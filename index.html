@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<!--Esto es para que el titulo de la pestaña se mueva-->
+		<script src="https://kit.fontawesome.com/e00b108020.js"></script>
+		<script language="JavaScript">
+			var TituloFC = "Campeonatos de Olimpiadas Matemáticas (COM)      ";
+			var espera = 350;
+			var tiempobarrido = null;
+			function despliegue_title() {
+			document.title = TituloFC;
+			TituloFC = TituloFC.substring(1,TituloFC.length) + TituloFC.charAt(0);
+			tiempobarrido = setTimeout("despliegue_title()",espera);
+										}
+			despliegue_title();
+		</script>
+		<script>
+			function NewWindow(mypage, myname, w, h, scroll)
+			{
+			var winl = (screen.width - w) / 2;
+			var wint = (screen.height - h) / 2;
+			winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizable'
+			win = window.open(mypage, myname, winprops)
+			if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
+			}
+		</script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Campeonatos de Olimpiadas Matemáticas (COM)</title>
+		<link rel="icon" href="logo.png">
+	</head>
+	<body>
+		<div class="wrapper">
+				<img class="logo" src="logoinicio.png">
+				<a href="telefono.html" id="telefono" class="pointer"><br><br>Teléfono</a>
+				<a href="computadora.html" id="computadora" class="pointer"><br><br>Computadora</a>
+		</div>
+	</body>
+</html>
+<style type="text/css">
+	body{
+		width: 100vw;
+		height: 100vh;
+		margin: 0vw;
+		padding: 0vw;
+	}
+	.logo{
+		margin-top: 10%;
+		transform: translateY(-50%);
+		margin-bottom: auto;
+		height: 30%;
+		position: sticky;
+		top: max(100, 100);
+	}
+	.wrapper {
+	  background: url("elige.png");
+	  background-size: 100%;
+	  color: #eee;
+	  width: 100vw;
+	  height: 100vh;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	  perspective: 1000px;
+	  perspective-origin: 50% 50%;
+	  animation: animation 20s linear infinite;
+	}
+
+	@keyframes animation {
+	   100%{
+	    background-position:0px -3000px;
+	  }
+	}
+	
+	.pointer:hover{
+			cursor: pointer;
+		}
+	#computadora{
+		margin-top: 17vh;
+		margin-left: -40%;
+		position: fixed;
+		width: 25vh;
+		height: 25vh;
+		background: linear-gradient(#2E303B,#2A2C38,#1F202B);
+		color: #fff;
+		border-radius: .7vw;
+		font-size: 4vh;
+		font-family: Forte;
+		box-shadow: 10px 10px 10px 5px #000;
+		animation: entradabotones 1.5s;
+		animation-iteration-count: 1;
+		animation-direction: normal;
+		text-decoration: none;
+		text-align: center;
+	}	
+	#computadora:hover{
+		color: #fff;
+		background: url(computadora.gif);
+		background-position: center;
+		background-size: 130%;
+		font-size: 3.7vh;
+		box-shadow: 10px 10px 7.5px 2px #222;
+		animation-name: borde;
+		cursor: pointer;
+		animation-duration: .8s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate;
+		animation-timing-function: linear;
+		border-color: #fff;
+		border-radius: 1.2Vw;
+		border-style: double;
+		border-width: 1vh;
+	}
+	#telefono{
+		margin-top: 17vh;
+		margin-left: 47%;
+		position: fixed;
+		width: 25vh;
+		height: 25vh;
+		background: linear-gradient(#2E303B,#2A2C38,#1F202B);
+		color: #fff;
+		border-radius: .7vw;
+		font-size: 4vh;
+		font-family: Forte;
+		box-shadow: 10px 10px 10px 5px #000;
+		animation: entradabotones 1.5s;
+		animation-iteration-count: 1;
+		animation-direction: normal;
+		text-decoration: none;
+		text-align: center;
+	}
+	#telefono:hover{
+		color: #fff;
+		background: url(telefono.gif);
+		background-position: center;
+		background-size: 130%;
+		font-size: 3.7vh;
+		box-shadow: 10px 10px 7.5px 2px #222;
+		animation-name: borde;
+		cursor: pointer;
+		animation-duration: .8s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate;
+		animation-timing-function: linear;
+		border-color: #fff;
+		border-radius: 1.2Vw;
+		border-style: double;
+		border-width: 1vh;
+	}
+</style>

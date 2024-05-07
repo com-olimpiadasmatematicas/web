@@ -39,8 +39,8 @@
 </html>
 <style type="text/css">
 	body{
-		width: 100vw;
-		height: 100vh;
+		width: 99vw;
+		height: 99vh;
 		margin: 0vw;
 		padding: 0vw;
 	}
@@ -51,6 +51,9 @@
 		height: 30%;
 		position: sticky;
 		top: max(100, 100);
+		animation: entrada3 3.5s;
+		animation-iteration-count: 1;
+		animation-direction: normal;
 	}
 	.wrapper {
 	  background: url("elige.png");
@@ -87,11 +90,11 @@
 		font-size: 4vh;
 		font-family: Forte;
 		box-shadow: 10px 10px 10px 5px #000;
-		animation: entradabotones 1.5s;
-		animation-iteration-count: 1;
-		animation-direction: normal;
 		text-decoration: none;
 		text-align: center;
+		animation: entrada2 3.5s;
+		animation-iteration-count: 1;
+		animation-direction: normal;
 	}	
 	#computadora:hover{
 		color: #fff;
@@ -124,11 +127,11 @@
 		font-size: 4vh;
 		font-family: Forte;
 		box-shadow: 10px 10px 10px 5px #000;
-		animation: entradabotones 1.5s;
-		animation-iteration-count: 1;
-		animation-direction: normal;
 		text-decoration: none;
 		text-align: center;
+		animation: entrada1 3.5s;
+		animation-iteration-count: 1;
+		animation-direction: normal;
 	}
 	#telefono:hover{
 		color: #fff;
@@ -148,5 +151,35 @@
 		border-radius: 1.2Vw;
 		border-style: double;
 		border-width: 1vh;
+	}
+	@keyframes entrada1{
+		0%{
+			transform: translateX(100%);
+			opacity: 0;
+		}
+		100%{
+			oopacity: 0;
+			transform: translateX(0);
+		}
+	}
+	@keyframes entrada2{
+		0%{
+			transform: translateX(-100%);
+			opacity: 0;
+		}
+		100%{
+			oopacity: 0;
+			transform: translateX(0);
+		}
+	}
+	@keyframes entrada3{
+		0%{
+			transform: translateY(200%);
+			opacity: 0;
+		}
+		100%{
+			oopacity: 0;
+			transform: translateY(-50%);
+		}
 	}
 </style>

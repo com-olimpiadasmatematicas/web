@@ -28,22 +28,23 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Campeonatos de Olimpiadas Matemáticas (COM)</title>
 			<link rel="icon" href="logo.png">
+			<link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<div class="resolucion">
 			<div class="desktop">
 				<div id="inicio1">
-					<a href="menu.html"><font face="ROG Fonts" size="5" id="siguiente1">Ingresar</font></a>
+					<a href="menu.html"><font id="siguiente1"><b>INGRESAR</b></font></a>
 				</div>
 			</div>
 			<div class="tablet">
 				<div id="inicio2">
-					<a href="menu.html"><font face="ROG Fonts" size="5" id="siguiente2">Ingresar</font></a>
+					<a href="menu.html"><font size="5" id="siguiente2"><b>INGRESAR</b></font></a>
 				</div>	
 			</div>
 			<div class="movil">
 				<div id="inicio3">
-					<a href="menu.html"><font face="ROG Fonts" id="siguiente3">Ingresar</font></a>
+					<a href="menu.html"><font id="siguiente3"><b>INGRESAR</b></font></a>
 				</div>
 			</div>
 		</div>	
@@ -165,23 +166,28 @@
 	}
 	#siguiente1{
 		text-decoration: underline;
-		color: #000;
+		color: #fff;
 		text-align: center;
-		position: fixed;
+		position: absolute;
 		margin-top: 72vh;
-		margin-left: 49%;
-		width: 12vw;
-		height: 6vh;
-		background-color: #fff;
+		width: 18%;
+		height: 7vh;
+		background-color: #000;
 		animation-name: sig;
 		animation-duration: 10.5s;
 		animation-iteration-count: 1;
 		animation-play-state: running;
 		animation-direction: alternate-reverse;
 		animation-timing-function: linear;
+		font-family: 'Orbitron', sans-serif;
+		border-radius: 25%;
+		left: 53%;
+		transform: translateX(-53%);
+		font-size: 2.5vw;
 	}
 	#siguiente1:hover{
 		color: #990C88;
+		background: #fff;
 		cursor: pointer;
 	}
 </style>
@@ -233,23 +239,29 @@
 	}
 	#siguiente2{
 		text-decoration: underline;
-		color: #000;
+		color: #fff;
 		text-align: center;
 		position: fixed;
 		margin-top: 72vh;
-		margin-left: 40%;
-		width: 12vw;
-		height: 6vh;
-		background-color: #fff;
+		width: 18vw;
+		height: 7vh;
+		background-color: #000;
 		animation-name: sig;
 		animation-duration: 10.5s;
 		animation-iteration-count: 1;
 		animation-play-state: running;
 		animation-direction: alternate-reverse;
 		animation-timing-function: linear;
+		font-family: 'Orbitron', sans-serif;
+		border-radius: 25%;
+		left: 53%;
+		transform: translateX(-53%);
+		font-size: 2.8vw;
+		align-content: center;
 	}
 	#siguiente2:hover{
 		color: #990C88;
+		background: #fff;
 		cursor: pointer;
 	}
 </style>
@@ -302,13 +314,13 @@
 	#siguiente3{
 		position: fixed;
 		top: 72vh;
-		left: 48%;
-		transform: translateX(-48%);
+		left: 49%;
+		transform: translateX(-49%);
 		text-decoration: underline;
-		color: #000;
-		width: 20vw;
-		height: 10vh;
-		background-color: #fff;
+		color: #fff;
+		width: 30vw;
+		height: 5vh;
+		background-color: #000;
 		text-align: center;
 		z-index: 1000;
 		animation-name: sig;
@@ -317,9 +329,12 @@
 		animation-play-state: running;
 		animation-direction: alternate-reverse;
 		animation-timing-function: linear;
-		font-size: 120%;
+		font-size: 5vw;
+		border-radius: 25%;
+		align-content: center;
 	}
 	#siguiente3:hover{
+		background: #fff;
 		color: #990C88;
 		cursor: pointer;
 	}

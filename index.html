@@ -1,182 +1,338 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<!--Esto es para que el titulo de la pestaña se mueva-->
-		<script src="https://kit.fontawesome.com/e00b108020.js"></script>
-		<script language="JavaScript">
-			var TituloFC = "Campeonatos de Olimpiadas Matemáticas (COM)      ";
-			var espera = 350;
-			var tiempobarrido = null;
-			function despliegue_title() {
-			document.title = TituloFC;
-			TituloFC = TituloFC.substring(1,TituloFC.length) + TituloFC.charAt(0);
-			tiempobarrido = setTimeout("despliegue_title()",espera);
-										}
-			despliegue_title();
-		</script>
-		<script>
-			function NewWindow(mypage, myname, w, h, scroll)
-			{
-			var winl = (screen.width - w) / 2;
-			var wint = (screen.height - h) / 2;
-			winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizable'
-			win = window.open(mypage, myname, winprops)
-			if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
-			}
-		</script>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Campeonatos de Olimpiadas Matemáticas (COM)</title>
-		<link rel="icon" href="logo.png">
+		<!--Esto es para que el titulo de la pestaña se mueva-->
+			<script src="https://kit.fontawesome.com/e00b108020.js"></script>
+			<script language="JavaScript">
+				var TituloFC = "Campeonatos de Olimpiadas Matemáticas \"COM\"      ";
+				var espera = 350;
+				var tiempobarrido = null;
+				function despliegue_title() {
+				document.title = TituloFC;
+				TituloFC = TituloFC.substring(1,TituloFC.length) + TituloFC.charAt(0);
+				tiempobarrido = setTimeout("despliegue_title()",espera);
+											}
+				despliegue_title();
+			</script>
+			<script>
+				function NewWindow(mypage, myname, w, h, scroll)
+				{
+				var winl = (screen.width - w) / 2;
+				var wint = (screen.height - h) / 2;
+				winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizable'
+				win = window.open(mypage, myname, winprops)
+				if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
+				}
+			</script>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Campeonatos de Olimpiadas Matemáticas (COM)</title>
+			<link rel="icon" href="logo.png">
 	</head>
 	<body>
-		<div class="wrapper">
-		</div>
+		<div class="resolucion">
+			<div class="desktop">
+				<div id="inicio1">
+					<a href="menu.html"><font face="ROG Fonts" size="5" id="siguiente1">Ingresar</font></a>
+				</div>
+			</div>
+			<div class="tablet">
+				<div id="inicio2">
+					<a href="menu.html"><font face="ROG Fonts" size="5" id="siguiente2">Ingresar</font></a>
+				</div>	
+			</div>
+			<div class="movil">
+				<div id="inicio3">
+					<a href="menu.html"><font face="ROG Fonts" id="siguiente3">Ingresar</font></a>
+				</div>
+			</div>
+		</div>	
 	</body>
 </html>
+<!--Resolución-->
 <style type="text/css">
-	body{
-		width: 99vw;
-		height: 99vh;
-		margin: 0vw;
-		padding: 0vw;
+	.resolucion{
+		width: 99%;
 	}
-	.logo{
-		margin-top: 10%;
-		transform: translateY(-50%);
-		margin-bottom: auto;
-		height: 30%;
-		position: sticky;
-		top: max(100, 100);
-		animation: entrada3 3.5s;
-		animation-iteration-count: 1;
-		animation-direction: normal;
-	}
-	.wrapper {
-	  background: url("fondomenu.jpg");
-	  background-size: 100%;
-	  color: #eee;
-	  width: 100vw;
-	  height: 100vh;
-	  display: flex;
-	  justify-content: center;
-	  align-items: center;
-	  perspective: 10000px;
-	  perspective-origin: 50% 50%;
-	  animation: animation 80s linear infinite;
-	}
-
-	@keyframes animation {
-	   100%{
-	    background-position:0px -30000px;
-	  }
-	}
-	
-	.pointer:hover{
-			cursor: pointer;
+	/* Movil */
+	@media (max-width: 767px){
+		.tablet {
+			display: none;
 		}
-	#computadora{
-		margin-top: 17vh;
-		margin-left: -40%;
-		position: fixed;
-		width: 25vh;
-		height: 25vh;
-		background: linear-gradient(#2E303B,#2A2C38,#1F202B);
-		color: #fff;
-		border-radius: .7vw;
-		font-size: 4vh;
-		font-family: Forte;
-		box-shadow: 10px 10px 10px 5px #000;
-		text-decoration: none;
-		text-align: center;
-		animation: entrada2 3.5s;
-		animation-iteration-count: 1;
-		animation-direction: normal;
-	}	
-	#computadora:hover{
-		color: #fff;
-		background: url(computadora.gif);
-		background-position: center;
-		background-size: 130%;
-		font-size: 3.7vh;
-		box-shadow: 10px 10px 7.5px 2px #222;
-		animation-name: borde;
-		cursor: pointer;
-		animation-duration: .8s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate;
-		animation-timing-function: linear;
-		border-color: #fff;
-		border-radius: 1.2Vw;
-		border-style: double;
-		border-width: 1vh;
-	}
-	#telefono{
-		margin-top: 17vh;
-		margin-left: 47%;
-		position: fixed;
-		width: 25vh;
-		height: 25vh;
-		background: linear-gradient(#2E303B,#2A2C38,#1F202B);
-		color: #fff;
-		border-radius: .7vw;
-		font-size: 4vh;
-		font-family: Forte;
-		box-shadow: 10px 10px 10px 5px #000;
-		text-decoration: none;
-		text-align: center;
-		animation: entrada1 3.5s;
-		animation-iteration-count: 1;
-		animation-direction: normal;
-	}
-	#telefono:hover{
-		color: #fff;
-		background: url(telefono.gif);
-		background-position: center;
-		background-size: 130%;
-		font-size: 3.7vh;
-		box-shadow: 10px 10px 7.5px 2px #222;
-		animation-name: borde;
-		cursor: pointer;
-		animation-duration: .8s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate;
-		animation-timing-function: linear;
-		border-color: #fff;
-		border-radius: 1.2Vw;
-		border-style: double;
-		border-width: 1vh;
-	}
-	@keyframes entrada1{
-		0%{
-			transform: translateX(100%);
-			opacity: 0;
-		}
-		100%{
-			oopacity: 0;
-			transform: translateX(0);
+		.desktop {
+			display: none;
 		}
 	}
-	@keyframes entrada2{
-		0%{
-			transform: translateX(-100%);
-			opacity: 0;
+	/* Tablet */
+	@media (min-width: 768px) and (max-width: 1023px) {
+		.movil {
+			display: none;
 		}
-		100%{
-			oopacity: 0;
-			transform: translateX(0);
+		.desktop {
+			display: none;
 		}
 	}
-	@keyframes entrada3{
-		0%{
-			transform: translateY(200%);
-			opacity: 0;
+	/* Desktop */
+	@media (min-width: 1024px) {
+		.movil {
+			display: none;
 		}
-		100%{
-			oopacity: 0;
-			transform: translateY(-50%);
+		.tablet {
+			display: none;
 		}
 	}
 </style>
+<!--Universales-->
+<style type="text/css">
+	button:hover{
+		cursor: pointer;
+		opacity: .7;
+	}
+	.desktop, .tablet, .movil {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+	@keyframes sig{
+		0%{
+			background-color: #fff;
+			text-align: center;
+			color: #000;
+			border: 1vh;
+			border-color: #fff;
+			border-radius: 25%;
+		}
+		3%{
+			background-color: transparent;
+			color: transparent;
+			text-align: center;
+		}
+		100%{
+			background-color: transparent;
+			color: transparent;
+			text-align: center;
+		}
+	}
+</style>
+<!--Desktop-->
+<style type="text/css">
+	.desktop{
+		margin-left: -5%;
+		margin-top: -2.25%;
+		width: 105%;
+		height: 105%;
+		background: url(img/intro1.png);
+		background-size: 100%;
+		padding: 0vh;
+		position: fixed;
+		animation-name: inicio1;
+		animation-duration: 10.2s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate-reverse;
+		animation-timing-function: linear;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+	@keyframes inicio1{
+		0%{
+			background: #000;
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		1%{
+			background: url(img/intro1.gif);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		99%{
+			background: url(img/intro1.gif);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		100%{
+			background: url(img/intro1.png);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+	}
+	#siguiente1{
+		text-decoration: underline;
+		color: #000;
+		text-align: center;
+		position: fixed;
+		margin-top: 72vh;
+		margin-left: 49%;
+		width: 12vw;
+		height: 6vh;
+		background-color: #fff;
+		animation-name: sig;
+		animation-duration: 10.5s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate-reverse;
+		animation-timing-function: linear;
+	}
+	#siguiente1:hover{
+		color: #990C88;
+		cursor: pointer;
+	}
+</style>
+<!--Tablet-->
+<style type="text/css">
+	.tablet{
+		margin-left: -1%;
+		margin-top: -1%;
+		width: 101%;
+		height: 101%;
+		background: url(img/intro2.png);
+		background-size: 100%;
+		padding: 0vh;
+		position: fixed;
+		animation-name: inicio2;
+		animation-duration: 10.2s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate-reverse;
+		animation-timing-function: linear;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+	@keyframes inicio2{
+		0%{
+			background: #000;
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		1%{
+			background: url(img/intro2.gif);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		99%{
+			background: url(img/intro2.gif);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		100%{
+			background: url(img/intro2.png);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+	}
+	#siguiente2{
+		text-decoration: underline;
+		color: #000;
+		text-align: center;
+		position: fixed;
+		margin-top: 72vh;
+		margin-left: 40%;
+		width: 12vw;
+		height: 6vh;
+		background-color: #fff;
+		animation-name: sig;
+		animation-duration: 10.5s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate-reverse;
+		animation-timing-function: linear;
+	}
+	#siguiente2:hover{
+		color: #990C88;
+		cursor: pointer;
+	}
+</style>
+<!--Movil-->
+<style type="text/css">
+	.movil{
+		margin-left: -3%;
+		margin-top: -3%;
+		width: 103%;
+		height: 103%;
+		background: url(img/intro3.png);
+		background-size: 100%;
+		padding: auto;
+		position: fixed;
+		animation-name: inicio3;
+		animation-duration: 7s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate-reverse;
+		animation-timing-function: linear;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+	@keyframes inicio3{
+		0%{
+			background: #000;
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		1%{
+			background: url(img/intro3.gif);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		99%{
+			background: url(img/intro3.gif);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		100%{
+			background: url(img/intro3.png);
+			background-size: 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+	}
+	#siguiente3{
+		position: fixed;
+		top: 72vh;
+		left: 48%;
+		transform: translateX(-48%);
+		text-decoration: underline;
+		color: #000;
+		width: 20vw;
+		height: 10vh;
+		background-color: #fff;
+		text-align: center;
+		z-index: 1000;
+		animation-name: sig;
+		animation-duration: 7.5s;
+		animation-iteration-count: 1;
+		animation-play-state: running;
+		animation-direction: alternate-reverse;
+		animation-timing-function: linear;
+		font-size: 120%;
+	}
+	#siguiente3:hover{
+		color: #990C88;
+		cursor: pointer;
+	}
+</style>
+<!--Desktop-->
+<script type="text/javascript">
+
+</script>
+<!--Tablet-->
+<script type="text/javascript">
+
+</script>
+<!--Movil-->
+<script type="text/javascript">
+	
+</script>

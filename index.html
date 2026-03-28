@@ -1,353 +1,864 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 	<head>
-		<!--Esto es para que el titulo de la pestaña se mueva-->
-			<script src="https://kit.fontawesome.com/e00b108020.js"></script>
-			<script language="JavaScript">
-				var TituloFC = "Campeonatos de Olimpiadas Matemáticas \"COM\"      ";
-				var espera = 350;
-				var tiempobarrido = null;
-				function despliegue_title() {
-				document.title = TituloFC;
-				TituloFC = TituloFC.substring(1,TituloFC.length) + TituloFC.charAt(0);
-				tiempobarrido = setTimeout("despliegue_title()",espera);
-											}
-				despliegue_title();
-			</script>
-			<script>
-				function NewWindow(mypage, myname, w, h, scroll)
-				{
-				var winl = (screen.width - w) / 2;
-				var wint = (screen.height - h) / 2;
-				winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizable'
-				win = window.open(mypage, myname, winprops)
-				if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
-				}
-			</script>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Campeonatos de Olimpiadas Matemáticas (COM)</title>
-			<link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-			<link rel="icon" href="logo.png">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Campeonatos de Olimpiadas Matemáticas (COM)</title>
+		<link rel="icon" href="logo.png">
+		<link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+		<script src="https://kit.fontawesome.com/e00b108020.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+		<!-- TITULO ANIMADO -->
+		<script>
+		let TituloFC = 'Campeonatos de Olimpiadas Matemáticas "COM"      ';
+		let espera = 350;
+		function despliegue_title() {
+			document.title = TituloFC;
+			TituloFC = TituloFC.substring(1) + TituloFC.charAt(0);
+			setTimeout(despliegue_title, espera);
+		}
+		despliegue_title();
+		</script>
 	</head>
-	<body>
-		<div class="resolucion">
-			<div class="desktop">
-				<div id="inicio1">
-					<a href="menu.html"><font id="siguiente1"><b>INGRESAR</b></font></a>
-				</div>
-			</div>
-			<div class="tablet">
-				<div id="inicio2">
-					<a href="menu.html"><font size="5" id="siguiente2"><b>INGRESAR</b></font></a>
-				</div>	
-			</div>
-			<div class="movil">
-				<div id="inicio3">
-					<a href="menu.html"><font id="siguiente3"><b>INGRESAR</b></font></a>
-				</div>
-			</div>
-		</div>	
-	</body>
+<body>
+	<!-- NAVBAR (MENÚ FIJO)-->
+	<nav class="navbar">
+		<div class="nav-logo">
+			<a href=""><img src="logo.png"></a>
+		</div>
+		<div class="nav-menu">
+			<span>Información</span>
+			<span>Personal</span>
+			<span>Concursos</span>
+			<span>Cicuito</span>
+			<span>Problemas</span>
+			<span>Registro</span>
+			<span>Resultados</span>
+			<span>Ranking</span>
+			<span>RPEM</span>
+		</div>
+		<!-- BUSCADOR -->
+		<div class="search">
+			<input type="text" placeholder="Buscar en COM..." id="searchInput" autocomplete="off">
+			<div class="results" id="results"></div>
+		</div>
+	</nav>
+	<!-- CONTACTO -->
+	<div class="social">
+		<a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+		<a href="https://www.instagram.com/campeonatos_matematicos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+		<a href="https://www.facebook.com/CampeonatoOlimpiadasMatematicas?locale=es_LA" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+		<a href="#" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a>
+	</div>
+	<div class="cursor"></div>
+
+	<!-- LOADER -->
+	<div class="loader">
+		<div class="progress">0%</div>
+	</div>
+
+	<!-- INTRO -->
+	<div class="intro">
+		<img src="logo.png" class="logo">
+	</div>
+
+	<!-- MAIN -->
+	<div class="main">
+
+		<div class="slider">
+			<div class="slide" style="background-image:url('https://picsum.photos/id/1011/1600/900')"></div>
+			<div class="slide" style="background-image:url('https://picsum.photos/id/1015/1600/900')"></div>
+			<div class="slide" style="background-image:url('https://picsum.photos/id/1016/1600/900')"></div>
+			<div class="slide" style="background-image:url('https://picsum.photos/id/1018/1600/900')"></div>
+			<div class="slide" style="background-image:url('https://picsum.photos/id/1020/1600/900')"></div>
+		</div>
+
+		<div class="text">
+			<h1 id="title"></h1>
+			<p id="desc"></p>
+		</div>
+
+	</div>
+
+	<!-- OVERLAY ELIPSE -->
+	<div class="bottom-overlay"></div>
+
+	<!-- DOTS -->
+	<div class="dots">
+
+		<div class="dot" onclick="goTo(0)">
+			<svg width="24" height="24">
+				<circle class="bg" cx="12" cy="12" r="10"></circle>
+				<circle class="progressCircle" cx="12" cy="12" r="10"></circle>
+			</svg>
+		</div>
+
+		<div class="dot" onclick="goTo(1)">
+			<svg width="24" height="24">
+				<circle class="bg" cx="12" cy="12" r="10"></circle>
+				<circle class="progressCircle" cx="12" cy="12" r="10"></circle>
+			</svg>
+		</div>
+
+		<div class="dot" onclick="goTo(2)">
+			<svg width="24" height="24">
+				<circle class="bg" cx="12" cy="12" r="10"></circle>
+				<circle class="progressCircle" cx="12" cy="12" r="10"></circle>
+			</svg>
+		</div>
+
+		<div class="dot" onclick="goTo(3)">
+			<svg width="24" height="24">
+				<circle class="bg" cx="12" cy="12" r="10"></circle>
+				<circle class="progressCircle" cx="12" cy="12" r="10"></circle>
+			</svg>
+		</div>
+
+		<div class="dot" onclick="goTo(4)">
+			<svg width="24" height="24">
+				<circle class="bg" cx="12" cy="12" r="10"></circle>
+				<circle class="progressCircle" cx="12" cy="12" r="10"></circle>
+			</svg>
+		</div>
+
+	</div>
+</body>
 </html>
-<!--Resolución-->
-<style type="text/css">
-	.resolucion{
-		width: 99%;
-	}
-	/* Movil */
-	@media (max-width: 767px){
-		.tablet {
-			display: none;
-		}
-		.desktop {
-			display: none;
-		}
-	}
-	/* Tablet */
-	@media (min-width: 768px) and (max-width: 1023px) {
-		.movil {
-			display: none;
-		}
-		.desktop {
-			display: none;
-		}
-	}
-	/* Desktop */
-	@media (min-width: 1024px) {
-		.movil {
-			display: none;
-		}
-		.tablet {
-			display: none;
-		}
-	}
-</style>
-<!--Universales-->
-<style type="text/css">
-	button:hover{
-		cursor: pointer;
-		opacity: .7;
-	}
-	.desktop, .tablet, .movil {
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		background-size: cover;
-		background-position: center;
-		background-repeat: no-repeat;
-	}
-	@keyframes sig{
-		0%{
-			background-color: #fff;
-			text-align: center;
-			color: #000;
-			border: 1vh;
-			border-color: #fff;
-			border-radius: 25%;
-		}
-		3%{
-			background-color: transparent;
-			color: transparent;
-			text-align: center;
-		}
-		100%{
-			background-color: transparent;
-			color: transparent;
-			text-align: center;
-		}
-	}
-</style>
-<!--Desktop-->
-<style type="text/css">
-	.desktop{
-		margin-left: -5%;
-		margin-top: -2.25%;
-		width: 105%;
-		height: 105%;
-		background: url(intro1.png);
-		background-size: 100%;
-		padding: 0vh;
-		position: fixed;
-		animation-name: inicio1;
-		animation-duration: 10.2s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate-reverse;
-		animation-timing-function: linear;
-		background-position: center;
-		background-repeat: no-repeat;
-	}
-	@keyframes inicio1{
-		0%{
-			background: #000;
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		1%{
-			background: url(intro1.gif);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		99%{
-			background: url(intro1.gif);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		100%{
-			background: url(intro1.png);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-	}
-	#siguiente1{
-		text-decoration: underline;
-		color: #fff;
-		text-align: center;
-		position: absolute;
-		margin-top: 72vh;
-		width: 18%;
-		height: 7vh;
-		background-color: #000;
-		animation-name: sig;
-		animation-duration: 10.5s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate-reverse;
-		animation-timing-function: linear;
-		font-family: 'Orbitron', sans-serif;
-		border-radius: 25%;
-		left: 53%;
-		transform: translateX(-53%);
-		font-size: 2.5vw;
-	}
-	#siguiente1:hover{
-		color: #990C88;
-		background: #fff;
-		cursor: pointer;
-	}
-</style>
-<!--Tablet-->
-<style type="text/css">
-	.tablet{
-		margin-left: -1%;
-		margin-top: -1%;
-		width: 101%;
-		height: 101%;
-		background: url(intro2.png);
-		background-size: 100%;
-		padding: 0vh;
-		position: fixed;
-		animation-name: inicio2;
-		animation-duration: 10.2s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate-reverse;
-		animation-timing-function: linear;
-		background-position: center;
-		background-repeat: no-repeat;
-	}
-	@keyframes inicio2{
-		0%{
-			background: #000;
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		1%{
-			background: url(intro2.gif);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		99%{
-			background: url(intro2.gif);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		100%{
-			background: url(intro2.png);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-	}
-	#siguiente2{
-		text-decoration: underline;
-		color: #fff;
-		text-align: center;
-		position: fixed;
-		margin-top: 72vh;
-		width: 18vw;
-		height: 7vh;
-		background-color: #000;
-		animation-name: sig;
-		animation-duration: 10.5s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate-reverse;
-		animation-timing-function: linear;
-		font-family: 'Orbitron', sans-serif;
-		border-radius: 25%;
-		left: 53%;
-		transform: translateX(-53%);
-		font-size: 2.8vw;
-		align-content: center;
-	}
-	#siguiente2:hover{
-		color: #990C88;
-		background: #fff;
-		cursor: pointer;
-	}
-</style>
-<!--Movil-->
-<style type="text/css">
-	.movil{
-		margin-left: -3%;
-		margin-top: -3%;
-		width: 103%;
-		height: 103%;
-		background: url(intro3.png);
-		background-size: 100%;
-		padding: auto;
-		position: fixed;
-		animation-name: inicio3;
-		animation-duration: 7s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate-reverse;
-		animation-timing-function: linear;
-		background-position: center;
-		background-repeat: no-repeat;
-	}
-	@keyframes inicio3{
-		0%{
-			background: #000;
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		1%{
-			background: url(intro3.gif);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		99%{
-			background: url(intro3.gif);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-		100%{
-			background: url(intro3.png);
-			background-size: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-		}
-	}
-	#siguiente3{
-		position: fixed;
-		top: 72vh;
-		left: 49%;
-		transform: translateX(-49%);
-		text-decoration: underline;
-		color: #fff;
-		width: 30vw;
-		height: 5vh;
-		background-color: #000;
-		text-align: center;
-		z-index: 1000;
-		animation-name: sig;
-		animation-duration: 7.5s;
-		animation-iteration-count: 1;
-		animation-play-state: running;
-		animation-direction: alternate-reverse;
-		animation-timing-function: linear;
-		font-size: 5vw;
-		border-radius: 25%;
-		align-content: center;
-	}
-	#siguiente3:hover{
-		background: #fff;
-		color: #990C88;
-		cursor: pointer;
-	}
-</style>
-<!--Desktop-->
-<script type="text/javascript">
 
-</script>
-<!--Tablet-->
-<script type="text/javascript">
+<style>
+	/* =========================
+	   RESET
+	========================= */
+	*{
+		margin:0;
+		padding:0;
+		box-sizing:border-box;
+	}
 
-</script>
-<!--Movil-->
-<script type="text/javascript">
-	
+	body{
+		font-family:'Orbitron', sans-serif;
+		background:#000;
+		color:#fff;
+		cursor:none;
+		overflow:hidden;
+	}
+
+	/* =========================
+	   CURSOR
+	========================= */
+	.cursor{
+		width:20px;
+		height:20px;
+		border:2px solid #a020f0;
+		border-radius:50%;
+		position:fixed;
+		pointer-events:none;
+		z-index:9999;
+		transform:translate(-50%,-50%);
+		background: rgba(0, 0, 0, 0.7);
+	}
+
+	/* =========================
+	   LOADER
+	========================= */
+	.loader{
+		position:fixed;
+		width:100%;
+		height:100%;
+		background:#000;
+		display:flex;
+		justify-content:center;
+		align-items:center;
+		z-index:3000;
+		flex-direction:column;
+	}
+
+	.progress{
+		font-size:2rem;
+		color:#a020f0;
+	}
+
+	/* =========================
+	   INTRO
+	========================= */
+	.intro{
+		position:fixed;
+		width:100%;
+		height:100%;
+		display:flex;
+		justify-content:center;
+		align-items:center;
+		background:#000;
+		z-index:2000;
+	}
+
+	.logo{
+		width:200px;
+		opacity:0;
+	}
+
+	/* =========================
+	   SLIDER
+	========================= */
+	.slider{
+		position:relative;
+		width:100%;
+		height:100vh;
+		overflow:hidden;
+	}
+
+	.slide{
+		position:absolute;
+		width:100%;
+		height:100%;
+		background-size:cover;
+		background-position:center;
+		opacity:0;
+		transform:scale(1.2);
+		filter:brightness(0.5);
+	}
+
+	/* =========================
+	   TEXTO
+	========================= */
+	.text{
+		position:absolute;
+		top:50%;
+		left:50%;
+		transform:translate(-50%,-50%);
+		text-align:center;
+	}
+
+	.text h1{
+		font-size:3rem;
+		margin-bottom:20px;
+	}
+
+	.text p{
+		font-size:1.2rem;
+		opacity:.8;
+	}
+
+	/* =========================
+	   COLORES
+	========================= */
+	.c1{color:#a020f0;}
+	.c2{color:#00bfff;}
+	.c3{color:#ff4040;}
+	.c4{color:#32cd32;}
+	.c5{color:#ffd700;}
+
+	/* =========================
+	   DOTS (RELOJ)
+	========================= */
+	.dots{
+		position:absolute;
+		bottom:35px;
+		left:50%;
+		transform:translateX(-45%);
+		display:flex;
+		gap:20px;
+		z-index:100;
+	}
+
+	.dot{
+		width:24px;
+		height:24px;
+		cursor:pointer;
+		transition: all 0.3s ease;
+	}
+
+	.dot svg{
+		transform:rotate(-90deg);
+	}
+
+	.dot circle{
+		fill:none;
+		stroke-width:3;
+		stroke-linecap:round;
+	}
+
+	.bg{
+		stroke:rgba(255,255,255,0.2);
+	}
+
+	.progressCircle{
+		stroke:currentColor;
+		stroke-dasharray:75;
+		stroke-dashoffset:75;
+	}
+
+	/* colores de cada dot */
+	.dot:nth-child(1){color:#a020f0;}
+	.dot:nth-child(2){color:#00bfff;}
+	.dot:nth-child(3){color:#ff4040;}
+	.dot:nth-child(4){color:#32cd32;}
+	.dot:nth-child(5){color:#ffd700;}
+
+	/* DOT ACTIVO */
+	.dot.active{
+		transform:scale(1.6);
+		filter:drop-shadow(0 0 10px currentColor)
+		       drop-shadow(0 0 20px currentColor)
+		       drop-shadow(0 0 40px currentColor);
+	}
+
+	/* =========================
+	   ELIPSE (PERFECTA)
+	========================= */
+	.bottom-overlay{
+		position:absolute;
+		bottom:0;
+		left:10%;
+		width:80%;
+		height:100px;
+
+		/* 🔥 curva continua real */
+		background:rgba(0,0,0,0.75);
+		border-top-left-radius:50% 100%;
+		border-top-right-radius:50% 100%;
+
+		z-index:50;
+		backdrop-filter: blur(8px);
+		border-top-left-radius:60% 120%;
+	border-top-right-radius:60% 120%;
+	}
+	/* =========================
+	   NAVBAR PRO
+	========================= */
+	.navbar{
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:70px;
+
+		display:flex;
+		justify-content:space-between;
+		align-items:center;
+
+		padding:0 40px;
+
+		background:rgba(0,0,0,0.9);
+		backdrop-filter: blur(10px);
+
+		z-index:500;
+	}
+
+	/* LOGO */
+	.nav-logo img{
+		width:55px;
+		filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+	}
+
+	/* MENU */
+	.nav-menu{
+		display:flex;
+		gap:25px;
+	}
+
+	.nav-menu span{
+		position:relative;
+		cursor:pointer;
+		font-size:1rem;
+		opacity:0.8;
+		transition:0.3s;
+	}
+
+	/* línea animada */
+	.nav-menu span::after{
+		content:'';
+		position:absolute;
+		left:0;
+		bottom:-5px;
+		width:0%;
+		height:2px;
+		background:linear-gradient(90deg,#a020f0,#00bfff);
+		transition:0.3s;
+	}
+
+	.nav-menu span:hover{
+		opacity:1;
+		color:#fff;
+	}
+
+	.nav-menu span:hover::after{
+		width:100%;
+	}
+
+	/* =========================
+	   SOCIAL PRO
+	========================= */
+	.social{
+		position:fixed;
+		right:20px;
+		top:50%;
+		transform:translateY(-50%);
+
+		display:flex;
+		flex-direction:column;
+		gap:15px;
+
+		z-index:400;
+	}
+
+	.social a{
+		width:45px;
+		height:45px;
+
+		display:flex;
+		justify-content:center;
+		align-items:center;
+
+		border-radius:50%;
+		text-decoration:none;
+
+		background:rgba(0,0,0,0.6);
+		backdrop-filter: blur(8px);
+
+		color:#fff;
+		font-size:18px;
+
+		transition:0.3s;
+
+		box-shadow:0 0 10px rgba(0,0,0,0.3);
+	}
+
+	/* hover PRO */
+	.social a:hover{
+		transform:scale(1.2);
+		box-shadow:
+		0 0 10px currentColor,
+		0 0 20px currentColor,
+		0 0 40px currentColor;
+	}
+
+	/* colores por red */
+	.social a:nth-child(1){color:#fff;
+						   background: url(whatsapp.png);
+						   background-size: 65%;
+						   background-position: center;
+						   background-repeat: no-repeat;} /* WhatsApp */
+	.social a:nth-child(2){color:#fff;
+						   background: url(instagram.png);
+						   background-size: 140%;
+						   background-position: center;
+						   background-repeat: no-repeat;} /* Instagram */
+	.social a:nth-child(3){color:#fff;
+						   background: url(facebook.png);
+						   background-size: 80%;
+						   background-position: center;
+						   background-repeat: no-repeat;} /* Facebook */
+	.social a:nth-child(4){color:#fff;
+						   background: url(gmail.png);
+						   background-size: 80%;
+						   background-position: center;
+						   background-repeat: no-repeat;} /* Gmail */
+	/* =========================
+	   MENU ACTIVO
+	========================= */
+	.nav-menu span.active{
+		color:#fff;
+		opacity:1;
+	}
+
+	.nav-menu span.active::after{
+		width:100%;
+	}
+
+	/* =========================
+	   BUSCADOR PRO
+	========================= */
+	.search{
+		position:relative;
+	}
+
+	.search input{
+		width:40px;
+		height:40px;
+		border-radius:20px;
+		border:none;
+		outline:none;
+		padding:0 15px;
+		background:rgba(255,255,255,0.1);
+		color:#fff;
+		transition:0.4s;
+		cursor:pointer;
+	}
+
+	/* EXPANSIÓN */
+	.search input:focus{
+		width:180px;
+		cursor:text;
+	}
+
+	/* RESULTADOS */
+	.results{
+		position:absolute;
+		top:50px;
+		right:0;
+		width:200px;
+		background:rgba(0,0,0,0.9);
+		border-radius:10px;
+		overflow:hidden;
+		display:none;
+		backdrop-filter:blur(10px);
+	}
+
+	.results div{
+		padding:10px;
+		cursor:pointer;
+		transition:0.3s;
+	}
+
+	.results div:hover{
+		background:#a020f0;
+	}
+	/* =========================
+	   BUSCADOR NIVEL GOOGLE
+	========================= */
+	.search{
+		position:relative;
+	}
+
+	.search input{
+		width:40px;
+		height:40px;
+		border-radius:20px;
+		border:none;
+		outline:none;
+		padding:0 15px;
+		background:rgba(255,255,255,0.1);
+		color:#fff;
+		transition:0.4s;
+		cursor:pointer;
+	}
+
+	/* expansión suave */
+	.search input:focus{
+		width:220px;
+		cursor:text;
+		background:rgba(255,255,255,0.15);
+	}
+
+	/* RESULTADOS */
+	.results{
+		position:absolute;
+		top:50px;
+		right:0;
+		width:240px;
+		background:rgba(0,0,0,0.95);
+		border-radius:12px;
+		overflow:hidden;
+		display:none;
+		backdrop-filter:blur(12px);
+		box-shadow:0 0 20px rgba(0,0,0,0.5);
+	}
+
+	/* item */
+	.results div{
+		padding:12px;
+		cursor:pointer;
+		transition:0.25s;
+		display:flex;
+		justify-content:space-between;
+		font-size:0.9rem;
+	}
+
+	/* hover */
+	.results div:hover,
+	.results .active{
+		background:linear-gradient(90deg,#a020f0,#00bfff);
+		color:#fff;
+	}
+
+	/* historial */
+	.results .history{
+		opacity:0.6;
+		font-size:0.8rem;
+	}
+</style>
+
+<script>
+	// DETECTAR TOUCH
+	let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+	// CURSOR
+	const cursor = document.querySelector(".cursor");
+	if(!isTouchDevice){
+		document.addEventListener("mousemove", e=>{
+			cursor.style.left = e.clientX + "px";
+			cursor.style.top = e.clientY + "px";
+		});
+	}else{
+		cursor.style.display = "none";
+	}
+
+	// LOADER (NO TOCAR 🔥)
+	let load=0;
+	let int=setInterval(()=>{
+		load++;
+		document.querySelector(".progress").innerText=load+"%";
+		if(load>=100){
+			clearInterval(int);
+			gsap.to(".loader",{opacity:0,duration:1,onComplete:()=>{
+				document.querySelector(".loader").remove();
+				startIntro();
+			}});
+		}
+	},20);
+
+	// INTRO
+	function startIntro(){
+		let tl=gsap.timeline();
+		tl.to(".logo",{opacity:1,scale:1.2,duration:1.5})
+		.to(".logo",{opacity:0,duration:1,delay:1})
+		.to(".intro",{opacity:0,duration:1,onComplete:()=>{
+			document.querySelector(".intro").remove();
+			startSlider();
+		}});
+	}
+
+	// DATA
+	let data=[
+		{t:"POST 1",d:"Ejemplo 1",c:"c1"},
+		{t:"POST 2",d:"Ejemplo 2",c:"c2"},
+		{t:"POST 3",d:"Ejemplo 3",c:"c3"},
+		{t:"POST 4",d:"Ejemplo 4",c:"c4"},
+		{t:"POST 5",d:"Ejemplo 5",c:"c5"}
+	];
+
+	let slides=document.querySelectorAll(".slide");
+	let dots=document.querySelectorAll(".dot");
+	let slider=document.querySelector(".slider");
+
+	let i=0;
+	let duration=5000;
+
+	let timer=null;
+	let started=false;
+	let paused=false;
+
+	// START
+	function startSlider(){
+		if(started) return;
+		started=true;
+		show(i);
+	}
+
+	// SHOW
+	function show(index){
+
+		if(timer) clearTimeout(timer);
+		gsap.killTweensOf(".progressCircle");
+
+		gsap.to(slides,{opacity:0,scale:1.2,duration:1});
+		gsap.to(slides[index],{opacity:1,scale:1,duration:1.5});
+
+		title.className=data[index].c;
+		title.innerText=data[index].t;
+		desc.innerText=data[index].d;
+
+		dots.forEach(d=>{
+			d.classList.remove("active");
+			let c=d.querySelector(".progressCircle");
+			c.style.strokeDashoffset=75;
+		});
+
+		let active=dots[index];
+		active.classList.add("active");
+
+		let circle=active.querySelector(".progressCircle");
+
+		gsap.fromTo(circle,
+			{strokeDashoffset:75},
+			{strokeDashoffset:0,duration:duration/1000,ease:"linear"}
+		);
+
+		if(!paused){
+			timer=setTimeout(()=>{
+				i=(index+1)%slides.length;
+				show(i);
+			},duration);
+		}
+	}
+
+	// CLICK
+	function goTo(index){
+		i=index;
+		show(i);
+	}
+	// 🔥 animación de la elipse
+	gsap.fromTo(".bottom-overlay",
+		{scale:1, opacity:0.7},
+		{scale:1.1, opacity:1, duration:0.6, ease:"power2.out"}
+	);
+
+	gsap.to(".bottom-overlay",
+		{scale:1, duration:0.6, delay:0.6, ease:"power2.inOut"}
+	);
+	gsap.to(".bottom-overlay", {
+		backgroundColor: getComputedStyle(dots[index]).color,
+		duration:0.5
+	});
+	// MAPEO MENU
+	let menuItems = document.querySelectorAll(".nav-menu span");
+
+	// sincronizar menú con slider
+	function updateMenu(index){
+		menuItems.forEach(el=>el.classList.remove("active"));
+
+		if(menuItems[index]){
+			menuItems[index].classList.add("active");
+		}
+	}
+
+	// MODIFICAR tu función show (solo añade esto al final)
+	const originalShow2 = show;
+	show = function(index){
+		originalShow2(index);
+		updateMenu(index);
+	}
+
+	// click en menú
+	menuItems.forEach(el=>{
+		el.addEventListener("click", ()=>{
+			let idx = el.getAttribute("data-index");
+			if(idx !== null){
+				i = parseInt(idx);
+				show(i);
+			}
+		});
+	});
+
+	// =========================
+	// BUSCADOR CON IA
+	// =========================
+	const searchInput = document.getElementById("searchInput");
+	const resultsBox = document.getElementById("results");
+
+	// DATA BASE
+	let pages = [
+		{ name:"Resultados", index:0, keywords:["resultados","ganadores","puntajes","quien gano"] },
+		{ name:"Convocatoria", index:1, keywords:["convocatoria","inscripcion concurso","evento"] },
+		{ name:"Problemas", index:2, keywords:["problemas","ejercicios","retos","matematicas"] },
+		{ name:"Ranking", index:3, keywords:["ranking","tabla","posiciones","quien va primero"] },
+		{ name:"Registro", index:4, keywords:["registro","inscribirme","crear cuenta","participar"] },
+		{ name:"Información", index:null, keywords:["info","acerca","datos"] },
+		{ name:"Personal", index:null, keywords:["perfil","usuario","cuenta"] }
+	];
+
+	// HISTORIAL
+	let history = JSON.parse(localStorage.getItem("historyCOM")) || [];
+
+	// IA: SIMILITUD SIMPLE
+	function scoreMatch(text, query){
+		text = text.toLowerCase();
+		query = query.toLowerCase();
+
+		let score = 0;
+
+		if(text.includes(query)) score += 5;
+
+		let words = query.split(" ");
+		words.forEach(w=>{
+			if(text.includes(w)) score += 2;
+		});
+
+		return score;
+	}
+
+	// IA: INTERPRETACIÓN
+	function smartSearch(query){
+
+		let results = [];
+
+		pages.forEach(p=>{
+			let score = 0;
+
+			// nombre
+			score += scoreMatch(p.name, query);
+
+			// keywords
+			p.keywords.forEach(k=>{
+				score += scoreMatch(k, query);
+			});
+
+			if(score > 0){
+				results.push({...p, score});
+			}
+		});
+
+		// ordenar por relevancia
+		results.sort((a,b)=>b.score - a.score);
+
+		return results;
+	}
+
+	// MOSTRAR
+	function showResults(list, isAI=false){
+		resultsBox.innerHTML = "";
+
+		list.slice(0,5).forEach(item=>{
+			let div = document.createElement("div");
+
+			div.innerHTML = `
+				<span>${item.name}</span>
+				<span style="opacity:.6">${isAI ? "IA" : "↗"}</span>
+			`;
+
+			div.onclick = ()=>{
+				selectItem(item);
+			};
+
+			resultsBox.appendChild(div);
+		});
+
+		resultsBox.style.display = list.length ? "block" : "none";
+	}
+
+	// SELECCIONAR
+	function selectItem(item){
+		searchInput.value = item.name;
+
+		history = history.filter(h => h.name !== item.name);
+		history.unshift(item);
+		localStorage.setItem("historyCOM", JSON.stringify(history.slice(0,5)));
+
+		if(item.index !== null){
+			i = item.index;
+			show(i);
+		}
+
+		resultsBox.style.display = "none";
+	}
+
+	// INPUT
+	searchInput.addEventListener("input", ()=>{
+		let val = searchInput.value.trim();
+
+		if(val === ""){
+			showResults(history);
+			return;
+		}
+
+		let aiResults = smartSearch(val);
+
+		showResults(aiResults, true);
+	});
+
+	// FOCUS → historial
+	searchInput.addEventListener("focus", ()=>{
+		if(searchInput.value === ""){
+			showResults(history);
+		}
+	});
+
+	// CLICK FUERA
+	document.addEventListener("click", (e)=>{
+		if(!document.querySelector(".search").contains(e.target)){
+			resultsBox.style.display="none";
+		}
+	});
 </script>

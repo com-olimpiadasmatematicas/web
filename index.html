@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COM · Campeonatos de Olimpiadas Matemáticas</title>
-<meta name="description" content="Campeonatos de Olimpiadas Matemáticas (COM): concursos, entrenamientos y olimpiadas donde la lógica se convierte en grandeza.">
+<meta name="description" content="Campeonatos de Olimpiadas Matemáticas (COM): creado con el fin de llegar a los alumnos por el gusto de las matemáticas a otro nivel. Challenge por equipos, entrenamientos y olimpiadas.">
 <meta name="theme-color" content="#07060b">
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -283,7 +283,7 @@ section{position:relative}
 /* ----- Nosotros ----- */
 .about{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:center}
 .about-media{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;clip-path:inset(0 0 0 0 round var(--radius))}
-.about-media img{width:100%;height:120%;object-fit:cover;transform:translateY(-8%)}
+.about-media img{width:100%;height:120%;object-fit:cover;object-position:center 35%;transform:translateY(-8%)}
 .about-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(7,6,11,.85))}
 .about-badge{
   position:absolute;left:20px;right:20px;bottom:20px;z-index:2;display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;
@@ -299,7 +299,7 @@ section{position:relative}
 .stat::before{content:"";position:absolute;top:0;left:0;width:40px;height:3px;background:var(--c)}
 .stat b{font:900 2.4rem/1 var(--display);display:block;color:var(--c)}
 .stat span{font-size:.85rem;color:var(--muted)}
-@media (max-width:900px){.about{grid-template-columns:1fr}.about-media{aspect-ratio:16/11}}
+@media (max-width:900px){.about{grid-template-columns:1fr}.about-media{aspect-ratio:1/1}.about-media img{object-position:center 30%}}
 
 /* ----- Áreas ----- */
 .areas-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:56px}
@@ -558,22 +558,22 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="container hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow hero-in"><i class="live"></i>Concursos y Olimpiadas Matemáticas</span>
+      <span class="eyebrow hero-in"><i class="live"></i>Final Nacional FUSION26 · 4–6 dic · Guadalajara</span>
       <h1>
         <span class="line"><span class="hero-line">Donde la</span></span>
         <span class="line"><span class="hero-line">lógica se</span></span>
         <span class="line"><span class="hero-line">convierte en</span></span>
         <span class="line"><span class="hero-line"><span class="rotator" id="rotator">grandeza</span></span></span>
       </h1>
-      <p class="lead hero-in">Campeonatos de Olimpiadas Matemáticas “COM”: un espacio para descubrir, entrenar y celebrar el talento matemático. Resuelve, compite y demuestra de lo que eres capaz.</p>
+      <p class="lead hero-in">Campeonatos de Olimpiadas Matemáticas “COM” nació con un propósito: llevar a los alumnos el gusto por las matemáticas a otro nivel. Suma puntos en cada concurso del Circuito Nacional y conviértete en Campeón de Campeones.</p>
       <div class="hero-ctas hero-in">
         <a href="registro.html" class="btn btn-primary magnetic">Quiero participar <span class="arrow">→</span></a>
         <a href="convocatorias.html" class="btn btn-ghost magnetic">Ver convocatorias</a>
       </div>
       <div class="hero-meta hero-in">
-        <div><b>4</b>Áreas olímpicas</div>
-        <div><b>5</b>Etapas del camino</div>
-        <div><b>∞</b>Problemas por resolver</div>
+        <div><b>6</b>Concursos en el circuito</div>
+        <div><b>5</b>Categorías</div>
+        <div><b>1</b>Campeón de Campeones</div>
       </div>
     </div>
 
@@ -597,24 +597,26 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
 <!-- MARQUEE -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee-row" id="mq1">
-    <span style="--dot:var(--cyan)"><em>Álgebra</em></span>
-    <span style="--dot:var(--red)">∑ 1/n² = π²/6</span>
-    <span style="--dot:var(--yellow)"><em>Geometría</em></span>
-    <span style="--dot:var(--green)">∫ eˣ dx = eˣ + C</span>
-    <span style="--dot:var(--purple-2)"><em>Combinatoria</em></span>
-    <span style="--dot:var(--cyan)">a ≡ b (mod n)</span>
-    <span style="--dot:var(--red)"><em>Teoría de números</em></span>
-    <span style="--dot:var(--yellow)">n! = n·(n−1)!</span>
+    <span style="--dot:var(--cyan)"><em>Kids A</em></span>
+    <span style="--dot:var(--red)">4° y 5° primaria</span>
+    <span style="--dot:var(--yellow)"><em>Kids B</em></span>
+    <span style="--dot:var(--green)">6° primaria y 1° secundaria</span>
+    <span style="--dot:var(--purple-2)"><em>Junior's A</em></span>
+    <span style="--dot:var(--cyan)">2° y 3° secundaria</span>
+    <span style="--dot:var(--red)"><em>Juniors B</em></span>
+    <span style="--dot:var(--yellow)">1° y 2° de bachillerato</span>
+    <span style="--dot:var(--green)"><em>Elite</em></span>
+    <span style="--dot:var(--purple-2)">3° de bachillerato y universitarios</span>
   </div>
   <div class="marquee-row" id="mq2">
-    <span style="--dot:var(--green)">Lógica</span>
+    <span style="--dot:var(--green)">Mateatletas</span>
     <span style="--dot:var(--purple-2)"><em>Creatividad</em></span>
-    <span style="--dot:var(--cyan)">Estrategia</span>
+    <span style="--dot:var(--cyan)">Circuito Nacional</span>
     <span style="--dot:var(--red)"><em>Ingenio</em></span>
-    <span style="--dot:var(--yellow)">Disciplina</span>
-    <span style="--dot:var(--green)"><em>Pasión</em></span>
-    <span style="--dot:var(--purple-2)">Excelencia</span>
-    <span style="--dot:var(--cyan)"><em>Grandeza</em></span>
+    <span style="--dot:var(--yellow)">Challenge por equipos</span>
+    <span style="--dot:var(--green)"><em>Math Rush 2027</em></span>
+    <span style="--dot:var(--purple-2)">MateTips</span>
+    <span style="--dot:var(--cyan)"><em>Campeón de Campeones</em></span>
   </div>
 </div>
 
@@ -622,23 +624,23 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
 <section class="section" id="nosotros">
   <div class="container about">
     <div class="about-media reveal-clip">
-      <img src="1.png" alt="Arte geométrico COM" class="parallax-img">
+      <img src="mascota_com.svg" alt="Mascota de COM: jaguar charro rumbo a Fusion26" class="parallax-img">
       <div class="about-badge">
         <img src="logo.png" alt="">
-        <div><b>COM</b><span>Concursos y Olimpiadas Matemáticas</span></div>
+        <div><b>COM</b><span>Nuestra mascota, rumbo a Fusion26 Jalisco</span></div>
       </div>
     </div>
     <div class="about-text">
       <span class="kicker">Nosotros</span>
       <h2 class="h2 split">Formamos mentes que <span class="muted">resuelven</span> lo imposible</h2>
-      <p class="reveal">Somos <strong>Campeonatos de Olimpiadas Matemáticas “COM”</strong>. Organizamos concursos y olimpiadas donde estudiantes ponen a prueba su <strong>lógica</strong>, su <strong>creatividad</strong> y su capacidad para enfrentar problemas que van más allá del salón de clases.</p>
-      <p class="reveal">Creemos que las matemáticas son un deporte de la mente: se entrenan, se disfrutan y se compiten con pasión.</p>
-      <!-- EDITA estos números con tus datos reales (participantes, sedes, ediciones, etc.) -->
+      <p class="reveal">Somos <strong>Campeonatos de Olimpiadas Matemáticas “COM”</strong>, una comunidad creada para llegar a los alumnos por el gusto de las matemáticas, pero a otro nivel. Aquí nuestros <strong>mateatletas</strong> ponen a prueba su lógica, su creatividad y su trabajo en equipo, y crecen con cada reto que resuelven.</p>
+      <p class="reveal">Tenemos <strong>sedes en todo el país</strong> y una <strong>sede virtual</strong> para estados libres. Además compartimos <strong>MateTips</strong>, talleres de la <strong>Red Profesional de Entrenadores</strong> y exámenes de años anteriores para que llegues preparado.</p>
+      <!-- Datos tomados de la página de Facebook de COM (oct 2026) -->
       <div class="stats">
-        <div class="stat reveal" style="--c:var(--cyan)"><b data-count="4">0</b><span>Áreas de competencia</span></div>
-        <div class="stat reveal" style="--c:var(--red)"><b data-count="5">0</b><span>Etapas para llegar a la meta</span></div>
-        <div class="stat reveal" style="--c:var(--yellow)"><b data-count="9">0</b><span>Secciones a tu alcance</span></div>
-        <div class="stat reveal" style="--c:var(--green)"><b>∞</b><span>Retos por descubrir</span></div>
+        <div class="stat reveal" style="--c:var(--cyan)"><b data-count="6">0</b><span>Concursos en el Circuito Nacional 2027</span></div>
+        <div class="stat reveal" style="--c:var(--red)"><b data-count="5">0</b><span>Categorías: Kids A, Kids B, Junior's A, Juniors B y Elite</span></div>
+        <div class="stat reveal" style="--c:var(--yellow)"><b data-count="13" data-suffix="+">0</b><span>Estados sede, más sede virtual</span></div>
+        <div class="stat reveal" style="--c:var(--green)"><b data-count="11" data-suffix=" mil">0</b><span>Seguidores en Facebook</span></div>
       </div>
     </div>
   </div>
@@ -691,38 +693,45 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
 <section class="route" id="ruta">
   <div class="route-pin">
     <div class="container route-head">
-      <span class="kicker">Tu camino</span>
-      <h2 class="h2 split">De la convocatoria <span class="muted">al podio</span></h2>
+      <span class="kicker">Circuito Nacional 2027</span>
+      <h2 class="h2 split">Seis concursos, <span class="muted">un campeón</span></h2>
     </div>
     <div class="route-track" id="routeTrack">
-      <a href="convocatorias.html" class="step" style="--c:var(--purple-2)">
-        <span class="big">01</span><span class="tag">Paso 01</span>
-        <h3>Convocatoria</h3>
-        <p>Consulta fechas, niveles y requisitos de cada competencia.</p>
-        <span class="go">Ver convocatorias <span>→</span></span>
-      </a>
-      <a href="registro.html" class="step" style="--c:var(--cyan)">
-        <span class="big">02</span><span class="tag">Paso 02</span>
-        <h3>Registro</h3>
-        <p>Inscríbete en minutos y asegura tu lugar en la siguiente edición.</p>
-        <span class="go">Registrarme <span>→</span></span>
-      </a>
-      <a href="entrenamientos.html" class="step" style="--c:var(--red)">
-        <span class="big">03</span><span class="tag">Paso 03</span>
-        <h3>Entrenamiento</h3>
-        <p>Prepárate con sesiones, problemas y recursos pensados para olímpicos.</p>
-        <span class="go">Entrenar <span>→</span></span>
-      </a>
-      <a href="eventos.html" class="step" style="--c:var(--yellow)">
-        <span class="big">04</span><span class="tag">Paso 04</span>
-        <h3>Competencia</h3>
-        <p>Llega el día: concentración, estrategia y a resolver como campeón.</p>
+      <!-- Puntos por medalla según la tabla de la temporada 2026. Examen perfecto = +1 punto (+2 en Fusion Nacional) -->
+      <a href="eventos.html" class="step" style="--c:var(--cyan)">
+        <span class="big">01</span><span class="tag">Concurso 01 · Virtual</span>
+        <h3>Marathon</h3>
+        <p>Campeonato virtual abierto a toda Latinoamérica. Oro 4 · Plata 2 · Bronce 1 pts.</p>
         <span class="go">Ver eventos <span>→</span></span>
       </a>
-      <a href="resultados.html" class="step" style="--c:var(--green)">
-        <span class="big">05</span><span class="tag">Paso 05</span>
-        <h3>Resultados</h3>
-        <p>Consulta tu puntaje, tu lugar en el ranking y descarga tu constancia.</p>
+      <a href="convocatorias.html" class="step" style="--c:var(--purple-2)">
+        <span class="big">02</span><span class="tag">Concurso 02 · Estatal</span>
+        <h3>Fusion Estatales</h3>
+        <p>La fase estatal: aquí se gana el pase para representar a tu estado en la Final Nacional.</p>
+        <span class="go">Ver convocatorias <span>→</span></span>
+      </a>
+      <a href="eventos.html" class="step" style="--c:var(--red)">
+        <span class="big">03</span><span class="tag">Concurso 03 · Geometría</span>
+        <h3>OMG</h3>
+        <p>Olimpiada Mexicana de Geometría. Oro 6 · Plata 4 · Bronce 3 pts.</p>
+        <span class="go">Ver eventos <span>→</span></span>
+      </a>
+      <a href="eventos.html" class="step" style="--c:var(--yellow)">
+        <span class="big">04</span><span class="tag">Concurso 04 · Por equipos</span>
+        <h3>Challenge</h3>
+        <p>Mate Teams: equipos de 2 a 4 integrantes contra 8 problemas. Oro 5 · Plata 3 · Bronce 2 pts.</p>
+        <span class="go">Ver eventos <span>→</span></span>
+      </a>
+      <a href="eventos.html" class="step" style="--c:var(--green)">
+        <span class="big">05</span><span class="tag">Concurso 05 · ¡Nuevo!</span>
+        <h3>Math Rush</h3>
+        <p>El nuevo integrante del Circuito Nacional 2027. Muy pronto más detalles.</p>
+        <span class="go">Próximamente <span>→</span></span>
+      </a>
+      <a href="resultados.html" class="step" style="--c:var(--purple-2)">
+        <span class="big">06</span><span class="tag">Gran Final · Diciembre</span>
+        <h3>Fusion Nacional</h3>
+        <p>Oro 8 · Plata 5 · Bronce 3 pts. Aquí se corona al Campeón de Campeones de cada categoría.</p>
         <span class="go">Ver resultados <span>→</span></span>
       </a>
     </div>
@@ -784,7 +793,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
       <span class="outline cta-line">¿Listo para</span><br>
       <span class="grad cta-line">el desafío?</span>
     </h2>
-    <p class="reveal">Únete a la comunidad COM y lleva tu talento matemático al siguiente nivel.</p>
+    <p class="reveal">Suma puntos en cada concurso del Circuito Nacional y lucha por el título de Campeón de Campeones.</p>
     <a href="registro.html" class="big-btn magnetic" data-cursor="¡Va!">Regístrate<br>ahora</a>
   </div>
 </section>
@@ -797,10 +806,10 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
     <div class="foot-grid">
       <div class="foot-brand">
         <a href="#inicio" class="brand"><img src="logo.png" alt="Logo COM"><div><b>COM</b><small>Olimpiadas Matemáticas</small></div></a>
-        <p>Campeonatos de Olimpiadas Matemáticas: donde la lógica se convierte en grandeza.</p>
+        <p>Creado con el fin de llegar a los alumnos por el gusto de las matemáticas a otro nivel.</p>
         <div class="socials">
-          <!-- EDITA: pon tu número en wa.me/52XXXXXXXXXX y tu correo en mailto: -->
-          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="whatsapp.png" alt=""></a>
+          <!-- WhatsApp de informes tomado de Facebook (961 289 1680). EDITA: pon tu correo en mailto: -->
+          <a href="https://wa.me/529612891680" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="whatsapp.png" alt=""></a>
           <a href="https://www.instagram.com/campeonatos_matematicos/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="instagram.png" alt=""></a>
           <a href="https://www.facebook.com/CampeonatoOlimpiadasMatematicas?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="facebook.png" alt=""></a>
           <a href="#" aria-label="Correo"><img src="gmail.png" alt=""></a>
@@ -834,7 +843,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
   </div>
 </footer>
 
-<a href="#" class="float-wa" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="whatsapp.png" alt=""></a>
+<a href="https://wa.me/529612891680" class="float-wa" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="whatsapp.png" alt=""></a>
 
 <!-- BUSCADOR -->
 <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Buscar en COM">
@@ -1137,6 +1146,14 @@ const pages = [
   { name:"Constancias", url:"constancias.html", sub:"Descarga tu reconocimiento", ic:"Co", c:"#c13ad6", k:["constancias","diploma","certificado","reconocimiento"] },
   { name:"Resultados", url:"resultados.html", sub:"Puntajes y ganadores", ic:"Re", c:"#ef3340", k:["resultados","ganadores","puntajes","quien gano","calificaciones"] },
   { name:"Ranking", url:"ranking.html", sub:"Tabla de posiciones", ic:"Rk", c:"#ffd400", k:["ranking","tabla","posiciones","quien va primero","lugares"] },
+  { name:"Comunidad WhatsApp", url:"https://chat.whatsapp.com/HTAHVWTFgkzA0VvQwDxMJJ", sub:"MateTips, material e información", ic:"W", c:"#4cb848", k:["whatsapp","comunidad","grupo","tips","matetips","contacto","informes"] },
+  { name:"Circuito Nacional 2027", url:"#ruta", sub:"Marathon, Fusion, OMG, Challenge y Math Rush", ic:"CN", c:"#c13ad6", k:["circuito","nacional","puntos","temporada","2027","concursos","campeon de campeones"] },
+  { name:"Math Rush 2027", url:"#ruta", sub:"Nuevo concurso del circuito", ic:"MR", c:"#ef3340", k:["math rush","rush","nuevo","2027"] },
+  { name:"Categorías", url:"#nosotros", sub:"Kids A, Kids B, Junior's A, Juniors B y Elite", ic:"5", c:"#2ec4e6", k:["categorias","niveles","kids","junior","juniors","elite","primaria","secundaria","bachillerato","preparatoria","universidad"] },
+  { name:"OMG · Geometría", url:"#ruta", sub:"Olimpiada Mexicana de Geometría", ic:"△", c:"#ffd400", k:["omg","geometria","olimpiada mexicana"] },
+  { name:"Marathon", url:"#ruta", sub:"Campeonato virtual latinoamericano", ic:"M", c:"#2ec4e6", k:["marathon","maraton","virtual","latinoamerica"] },
+  { name:"Final Nacional FUSION26", url:"#ruta", sub:"4–6 de diciembre · Guadalajara, Jalisco", ic:"F", c:"#ffd400", k:["fusion","fusion26","final","nacional","guadalajara","jalisco","campeonato"] },
+  { name:"Challenge por equipos", url:"convocatorias.html", sub:"Mate Teams · sedes en todo México", ic:"Ch", c:"#ef3340", k:["challenge","equipos","sedes","sede","9no","noveno","convocatoria"] },
   { name:"Reto COM", url:"#reto", sub:"Resuelve un problema ahora", ic:"∑", c:"#4cb848", k:["reto","problema","jugar","desafio","acertijo"] },
   { name:"Áreas olímpicas", url:"#areas", sub:"Álgebra, combinatoria, geometría, números", ic:"△", c:"#2ec4e6", k:["areas","algebra","geometria","combinatoria","numeros","temas"] }
 ];
@@ -1224,9 +1241,9 @@ function splitText(el){
 /* ---------- Contadores ---------- */
 function countUp(el){
   const end = +el.dataset.count;
-  if (!hasGSAP) { el.textContent = end; return; }
+  if (!hasGSAP) { el.textContent = end + (el.dataset.suffix || ""); return; }
   const o = { v: 0 };
-  gsap.to(o, { v: end, duration: 1.6, ease: "power3.out", onUpdate: () => el.textContent = Math.round(o.v) });
+  gsap.to(o, { v: end, duration: 1.6, ease: "power3.out", onUpdate: () => el.textContent = Math.round(o.v) + (el.dataset.suffix || "") });
 }
 
 /* ---------- Preloader: dibuja los 4 cuadros del logo ---------- */

@@ -347,6 +347,10 @@ section{position:relative}
 .step .tag{font:500 .72rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--c)}
 .step h3{font:800 clamp(1.35rem,5.6vw,1.9rem)/1.1 var(--display);margin:auto 0 14px;text-transform:uppercase}
 .step p{color:var(--muted);margin-bottom:24px}
+.step-logo{display:block;height:118px;width:auto;max-width:72%;object-fit:contain;object-position:left center;margin:26px 0 4px;position:relative;z-index:1;filter:drop-shadow(0 10px 26px color-mix(in srgb,var(--c) 45%,transparent));transition:transform .6s var(--ease)}
+.step:hover .step-logo{transform:scale(1.07) rotate(-3deg)}
+.step h3{margin-top:auto}
+@media (max-width:900px){.step-logo{height:96px}}
 .step .go{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:.9rem;align-self:flex-start;padding-bottom:4px;border-bottom:1px solid var(--c)}
 .step .go span{transition:transform .4s var(--ease)}
 .step:hover .go span{transform:translateX(6px)}
@@ -519,8 +523,8 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
       <div><b>COM</b><small>Olimpiadas Matemáticas</small></div>
     </a>
     <ul class="nav-links">
-      <li><a href="nosotros.html" data-scramble>Nosotros</a></li>
-      <li><a href="eventos.html" data-scramble>Eventos</a></li>
+      <li><a href="nosotros_pro.html" data-scramble>Nosotros</a></li>
+      <li><a href="eventos_pro.html" data-scramble>Eventos</a></li>
       <li><a href="convocatorias.html" data-scramble>Convocatorias</a></li>
       <li><a href="recursos.html" data-scramble>Recursos</a></li>
       <li><a href="resultados.html" data-scramble>Resultados</a></li>
@@ -539,8 +543,8 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
 
 <nav class="mobile-menu" id="mobileMenu" aria-label="Menú">
   <ol>
-    <li><a style="--i:1" href="nosotros.html">Nosotros</a></li>
-    <li><a style="--i:2" href="eventos.html">Eventos</a></li>
+    <li><a style="--i:1" href="nosotros_pro.html">Nosotros</a></li>
+    <li><a style="--i:2" href="eventos_pro.html">Eventos</a></li>
     <li><a style="--i:3" href="convocatorias.html">Convocatorias</a></li>
     <li><a style="--i:4" href="registro.html">Registro</a></li>
     <li><a style="--i:5" href="recursos.html">Recursos</a></li>
@@ -558,7 +562,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="container hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow hero-in"><i class="live"></i>Final Nacional FUSION26 · 4–6 dic · Guadalajara</span>
+      <span class="eyebrow hero-in"><i class="live"></i><span id="heroFinal">Final Nacional FUSION26 · 4–6 dic · Guadalajara</span></span>
       <h1>
         <span class="line"><span class="hero-line">Donde la</span></span>
         <span class="line"><span class="hero-line">lógica se</span></span>
@@ -698,44 +702,93 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
     </div>
     <div class="route-track" id="routeTrack">
       <!-- Puntos por medalla según la tabla de la temporada 2026. Examen perfecto = +1 punto (+2 en Fusion Nacional) -->
-      <a href="eventos.html" class="step" style="--c:var(--cyan)">
+      <a href="eventos_pro.html" class="step" style="--c:var(--cyan)">
         <span class="big">01</span><span class="tag">Concurso 01 · Virtual</span>
+        <img class="step-logo" src="concursos/marathon.png" alt="Logo Marathon" loading="lazy">
         <h3>Marathon</h3>
         <p>Campeonato virtual abierto a toda Latinoamérica. Oro 4 · Plata 2 · Bronce 1 pts.</p>
         <span class="go">Ver eventos <span>→</span></span>
       </a>
       <a href="convocatorias.html" class="step" style="--c:var(--purple-2)">
         <span class="big">02</span><span class="tag">Concurso 02 · Estatal</span>
+        <img class="step-logo" src="concursos/fusion_estatales.png" alt="Logo Fusion Estatales" loading="lazy">
         <h3>Fusion Estatales</h3>
         <p>La fase estatal: aquí se gana el pase para representar a tu estado en la Final Nacional.</p>
         <span class="go">Ver convocatorias <span>→</span></span>
       </a>
-      <a href="eventos.html" class="step" style="--c:var(--red)">
+      <a href="eventos_pro.html" class="step" style="--c:var(--red)">
         <span class="big">03</span><span class="tag">Concurso 03 · Geometría</span>
+        <img class="step-logo" src="concursos/omg.png" alt="Logo OMG" loading="lazy">
         <h3>OMG</h3>
         <p>Olimpiada Mexicana de Geometría. Oro 6 · Plata 4 · Bronce 3 pts.</p>
         <span class="go">Ver eventos <span>→</span></span>
       </a>
-      <a href="eventos.html" class="step" style="--c:var(--yellow)">
+      <a href="eventos_pro.html" class="step" style="--c:var(--yellow)">
         <span class="big">04</span><span class="tag">Concurso 04 · Por equipos</span>
+        <img class="step-logo" src="concursos/challenge.png" alt="Logo Challenge" loading="lazy">
         <h3>Challenge</h3>
         <p>Mate Teams: equipos de 2 a 4 integrantes contra 8 problemas. Oro 5 · Plata 3 · Bronce 2 pts.</p>
         <span class="go">Ver eventos <span>→</span></span>
       </a>
-      <a href="eventos.html" class="step" style="--c:var(--green)">
+      <a href="eventos_pro.html" class="step" style="--c:var(--green)">
         <span class="big">05</span><span class="tag">Concurso 05 · ¡Nuevo!</span>
+        <img class="step-logo" src="concursos/math_rush.png" alt="Logo Math Rush" loading="lazy">
         <h3>Math Rush</h3>
         <p>El nuevo integrante del Circuito Nacional 2027. Muy pronto más detalles.</p>
         <span class="go">Próximamente <span>→</span></span>
       </a>
       <a href="resultados.html" class="step" style="--c:var(--purple-2)">
         <span class="big">06</span><span class="tag">Gran Final · Diciembre</span>
+        <img class="step-logo" src="concursos/fusion_nacional.png" alt="Logo Fusion Nacional" loading="lazy">
         <h3>Fusion Nacional</h3>
         <p>Oro 8 · Plata 5 · Bronce 3 pts. Aquí se corona al Campeón de Campeones de cada categoría.</p>
         <span class="go">Ver resultados <span>→</span></span>
       </a>
     </div>
     <div class="route-progress"><i id="routeBar"></i></div>
+  </div>
+</section>
+
+<!-- VALORES -->
+<section class="section" id="valores">
+  <div class="container">
+    <div class="areas-head">
+      <div>
+        <span class="kicker">Lo que nos mueve</span>
+        <h2 class="h2 split">Cuatro valores, <span class="muted">un mateatleta</span></h2>
+      </div>
+      <p class="sub reveal">Lo que enseñamos va más allá de las fórmulas: es una forma de enfrentar cualquier problema.</p>
+    </div>
+    <div class="areas">
+      <article class="card tilt reveal" style="--c:var(--cyan)">
+        <span class="num">01 / 04</span>
+        <div class="icon">∞</div>
+        <h3>Constancia</h3>
+        <p>Una sesión corta de práctica todos los días vale más que muchas horas de estudio ocasional.</p>
+        <div class="tags"><span>Hábito</span><span>Plan de estudio</span></div>
+      </article>
+      <article class="card tilt reveal" style="--c:var(--red)">
+        <span class="num">02 / 04</span>
+        <div class="icon">+</div>
+        <h3>Actitud positiva</h3>
+        <p>Los campeones no son quienes nunca fallan, sino quienes nunca dejan de intentarlo.</p>
+        <div class="tags"><span>Perseverancia</span><span>Confianza</span></div>
+      </article>
+      <article class="card tilt reveal" style="--c:var(--yellow)">
+        <span class="num">03 / 04</span>
+        <div class="icon">φ</div>
+        <h3>Creatividad</h3>
+        <p>Las matemáticas no son temas aislados, sino una red de ideas conectadas por descubrir.</p>
+        <div class="tags"><span>Patrones</span><span>Conexiones</span></div>
+      </article>
+      <article class="card tilt reveal" style="--c:var(--green)">
+        <span class="num">04 / 04</span>
+        <div class="icon">∑</div>
+        <h3>Trabajo en equipo</h3>
+        <p>Pensar, discutir, proponer estrategias y encontrar juntos el camino hacia una solución.</p>
+        <div class="tags"><span>Estrategia</span><span>Comunidad</span></div>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -776,7 +829,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
     <span class="kicker">Explora</span>
     <h2 class="h2 split">Todo COM <span class="muted">en un clic</span></h2>
     <div class="links-grid">
-      <a class="qlink reveal" href="eventos.html" style="--c:var(--cyan)" data-cursor="Ir"><span class="q-title">Eventos<span class="q-sub">Calendario de competencias</span></span><span class="q-arrow">→</span></a>
+      <a class="qlink reveal" href="eventos_pro.html" style="--c:var(--cyan)" data-cursor="Ir"><span class="q-title">Eventos<span class="q-sub">Calendario de competencias</span></span><span class="q-arrow">→</span></a>
       <a class="qlink reveal" href="recursos.html" style="--c:var(--red)" data-cursor="Ir"><span class="q-title">Recursos<span class="q-sub">Material y problemas</span></span><span class="q-arrow">→</span></a>
       <a class="qlink reveal" href="entrenamientos.html" style="--c:var(--yellow)" data-cursor="Ir"><span class="q-title">Entrenamientos<span class="q-sub">Prepárate para ganar</span></span><span class="q-arrow">→</span></a>
       <a class="qlink reveal" href="constancias.html" style="--c:var(--green)" data-cursor="Ir"><span class="q-title">Constancias<span class="q-sub">Descarga tu reconocimiento</span></span><span class="q-arrow">→</span></a>
@@ -820,14 +873,14 @@ footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-
         <ul>
           <li><a href="convocatorias.html">Convocatorias</a></li>
           <li><a href="registro.html">Registro</a></li>
-          <li><a href="eventos.html">Eventos</a></li>
+          <li><a href="eventos_pro.html">Eventos</a></li>
           <li><a href="entrenamientos.html">Entrenamientos</a></li>
         </ul>
       </div>
       <div class="foot-col">
         <h4>Consulta</h4>
         <ul>
-          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="nosotros_pro.html">Nosotros</a></li>
           <li><a href="recursos.html">Recursos</a></li>
           <li><a href="resultados.html">Resultados</a></li>
           <li><a href="ranking.html">Ranking</a></li>
@@ -1137,8 +1190,8 @@ function tickCf(){
 
 /* ---------- Buscador tipo Ctrl+K (versión mejorada del tuyo) ---------- */
 const pages = [
-  { name:"Nosotros", url:"nosotros.html", sub:"Quiénes somos", ic:"N", c:"#c13ad6", k:["nosotros","quienes","acerca","info","informacion","datos"] },
-  { name:"Eventos", url:"eventos.html", sub:"Calendario de competencias", ic:"E", c:"#2ec4e6", k:["eventos","fechas","calendario","competencia"] },
+  { name:"Nosotros", url:"nosotros_pro.html", sub:"Quiénes somos", ic:"N", c:"#c13ad6", k:["nosotros","quienes","acerca","info","informacion","datos"] },
+  { name:"Eventos", url:"eventos_pro.html", sub:"Calendario de competencias", ic:"E", c:"#2ec4e6", k:["eventos","fechas","calendario","competencia"] },
   { name:"Convocatorias", url:"convocatorias.html", sub:"Bases y requisitos", ic:"C", c:"#ef3340", k:["convocatoria","inscripcion concurso","bases","requisitos","evento"] },
   { name:"Registro", url:"registro.html", sub:"Inscríbete", ic:"R", c:"#ffd400", k:["registro","inscribirme","crear cuenta","participar","perfil","usuario","cuenta"] },
   { name:"Recursos", url:"recursos.html", sub:"Material de estudio", ic:"Rc", c:"#4cb848", k:["recursos","material","pdf","libros","problemas","ejercicios"] },
@@ -1149,11 +1202,13 @@ const pages = [
   { name:"Comunidad WhatsApp", url:"https://chat.whatsapp.com/HTAHVWTFgkzA0VvQwDxMJJ", sub:"MateTips, material e información", ic:"W", c:"#4cb848", k:["whatsapp","comunidad","grupo","tips","matetips","contacto","informes"] },
   { name:"Circuito Nacional 2027", url:"#ruta", sub:"Marathon, Fusion, OMG, Challenge y Math Rush", ic:"CN", c:"#c13ad6", k:["circuito","nacional","puntos","temporada","2027","concursos","campeon de campeones"] },
   { name:"Math Rush 2027", url:"#ruta", sub:"Nuevo concurso del circuito", ic:"MR", c:"#ef3340", k:["math rush","rush","nuevo","2027"] },
-  { name:"Categorías", url:"#nosotros", sub:"Kids A, Kids B, Junior's A, Juniors B y Elite", ic:"5", c:"#2ec4e6", k:["categorias","niveles","kids","junior","juniors","elite","primaria","secundaria","bachillerato","preparatoria","universidad"] },
+  { name:"Categorías", url:"eventos_pro.html#categorias", sub:"Kids A, Kids B, Junior's A, Juniors B y Elite", ic:"5", c:"#2ec4e6", k:["categorias","niveles","kids","junior","juniors","elite","primaria","secundaria","bachillerato","preparatoria","universidad"] },
   { name:"OMG · Geometría", url:"#ruta", sub:"Olimpiada Mexicana de Geometría", ic:"△", c:"#ffd400", k:["omg","geometria","olimpiada mexicana"] },
   { name:"Marathon", url:"#ruta", sub:"Campeonato virtual latinoamericano", ic:"M", c:"#2ec4e6", k:["marathon","maraton","virtual","latinoamerica"] },
   { name:"Final Nacional FUSION26", url:"#ruta", sub:"4–6 de diciembre · Guadalajara, Jalisco", ic:"F", c:"#ffd400", k:["fusion","fusion26","final","nacional","guadalajara","jalisco","campeonato"] },
   { name:"Challenge por equipos", url:"convocatorias.html", sub:"Mate Teams · sedes en todo México", ic:"Ch", c:"#ef3340", k:["challenge","equipos","sedes","sede","9no","noveno","convocatoria"] },
+  { name:"Valores del mateatleta", url:"#valores", sub:"Constancia, actitud, creatividad y equipo", ic:"V", c:"#2ec4e6", k:["valores","constancia","actitud","creatividad","equipo","mateatleta"] },
+  { name:"Delegados estatales", url:"nosotros_pro.html#delegados", sub:"Mapa: encuentra al delegado de tu estado", ic:"🗺", c:"#4cb848", k:["delegados","delegado","estatal","estado","mapa","contacto","representante"] },
   { name:"Reto COM", url:"#reto", sub:"Resuelve un problema ahora", ic:"∑", c:"#4cb848", k:["reto","problema","jugar","desafio","acertijo"] },
   { name:"Áreas olímpicas", url:"#areas", sub:"Álgebra, combinatoria, geometría, números", ic:"△", c:"#2ec4e6", k:["areas","algebra","geometria","combinatoria","numeros","temas"] }
 ];
@@ -1374,5 +1429,14 @@ mm.add("(max-width: 900px)", () => {
 addEventListener("load", () => ScrollTrigger.refresh());
 })();
 </script>
+<script>
+/* Datos del panel (Index): texto de la Gran Final en la portada */
+window.COM_setEventos = ev => {
+  const f = (ev && ev.final) || {}, el = document.getElementById("heroFinal");
+  if (el && f.nombre) el.textContent = ["Final Nacional " + f.nombre, f.fechaTexto, (f.lugar || "").split(",")[0]].filter(Boolean).join(" · ");
+};
+</script>
+<script src="firebase-config.js"></script>
+<script src="com-datos.js"></script>
 </body>
 </html>

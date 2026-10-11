@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosotros · COM</title>
+<meta name="description" content="Nosotros · Campeonatos de Olimpiadas Matemáticas (COM): creado con el fin de llegar a los alumnos por el gusto de las matemáticas a otro nivel. Challenge por equipos, entrenamientos y olimpiadas.">
+<meta name="theme-color" content="#07060b">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<!--
+  =====================================================================
+  COM · VERSIÓN PRO  (archivo nuevo, no reemplaza tu Index.html)
+  Usa tus archivos: logo.png, 1.png, whatsapp.png, instagram.png,
+  facebook.png, gmail.png  — deben estar en la misma carpeta.
+  Librerías: GSAP + ScrollTrigger (animaciones) y Lenis (scroll suave).
+  =====================================================================
+-->
+
+<style>
+:root{
+  --bg:#07060b;
+  --bg-2:#0d0b14;
+  --surface:#13101c;
+  --surface-2:#1a1626;
+  --line:rgba(255,255,255,.08);
+  --line-2:rgba(255,255,255,.14);
+  --text:#f4f2f8;
+  --muted:#a29db2;
+  --purple:#9b1c96;      /* morado del logo */
+  --purple-2:#c13ad6;    /* morado brillante para glow */
+  --cyan:#2ec4e6;
+  --red:#ef3340;
+  --yellow:#ffd400;
+  --green:#4cb848;
+  --radius:22px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --display:'Orbitron', sans-serif;
+  --body:'Space Grotesk', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{
+  font-family:var(--body);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body.loading{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--purple-2);color:#fff}
+
+/* Ruido sutil sobre todo el sitio */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:900;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.container{width:min(1200px,100% - 48px);margin-inline:auto}
+@media (max-width:600px){.container{width:calc(100% - 32px)}}
+
+/* ======================= CURSOR ======================= */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:2000;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-dot{width:6px;height:6px;background:#fff}
+.cursor-ring{
+  width:38px;height:38px;border:1.5px solid rgba(255,255,255,.55);
+  display:grid;place-items:center;
+  transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s;
+  font:600 10px/1 var(--mono);letter-spacing:.1em;color:transparent;
+}
+.cursor-ring.hover{width:70px;height:70px;background:rgba(193,58,214,.18);border-color:var(--purple-2)}
+.cursor-ring.label{width:86px;height:86px;background:#fff;color:#000;border-color:#fff}
+@media (hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+@media (hover:hover) and (pointer:fine){body.has-cursor,body.has-cursor a,body.has-cursor button{cursor:none}}
+
+/* ======================= DELEGADOS (MAPA) ======================= */
+.dmap{display:grid;grid-template-columns:1fr 0fr;gap:0;align-items:center;overflow:hidden;transition:grid-template-columns .9s var(--ease),gap .9s var(--ease)}
+.dmap.open{grid-template-columns:1fr 1fr;gap:34px}
+.dmap-stage{position:relative;min-width:0;border-radius:28px;padding:clamp(10px,2vw,26px);background:radial-gradient(70% 70% at 50% 45%,rgba(155,28,150,.22),transparent 70%),var(--bg-2);border:1px solid var(--line)}
+#mxMap{display:block;width:100%;height:auto;overflow:visible}
+#mxStates .st{fill:color-mix(in srgb,var(--c) 58%,#14101d);stroke:#07060b;stroke-width:.9;stroke-linejoin:round;cursor:pointer;outline:none;transition:fill .35s,opacity .35s}
+#mxStates.dim .st{opacity:.55}
+#mxStates .st.on{opacity:1;fill:var(--c);stroke:#fff;stroke-width:1.4}
+#mxStates .st.sel{opacity:1;fill:var(--c);stroke:#fff;stroke-width:1.6}
+#mxHover .zoom{fill:var(--c);stroke:#fff;stroke-width:1.4;filter:url(#stGlow)}
+#mxHover .zoom-base{filter:none}
+#mxHover .cone{fill:url(#coneG);stroke:rgba(255,255,255,.18);stroke-width:.6}
+.dmap-tip{position:absolute;left:0;top:0;transform:translate(-50%,0);pointer-events:none;opacity:0;transition:opacity .25s;z-index:3;padding:8px 14px;border-radius:999px;font:700 .85rem/1 var(--display);letter-spacing:.04em;white-space:nowrap;color:#07060b;background:var(--tc,#fff);box-shadow:0 10px 30px -8px rgba(0,0,0,.7),0 0 24px -4px var(--tc,#fff)}
+.dmap-tip.show{opacity:1}
+.dmap-tip::after{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;margin-left:-5px;background:inherit;transform:rotate(45deg)}
+.dmap-hint{position:absolute;left:clamp(16px,3vw,30px);bottom:clamp(14px,2.4vw,26px);font:500 .7rem var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;transition:opacity .4s}
+.dmap-hint::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.dmap.open .dmap-hint{opacity:0}
+.dmap-credit{position:absolute;right:clamp(16px,3vw,30px);bottom:clamp(14px,2.4vw,26px);font:400 .6rem var(--mono);color:rgba(255,255,255,.28)}
+.dpanel{position:relative;min-width:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .5s .35s,transform .7s .3s var(--ease),visibility 0s .9s}
+.dmap.open .dpanel{padding:30px;opacity:1;visibility:visible;transform:none;transition:opacity .5s .4s,transform .7s .35s var(--ease),visibility 0s}
+.dpanel{padding:0;border-radius:28px;background:linear-gradient(160deg,color-mix(in srgb,var(--dc,var(--purple-2)) 16%,var(--surface-2)),var(--surface));border:1px solid color-mix(in srgb,var(--dc,var(--purple-2)) 45%,transparent)}
+.dpanel-close{position:absolute;top:18px;right:18px;z-index:2;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);font-weight:600;font-size:.85rem;background:rgba(7,6,11,.5);transition:border-color .3s,background .3s,transform .3s}
+.dpanel-close:hover{border-color:#fff;background:rgba(255,255,255,.08);transform:rotate(-3deg)}
+.dp-head{display:flex;align-items:center;gap:18px;margin:6px 0 24px;padding-right:110px}
+.dp-shape{width:84px;height:84px;flex-shrink:0;overflow:visible;filter:drop-shadow(0 0 18px var(--dc))}
+.dp-shape path{fill:var(--dc);stroke:#fff;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.dp-head .kicker{margin-bottom:8px}
+.dp-head h3{font:900 clamp(1.5rem,2.6vw,2.3rem)/1.05 var(--display);text-transform:uppercase}
+.dp-card{display:flex;align-items:center;gap:20px;padding:18px;border-radius:20px;background:rgba(7,6,11,.45);border:1px solid var(--line)}
+.dp-photo{width:110px;height:110px;flex-shrink:0;border-radius:50%;overflow:hidden;border:3px solid var(--dc);box-shadow:0 0 0 6px color-mix(in srgb,var(--dc) 18%,transparent),0 0 30px -4px var(--dc);background:var(--surface-2)}
+.dp-photo img,.dp-photo svg{width:100%;height:100%;object-fit:cover;display:block}
+.dp-who b{display:block;font:800 1.3rem/1.2 var(--display)}
+.dp-who span{display:block;color:var(--muted);font-size:.9rem;margin:4px 0 10px}
+.dp-chip{font:500 .66rem var(--mono);font-style:normal;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid var(--dc);color:var(--dc)}
+.dp-chip.ok{background:var(--dc);color:#07060b}
+.dp-info{list-style:none;margin:20px 0 24px;display:grid;gap:2px}
+.dp-info li{display:flex;justify-content:space-between;gap:16px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.dp-info i{font:500 .72rem var(--mono);font-style:normal;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.dp-info span{text-align:right;font-weight:600}
+.dp-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.dp-swap{gap:10px}
+.dp-swap-ic{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--dc);color:#07060b;font-size:.9rem;transition:transform .5s var(--ease)}
+.dp-swap:hover .dp-swap-ic,.dp-swap[aria-pressed="true"] .dp-swap-ic{transform:rotate(180deg)}
+.dpanel.is-co .dp-photo{border-style:dashed}
+.dp-info li{align-items:center}
+#dpWa.is-off{background:rgba(255,255,255,.06);box-shadow:none;color:var(--muted);pointer-events:none;border:1px dashed var(--line-2)}
+@media (max-width:900px){
+  .dmap,.dmap.open{grid-template-columns:1fr;gap:18px}
+  .dpanel{display:none;transform:translateY(20px)}
+  .dmap.open .dpanel{display:block}
+  .dp-head{padding-right:0;margin-top:48px}
+  .dmap-credit{display:none}
+}
+@media (max-width:480px){.dmap.open .dpanel{padding:20px}.dp-photo{width:84px;height:84px}.dp-card{gap:14px}.dp-shape{width:64px;height:64px}}
+
+/* ======================= TRANSICIÓN DE PÁGINA ======================= */
+.page-intro{position:fixed;inset:0;z-index:3000}
+.pi-layer{position:absolute;inset:0;display:flex}
+.pi-layer i{flex:1;transform-origin:top;margin-right:-1px}
+.pi-color i:nth-child(1){background:var(--cyan)}
+.pi-color i:nth-child(2){background:var(--red)}
+.pi-color i:nth-child(3){background:var(--purple-2)}
+.pi-color i:nth-child(4){background:var(--yellow)}
+.pi-color i:nth-child(5){background:var(--green)}
+.pi-dark i{background:var(--bg-2);box-shadow:inset -1px 0 0 rgba(255,255,255,.04)}
+.pi-center{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;text-align:center}
+.pi-logo{width:clamp(64px,9vw,96px);height:auto;filter:drop-shadow(0 0 30px rgba(193,58,214,.7))}
+.pi-title{font:900 clamp(2.4rem,10vw,7.5rem)/1 var(--display);text-transform:uppercase;letter-spacing:.04em;overflow:hidden;padding:.05em 0;text-shadow:0 0 40px rgba(193,58,214,.55)}
+.pi-title .word{display:inline-block;white-space:nowrap}.pi-title .ch{display:inline-block}
+.pi-line{width:min(340px,60vw);height:3px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.pi-line i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple-2),var(--red),var(--yellow),var(--green));transform-origin:left;transform:scaleX(0)}
+.pi-sub{font:500 .72rem/1.4 var(--mono);letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+/* ======================= PRELOADER ======================= */
+.preloader{
+  position:fixed;inset:0;z-index:3000;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+}
+.preloader svg{width:150px;height:150px;overflow:visible}
+.preloader .sq{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.preloader .core{transform-box:fill-box;transform-origin:center}
+.pre-count{font:900 clamp(2.2rem,6vw,4rem)/1 var(--display);letter-spacing:.04em}
+.pre-count span{color:var(--purple-2)}
+.pre-bar{width:min(260px,60vw);height:2px;background:var(--line);overflow:hidden;border-radius:2px}
+.pre-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple-2),var(--red),var(--yellow),var(--green))}
+.pre-text{font:400 .75rem/1 var(--mono);letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+.curtain{position:fixed;inset:0;z-index:2999;display:flex;pointer-events:none}
+.curtain i{flex:1;background:var(--purple);transform:scaleY(0);transform-origin:bottom}
+.curtain i:nth-child(2){background:var(--cyan)}
+.curtain i:nth-child(3){background:var(--red)}
+.curtain i:nth-child(4){background:var(--yellow)}
+.curtain i:nth-child(5){background:var(--green)}
+
+/* ======================= PROGRESO SCROLL ======================= */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:1500;transform-origin:left;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--cyan),var(--purple-2),var(--red),var(--yellow),var(--green))}
+
+/* ======================= NAVBAR ======================= */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  transition:transform .5s var(--ease),background .4s,backdrop-filter .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{background:rgba(7,6,11,.72);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border-color:var(--line)}
+.nav.hidden{transform:translateY(-100%)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:78px}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand img{width:46px;height:46px;transition:transform .8s var(--ease)}
+.brand:hover img{transform:rotate(360deg)}
+.brand b{font:900 1.15rem/1 var(--display);letter-spacing:.12em}
+.brand small{display:block;font:400 .62rem/1.2 var(--mono);color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.nav-links{display:flex;gap:6px;list-style:none}
+.nav-links a{
+  position:relative;display:block;padding:10px 14px;border-radius:999px;
+  font-size:.9rem;font-weight:500;color:var(--muted);transition:color .3s,background .3s;
+}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.search-btn{
+  display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border-radius:999px;
+  border:1px solid var(--line-2);color:var(--muted);font-size:.85rem;transition:border-color .3s,color .3s;
+}
+.search-btn:hover{border-color:var(--purple-2);color:#fff}
+.search-btn kbd{font:500 .7rem/1 var(--mono);padding:4px 6px;border-radius:6px;background:rgba(255,255,255,.08)}
+.btn{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  height:52px;padding:0 28px;border-radius:999px;font-weight:600;font-size:.95rem;overflow:hidden;isolation:isolate;
+  transition:transform .3s var(--ease);
+}
+.btn-sm{height:42px;padding:0 20px;font-size:.85rem}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple-2));color:#fff;box-shadow:0 10px 40px -10px rgba(193,58,214,.7)}
+.btn-primary::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(135deg,var(--cyan),var(--purple-2));
+  clip-path:circle(0% at var(--mx,50%) var(--my,50%));transition:clip-path .6s var(--ease);
+}
+.btn-primary:hover::before{clip-path:circle(150% at var(--mx,50%) var(--my,50%))}
+.btn-ghost{border:1px solid var(--line-2);color:#fff}
+.btn-ghost:hover{border-color:#fff}
+.btn .arrow{transition:transform .4s var(--ease)}
+.btn:hover .arrow{transform:translateX(4px) rotate(-45deg)}
+.burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line-2);position:relative}
+.burger i{position:absolute;left:14px;right:14px;height:2px;background:#fff;transition:transform .4s var(--ease),top .4s var(--ease)}
+.burger i:nth-child(1){top:18px}.burger i:nth-child(2){top:26px}
+.burger.open i:nth-child(1){top:22px;transform:rotate(45deg)}
+.burger.open i:nth-child(2){top:22px;transform:rotate(-45deg)}
+@media (max-width:1100px){.nav-links{display:none}.burger{display:block}}
+@media (max-width:560px){.search-btn span,.search-btn kbd{display:none}.search-btn{width:42px;padding:0;justify-content:center}.nav-actions .btn-sm{display:none}.brand small{display:none}}
+
+/* Menú móvil a pantalla completa */
+.mobile-menu{
+  position:fixed;inset:0;z-index:999;background:var(--bg-2);
+  clip-path:circle(0% at calc(100% - 44px) 40px);transition:clip-path .8s var(--ease);
+  display:flex;flex-direction:column;justify-content:center;padding:100px 24px 40px;overflow:auto;
+}
+.mobile-menu.open{clip-path:circle(150% at calc(100% - 44px) 40px)}
+.mobile-menu ol{list-style:none;counter-reset:m}
+.mobile-menu li{overflow:hidden;border-bottom:1px solid var(--line)}
+.mobile-menu a{
+  display:flex;align-items:baseline;gap:16px;padding:14px 0;
+  font:700 clamp(1.5rem,6vw,2.6rem)/1.1 var(--display);transform:translateY(110%);transition:transform .7s var(--ease),color .3s;
+}
+.mobile-menu a::before{counter-increment:m;content:"0" counter(m);font:400 .75rem var(--mono);color:var(--muted)}
+.mobile-menu a:hover{color:var(--purple-2)}
+.mobile-menu.open a{transform:none}
+.mobile-menu li:nth-child(n) a{transition-delay:calc(.04s * var(--i))}
+
+/* ======================= HERO ======================= */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:120px 0 80px}
+#field{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 50% at 75% 45%,rgba(155,28,150,.35),transparent 70%),
+    radial-gradient(40% 40% at 15% 80%,rgba(46,196,230,.12),transparent 70%);
+}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse at center,#000 20%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 20%,transparent 75%);
+}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;padding:8px 14px 8px 10px;border-radius:999px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.03);
+  font:500 .72rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+}
+.eyebrow .live{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(76,184,72,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(76,184,72,0)}100%{box-shadow:0 0 0 0 rgba(76,184,72,0)}}
+.hero h1{
+  font:900 clamp(1.9rem,4.1vw,3.9rem)/1.08 var(--display);letter-spacing:-.01em;margin:26px 0 22px;
+  text-transform:uppercase;
+}
+.hero h1 .line{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .line>span{display:inline-block}
+.rotator{
+  display:inline-block;min-width:6ch;
+  background:linear-gradient(90deg,var(--cyan),var(--purple-2) 35%,var(--red) 65%,var(--yellow));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 100%;animation:shine 6s linear infinite;
+}
+@keyframes shine{to{background-position:-200% 0}}
+.hero p.lead{font-size:clamp(1rem,1.4vw,1.2rem);color:var(--muted);max-width:52ch;margin-bottom:36px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px}
+.hero-meta{display:flex;gap:28px;margin-top:48px;flex-wrap:wrap}
+.hero-meta div{font:400 .72rem/1.4 var(--mono);color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.hero-meta b{display:block;font:700 1.4rem/1.2 var(--display);color:#fff;letter-spacing:0}
+
+/* Logo 3D con órbitas */
+.emblem{position:relative;aspect-ratio:1;width:min(460px,100%);margin-inline:auto;perspective:1000px}
+.emblem-3d{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .2s linear}
+.emblem img{position:absolute;inset:18%;width:64%;height:64%;object-fit:contain;filter:drop-shadow(0 30px 60px rgba(155,28,150,.55));transform:translateZ(60px)}
+.orbit{position:absolute;border-radius:50%;border:1px dashed rgba(255,255,255,.14);inset:var(--in);animation:spin var(--t) linear infinite;transform-style:preserve-3d}
+.orbit::after{
+  content:"";position:absolute;top:-7px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:3px;
+  background:var(--c);box-shadow:0 0 20px var(--c),0 0 40px var(--c);
+}
+.orbit.rev{animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.emblem .glow{position:absolute;inset:22%;border-radius:50%;background:radial-gradient(circle,rgba(193,58,214,.55),transparent 70%);filter:blur(30px);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.15);opacity:.7}}
+.formula-chip{
+  position:absolute;padding:8px 12px;border-radius:12px;background:rgba(19,16,28,.8);border:1px solid var(--line-2);
+  font:500 .8rem/1 var(--mono);white-space:nowrap;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transform:translateZ(110px);animation:float 6s ease-in-out infinite;
+}
+.formula-chip.f1{top:8%;left:-4%;color:var(--cyan)}
+.formula-chip.f2{bottom:14%;right:-6%;color:var(--yellow);animation-delay:-2s}
+.formula-chip.f3{bottom:4%;left:6%;color:var(--green);animation-delay:-4s}
+@keyframes float{50%{translate:0 -12px}}
+
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;font:400 .65rem var(--mono);letter-spacing:.3em;color:var(--muted)}
+.scroll-cue i{width:1px;height:46px;background:linear-gradient(var(--purple-2),transparent);position:relative;overflow:hidden}
+.scroll-cue i::after{content:"";position:absolute;left:0;top:-50%;width:100%;height:50%;background:#fff;animation:drop 1.8s var(--ease) infinite}
+@keyframes drop{to{top:110%}}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;text-align:center}
+  .hero .emblem{width:min(300px,78vw);order:-1}
+  .hero p.lead{margin-inline:auto}
+  .hero-ctas,.hero-meta{justify-content:center}
+  .formula-chip{display:none}
+  .scroll-cue{display:none}
+}
+
+/* ======================= MARQUEE ======================= */
+.marquee{position:relative;padding:34px 0;border-block:1px solid var(--line);overflow:hidden;background:var(--bg-2)}
+.marquee-row{display:flex;width:max-content;gap:48px;white-space:nowrap}
+.marquee-row+.marquee-row{margin-top:18px}
+.marquee-row span{font:700 clamp(1.1rem,2.4vw,1.8rem)/1 var(--display);display:inline-flex;align-items:center;gap:48px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.35)}
+.marquee-row span em{font-style:normal;color:#fff;-webkit-text-stroke:0}
+.marquee-row span::after{content:"";width:14px;height:14px;border-radius:3px;background:var(--dot,var(--purple-2));transform:rotate(45deg);flex-shrink:0}
+.marquee::before,.marquee::after{content:"";position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.marquee::before{left:0;background:linear-gradient(90deg,var(--bg-2),transparent)}
+.marquee::after{right:0;background:linear-gradient(-90deg,var(--bg-2),transparent)}
+
+/* ======================= SECCIONES ======================= */
+section{position:relative}
+.section{padding:clamp(90px,12vw,160px) 0}
+.kicker{display:inline-flex;align-items:center;gap:12px;font:500 .75rem/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--purple-2);margin-bottom:22px}
+.kicker::before{content:"";width:28px;height:1px;background:currentColor}
+.h2{font:800 clamp(2rem,4.6vw,3.8rem)/1.05 var(--display);text-transform:uppercase;letter-spacing:-.01em}
+.h2 .muted{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.45)}
+.sub{color:var(--muted);font-size:1.05rem;max-width:56ch}
+.split .word{display:inline-block;white-space:nowrap}
+.split .ch{display:inline-block}
+
+/* ----- Nosotros ----- */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:center}
+.about-media{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;clip-path:inset(0 0 0 0 round var(--radius))}
+.about-media img{width:100%;height:120%;object-fit:cover;object-position:center 35%;transform:translateY(-8%)}
+.about-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(7,6,11,.85))}
+.about-badge{
+  position:absolute;left:20px;right:20px;bottom:20px;z-index:2;display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;
+  background:rgba(19,16,28,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line-2);
+}
+.about-badge img{width:48px;height:48px}
+.about-badge b{font:700 .95rem var(--display);display:block}
+.about-badge span{font-size:.82rem;color:var(--muted)}
+.about-text p{color:var(--muted);margin:22px 0;font-size:1.05rem}
+.about-text p strong{color:#fff;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:34px}
+.stat{padding:22px;border-radius:18px;background:var(--surface);border:1px solid var(--line);position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;top:0;left:0;width:40px;height:3px;background:var(--c)}
+.stat b{font:900 2.4rem/1 var(--display);display:block;color:var(--c)}
+.stat span{font-size:.85rem;color:var(--muted)}
+@media (max-width:900px){.about{grid-template-columns:1fr}.about-media{aspect-ratio:1/1}.about-media img{object-position:center 30%}}
+
+/* ----- Áreas ----- */
+.areas-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:56px}
+.areas{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{
+  --c:var(--purple-2);
+  position:relative;padding:30px 26px 28px;border-radius:var(--radius);min-height:360px;
+  background:var(--surface);border:1px solid var(--line);overflow:hidden;
+  display:flex;flex-direction:column;transform-style:preserve-3d;transition:border-color .4s,transform .15s linear;
+}
+.card::before{ /* spotlight que sigue al mouse */
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .4s;pointer-events:none;
+  background:radial-gradient(400px circle at var(--x,50%) var(--y,50%),color-mix(in srgb,var(--c) 28%,transparent),transparent 60%);
+}
+.card:hover{border-color:color-mix(in srgb,var(--c) 60%,transparent)}
+.card:hover::before{opacity:1}
+.card .num{font:500 .75rem var(--mono);color:var(--muted);letter-spacing:.2em}
+.card .icon{
+  width:64px;height:64px;margin:32px 0 26px;border-radius:16px;display:grid;place-items:center;
+  border:2px solid var(--c);color:var(--c);font:700 1.7rem/1 var(--display);
+  box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 10%,transparent),0 0 40px -6px var(--c);
+  transform:translateZ(40px);transition:transform .6s var(--ease);
+}
+.card:hover .icon{transform:translateZ(40px) rotate(-8deg) scale(1.08)}
+.card h3{font:700 1.25rem/1.2 var(--display);margin-bottom:12px;transform:translateZ(25px)}
+.card p{color:var(--muted);font-size:.95rem;transform:translateZ(15px)}
+.card .tags{margin-top:auto;padding-top:22px;display:flex;flex-wrap:wrap;gap:6px}
+.card .tags span{font:400 .72rem var(--mono);padding:5px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--muted)}
+@media (max-width:1000px){.areas{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.areas{grid-template-columns:1fr}.card{min-height:0}}
+
+/* ----- Ruta (scroll horizontal) ----- */
+.route{padding:clamp(90px,12vw,140px) 0 0;background:var(--bg-2);border-top:1px solid var(--line);overflow:hidden}
+.route-pin{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px}
+.route-head{margin-bottom:50px}
+.route-track{display:flex;gap:22px;padding-left:max(24px,calc((100vw - 1200px)/2));padding-right:24px;width:max-content}
+.step{
+  --c:var(--purple-2);
+  width:min(420px,80vw);flex-shrink:0;min-height:400px;border-radius:var(--radius);padding:34px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--surface-2),var(--surface));border:1px solid var(--line);
+  display:flex;flex-direction:column;transition:border-color .4s,transform .4s var(--ease);
+}
+.step:hover{border-color:var(--c);transform:translateY(-6px)}
+.step .big{position:absolute;right:-10px;top:-30px;font:900 11rem/1 var(--display);color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--c) 45%,transparent);pointer-events:none}
+.step .tag{font:500 .72rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--c)}
+.step h3{font:800 clamp(1.35rem,5.6vw,1.9rem)/1.1 var(--display);margin:auto 0 14px;text-transform:uppercase}
+.step p{color:var(--muted);margin-bottom:24px}
+.step-logo{display:block;height:118px;width:auto;max-width:72%;object-fit:contain;object-position:left center;margin:26px 0 4px;position:relative;z-index:1;filter:drop-shadow(0 10px 26px color-mix(in srgb,var(--c) 45%,transparent));transition:transform .6s var(--ease)}
+.step:hover .step-logo{transform:scale(1.07) rotate(-3deg)}
+.step h3{margin-top:auto}
+@media (max-width:900px){.step-logo{height:96px}}
+.step .go{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:.9rem;align-self:flex-start;padding-bottom:4px;border-bottom:1px solid var(--c)}
+.step .go span{transition:transform .4s var(--ease)}
+.step:hover .go span{transform:translateX(6px)}
+.route-progress{margin:46px auto 0;width:min(1200px,calc(100% - 48px));height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.route-progress i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--purple-2),var(--cyan),var(--red),var(--yellow),var(--green))}
+@media (max-width:900px){
+  .route-pin{min-height:0}
+  .route-track{flex-direction:column;width:auto;padding:0 24px}
+  .step{width:100%;min-height:300px}
+  .route-progress{display:none}
+}
+
+/* ----- Reto COM ----- */
+.challenge{
+  position:relative;display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(30px,5vw,70px);align-items:center;
+  padding:clamp(28px,5vw,64px);border-radius:32px;overflow:hidden;
+  background:
+    radial-gradient(80% 120% at 100% 0%,rgba(155,28,150,.35),transparent 60%),
+    linear-gradient(160deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line-2);
+}
+.challenge::before{content:"";position:absolute;inset:0;background:url(1.png) center/cover;opacity:.08;mix-blend-mode:screen;pointer-events:none}
+.challenge>*{position:relative;min-width:0}
+.problem-box{
+  background:rgba(7,6,11,.7);border:1px solid var(--line-2);border-radius:22px;padding:30px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.problem-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:10px;flex-wrap:wrap}
+.pill{font:500 .7rem var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;border-radius:999px;border:1px solid currentColor}
+.problem-text{font:500 clamp(1.1rem,2vw,1.35rem)/1.5 var(--body);min-height:4.5em;margin-bottom:24px}
+.problem-text code{font-family:var(--mono);color:var(--cyan)}
+.answer-row{display:flex;gap:10px}
+.answer-row input{
+  flex:1;min-width:0;height:54px;border-radius:14px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);
+  color:#fff;padding:0 18px;font:600 1.1rem var(--mono);outline:none;transition:border-color .3s,box-shadow .3s;
+}
+.answer-row input:focus{border-color:var(--purple-2);box-shadow:0 0 0 4px rgba(193,58,214,.2)}
+.answer-row input.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.feedback{min-height:1.6em;margin-top:14px;font-size:.95rem}
+.feedback.ok{color:var(--green)}.feedback.no{color:var(--red)}
+.problem-actions{display:flex;gap:18px;margin-top:16px;font-size:.88rem;color:var(--muted);flex-wrap:wrap}
+.problem-actions button{text-decoration:underline;text-underline-offset:4px;transition:color .3s}
+.problem-actions button:hover{color:#fff}
+.hint{display:none;margin-top:14px;padding:14px;border-radius:12px;background:rgba(255,212,0,.07);border:1px dashed rgba(255,212,0,.35);color:#ffe78a;font-size:.9rem}
+.hint.show{display:block}
+.score{display:flex;gap:10px;margin-top:28px}
+.score i{width:34px;height:8px;border-radius:4px;background:var(--line-2);transition:background .5s,box-shadow .5s}
+.score i.on{background:var(--c);box-shadow:0 0 12px var(--c)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:1800}
+@media (max-width:900px){.challenge{grid-template-columns:1fr}}
+@media (max-width:480px){.problem-box{padding:22px}.answer-row{flex-direction:column}.answer-row .btn{width:100%}}
+
+/* ----- Accesos rápidos ----- */
+.links-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:50px}
+.qlink{
+  --c:var(--purple-2);
+  position:relative;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:34px 8px;
+  border-bottom:1px solid var(--line);overflow:hidden;
+}
+.links-grid .qlink:not(:nth-child(3n)){border-right:1px solid var(--line)}
+.qlink::before{content:"";position:absolute;inset:0;background:var(--c);transform:scaleY(0);transform-origin:bottom;transition:transform .55s var(--ease);z-index:0}
+.qlink:hover::before{transform:scaleY(1)}
+.qlink>*{position:relative;z-index:1;transition:color .4s,transform .55s var(--ease)}
+.qlink:hover>*{color:#07060b}
+.qlink .q-title{font:700 clamp(1.1rem,2vw,1.5rem)/1.1 var(--display);text-transform:uppercase;padding-left:22px}
+.qlink .q-sub{display:block;font:400 .78rem var(--body);color:var(--muted);margin-top:8px;text-transform:none;letter-spacing:0;transition:color .4s}
+.qlink:hover .q-sub{color:rgba(7,6,11,.75)}
+.qlink .q-arrow{font-size:1.6rem;padding-right:22px}
+.qlink:hover .q-arrow{transform:rotate(-45deg)}
+.qlink:hover .q-title{transform:translateX(8px)}
+@media (max-width:900px){.links-grid{grid-template-columns:1fr 1fr}.links-grid .qlink:not(:nth-child(3n)){border-right:0}.links-grid .qlink:nth-child(odd){border-right:1px solid var(--line)}}
+@media (max-width:560px){.links-grid{grid-template-columns:1fr}.links-grid .qlink:nth-child(odd){border-right:0}}
+
+/* ----- CTA ----- */
+.cta{text-align:center;overflow:hidden}
+.cta-title{font:900 clamp(2.4rem,9vw,8.5rem)/.95 var(--display);text-transform:uppercase;letter-spacing:-.02em}
+.cta-title .outline{color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.6)}
+.cta-title .grad{background:linear-gradient(90deg,var(--cyan),var(--purple-2),var(--red),var(--yellow),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cta p{color:var(--muted);max-width:50ch;margin:28px auto 40px}
+.big-btn{
+  width:clamp(150px,18vw,200px);height:clamp(150px,18vw,200px);border-radius:50%;
+  display:inline-grid;place-items:center;text-align:center;
+  background:linear-gradient(135deg,var(--purple),var(--purple-2));
+  font:700 .95rem/1.3 var(--display);text-transform:uppercase;letter-spacing:.06em;
+  box-shadow:0 20px 80px -20px rgba(193,58,214,.9);position:relative;
+}
+.big-btn::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(255,255,255,.3);animation:spin 18s linear infinite}
+
+/* ======================= FOOTER ======================= */
+footer{border-top:1px solid var(--line);padding:70px 0 30px;background:var(--bg-2)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.foot-brand p{color:var(--muted);margin-top:18px;max-width:38ch;font-size:.95rem}
+.foot-col h4{font:500 .72rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.foot-col ul{list-style:none;display:grid;gap:10px}
+.foot-col a{color:#d9d5e4;transition:color .3s}
+.foot-col a:hover{color:var(--purple-2)}
+.socials{display:flex;gap:12px;margin-top:22px}
+.socials a{
+  width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  background:var(--surface);border:1px solid var(--line-2);transition:transform .4s var(--ease),border-color .3s,box-shadow .3s;
+}
+.socials a img{width:24px;height:24px;object-fit:contain}
+.socials a:hover{transform:translateY(-4px);border-color:var(--purple-2);box-shadow:0 10px 30px -10px var(--purple-2)}
+.foot-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:60px;padding-top:24px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.foot-mega{font:900 clamp(3rem,15vw,13rem)/.8 var(--display);text-align:center;margin-top:50px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.08);user-select:none;letter-spacing:.05em}
+@media (max-width:800px){.foot-grid{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
+
+/* Botón flotante WhatsApp */
+.float-wa{
+  position:fixed;right:22px;bottom:22px;z-index:950;width:58px;height:58px;border-radius:50%;
+  display:grid;place-items:center;background:#25d366;box-shadow:0 10px 30px -6px rgba(37,211,102,.6);
+  transition:transform .4s var(--ease);
+}
+.float-wa img{width:30px;height:30px;object-fit:contain;filter:brightness(0) invert(1)}
+.float-wa:hover{transform:scale(1.1) rotate(-8deg)}
+.float-wa::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25d366;animation:ring 2.2s infinite}
+@keyframes ring{to{transform:scale(1.6);opacity:0}}
+
+/* ======================= BUSCADOR (Ctrl+K) ======================= */
+.palette{position:fixed;inset:0;z-index:2500;display:none;align-items:flex-start;justify-content:center;padding:12vh 16px 16px;background:rgba(5,4,8,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.palette.open{display:flex}
+.palette-box{width:min(620px,100%);background:var(--surface);border:1px solid var(--line-2);border-radius:20px;overflow:hidden;box-shadow:0 40px 120px -20px rgba(0,0,0,.8),0 0 0 1px rgba(193,58,214,.15);animation:pop .35s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}}
+.palette-input{display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--line)}
+.palette-input svg{flex-shrink:0;color:var(--muted)}
+.palette-input input{flex:1;height:64px;background:none;border:0;outline:none;color:#fff;font:500 1.05rem var(--body)}
+.palette-input kbd{font:500 .7rem var(--mono);padding:4px 7px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--muted)}
+.palette-list{max-height:min(420px,55vh);overflow:auto;padding:8px}
+.palette-label{font:500 .68rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:12px 12px 6px}
+.palette-item{display:flex;align-items:center;gap:14px;padding:12px;border-radius:12px;cursor:pointer}
+.palette-item .pi-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:700 .85rem var(--display);background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);flex-shrink:0}
+.palette-item b{font-weight:600;display:block}
+.palette-item small{color:var(--muted);font-size:.8rem}
+.palette-item .pi-go{margin-left:auto;color:var(--muted);font-size:.8rem}
+.palette-item.active{background:rgba(193,58,214,.16)}
+.palette-empty{padding:30px;text-align:center;color:var(--muted)}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+
+/* ======================= NOSOTROS ======================= */
+.nav-links a.active{color:#fff;background:rgba(193,58,214,.16)}
+.emblem-mascot img{inset:15%;width:70%;height:70%;object-fit:cover;object-position:center 32%;border-radius:50%;border:3px solid rgba(255,255,255,.14);box-shadow:0 0 0 8px rgba(193,58,214,.14),0 30px 80px -10px rgba(193,58,214,.65);filter:none}
+.final .sub strong{color:#fff}
+.final-tag{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px;font-weight:600}
+
+.links-grid.links-2{grid-template-columns:1fr 1fr}
+.links-grid.links-2 .qlink{border-right:0}
+.links-grid.links-2 .qlink:nth-child(odd){border-right:1px solid var(--line)}
+@media (max-width:560px){.links-grid.links-2{grid-template-columns:1fr}.links-grid.links-2 .qlink:nth-child(odd){border-right:0}}
+/* Tabla de puntos */
+.points{border:1px solid var(--line-2);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.pt-row{display:grid;grid-template-columns:1.3fr repeat(4,1fr);align-items:center;border-bottom:1px solid var(--line);transition:background .3s}
+.pt-row:last-child{border-bottom:0}
+.pt-row>*{padding:24px 16px;text-align:center}
+.pt-row>*:first-child{text-align:left;padding-left:28px}
+.pt-head{background:var(--surface-2)}
+.pt-head span{font:600 .76rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--muted))}
+.pt-row b{font:900 clamp(1.5rem,3.4vw,2.6rem)/1 var(--display);color:var(--m);text-shadow:0 0 24px color-mix(in srgb,var(--m) 40%,transparent)}
+.pt-row b.hi{background:rgba(193,58,214,.09)}
+.pt-row:not(.pt-head):hover{background:rgba(255,255,255,.03)}
+.medal{display:flex;align-items:center;gap:12px;font:700 1rem var(--display)}
+.medal i{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,var(--m) 45%);box-shadow:0 0 18px var(--m);flex-shrink:0}
+.pt-notes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+.pt-note{display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.pt-note b{flex-shrink:0;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font:900 1rem var(--display);color:var(--c);border:1.5px solid var(--c)}
+.pt-note span{color:var(--muted);font-size:.92rem}
+.pt-note strong{color:#fff}
+@media (max-width:800px){.pt-notes{grid-template-columns:1fr}}
+@media (max-width:600px){
+  .pt-row{grid-template-columns:76px repeat(4,1fr)}
+  .pt-row>*{padding:16px 4px}
+  .pt-row>*:first-child{padding-left:12px}
+  .pt-head span{font-size:.56rem;letter-spacing:.02em}
+  .medal{font-size:.78rem;gap:6px}.medal i{width:14px;height:14px}
+}
+
+.pt-head span{display:flex;flex-direction:column;align-items:center;gap:10px}
+.pt-head span:first-child{align-items:flex-start;justify-content:flex-end}
+.pt-logo{height:64px;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));transition:transform .5s var(--ease)}
+.pt-head span:hover .pt-logo{transform:scale(1.12) rotate(-4deg)}
+.trophy img{height:120px;width:auto}
+@media (max-width:600px){.pt-logo{height:38px}.trophy img{height:96px}}
+/* Categorías */
+.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.cat{--c:var(--purple-2);position:relative;padding:26px 22px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);min-height:260px;display:flex;flex-direction:column;overflow:hidden;transition:border-color .4s,transform .15s linear}
+.cat::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c);box-shadow:0 0 22px var(--c)}
+.cat::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .4s;pointer-events:none;background:radial-gradient(300px circle at var(--x,50%) var(--y,50%),color-mix(in srgb,var(--c) 22%,transparent),transparent 60%)}
+.cat:hover{border-color:color-mix(in srgb,var(--c) 60%,transparent)}
+.cat:hover::after{opacity:1}
+.cat-n{font:500 .75rem var(--mono);color:var(--muted);letter-spacing:.2em}
+.cat h3{font:900 1.45rem/1.1 var(--display);color:var(--c);margin:auto 0 10px;text-transform:uppercase}
+.cat p{color:var(--muted);font-size:.92rem;min-height:2.8em}
+.cat-bar{height:6px;border-radius:3px;background:var(--line-2);margin-top:18px;overflow:hidden}
+.cat-bar i{display:block;height:100%;width:var(--w);background:var(--c);border-radius:3px;transform-origin:left}
+@media (max-width:1100px){.cats{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){.cats{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.cats{grid-template-columns:1fr}.cat{min-height:0}.cat h3{margin-top:28px}}
+
+/* Cuenta regresiva */
+.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.countdown div{background:rgba(255,255,255,.04);border:1px solid var(--line-2);border-radius:16px;padding:18px 4px;text-align:center}
+.countdown b{display:block;font:900 clamp(1.5rem,3.4vw,2.5rem)/1.1 var(--display);background:linear-gradient(180deg,#fff,#e7b8f0);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.countdown span{display:block;margin-top:8px;font:500 .66rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.trophy{display:flex;justify-content:center;margin-top:10px;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 10px 30px rgba(242,193,78,.45))}
+
+/* MateTips (tarjetas que giran) */
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tip{--c:var(--purple-2);perspective:1000px;height:200px;text-align:left;padding:0;display:block;width:100%}
+.tip-in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s var(--ease)}
+.tip.flipped .tip-in{transform:rotateY(180deg)}
+.tip-front,.tip-back{position:absolute;inset:0;border-radius:20px;padding:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+.tip-front{background:var(--surface);transition:border-color .4s}
+.tip-front i{font:900 2.6rem/1 var(--display);font-style:normal;color:transparent;-webkit-text-stroke:1.2px var(--c)}
+.tip-front b{margin-top:auto;font:700 1.08rem/1.25 var(--display);text-transform:uppercase}
+.tip-front::after{content:"Toca para ver ↻";position:absolute;top:26px;right:22px;font:500 .66rem var(--mono);letter-spacing:.08em;color:var(--muted)}
+.tip:hover .tip-front{border-color:var(--c)}
+.tip-back{transform:rotateY(180deg);justify-content:center;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 24%,var(--surface)),var(--surface));border-color:var(--c);color:#ece8f4;font-size:.98rem;line-height:1.55}
+@media (max-width:900px){.tips{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.tips{grid-template-columns:1fr}.tip{height:180px}}
+</style>
+</head>
+
+<body class="loading">
+
+<!-- TRANSICIÓN DE ENTRADA / SALIDA -->
+<div class="page-intro" id="pageIntro" aria-hidden="true">
+  <div class="pi-layer pi-color"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="pi-layer pi-dark"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="pi-center">
+    <img src="logo.png" alt="" class="pi-logo">
+    <div class="pi-title" id="piTitle">Nosotros</div>
+    <div class="pi-line"><i></i></div>
+    <div class="pi-sub">Campeonatos de Olimpiadas Matemáticas</div>
+  </div>
+</div>
+
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- NAVBAR -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="index_pro.html" class="brand" aria-label="COM inicio">
+      <img src="logo.png" alt="Logo COM">
+      <div><b>COM</b><small>Olimpiadas Matemáticas</small></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="nosotros_pro.html" class="active" aria-current="page" data-scramble>Nosotros</a></li>
+      <li><a href="eventos_pro.html" data-scramble>Eventos</a></li>
+      <li><a href="convocatorias.html" data-scramble>Convocatorias</a></li>
+      <li><a href="recursos.html" data-scramble>Recursos</a></li>
+      <li><a href="resultados.html" data-scramble>Resultados</a></li>
+      <li><a href="ranking.html" data-scramble>Ranking</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="search-btn" id="openSearch" aria-label="Buscar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span>Buscar</span><kbd>Ctrl K</kbd>
+      </button>
+      <a href="registro.html" class="btn btn-primary btn-sm magnetic">Registro</a>
+      <button class="burger" id="burger" aria-label="Abrir menú"><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menú">
+  <ol>
+    <li><a style="--i:1" href="nosotros_pro.html">Nosotros</a></li>
+    <li><a style="--i:2" href="eventos_pro.html">Eventos</a></li>
+    <li><a style="--i:3" href="convocatorias.html">Convocatorias</a></li>
+    <li><a style="--i:4" href="registro.html">Registro</a></li>
+    <li><a style="--i:5" href="recursos.html">Recursos</a></li>
+    <li><a style="--i:6" href="entrenamientos.html">Entrenamientos</a></li>
+    <li><a style="--i:7" href="constancias.html">Constancias</a></li>
+    <li><a style="--i:8" href="resultados.html">Resultados</a></li>
+    <li><a style="--i:9" href="ranking.html">Ranking</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- HERO NOSOTROS -->
+<section class="hero" id="inicio">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow hero-in"><i class="live"></i>Conócenos · Campeonatos de Olimpiadas Matemáticas</span>
+      <h1>
+        <span class="line"><span class="hero-line">Mentes que</span></span>
+        <span class="line"><span class="hero-line">se atreven a</span></span>
+        <span class="line"><span class="hero-line"><span class="rotator" id="rotator" data-words="competir,resolver,crear,ganar,soñar">competir</span></span></span>
+      </h1>
+      <p class="lead hero-in">COM nació con un propósito: llevar a los alumnos el gusto por las matemáticas a otro nivel. Somos la comunidad de los mateatletas de México.</p>
+      <div class="hero-ctas hero-in">
+        <a href="#quienes" class="btn btn-primary magnetic">Conócenos <span class="arrow">→</span></a>
+        <a href="#matetips" class="btn btn-ghost magnetic">Ver MateTips</a>
+      </div>
+      <div class="hero-meta hero-in">
+        <div><b>11 mil</b>Seguidores</div>
+        <div><b>5</b>Categorías</div>
+        <div><b>9</b>MateTips</div>
+      </div>
+    </div>
+
+    <div class="emblem emblem-mascot hero-in" id="emblem">
+      <div class="emblem-3d" id="emblem3d">
+        <div class="glow"></div>
+        <div class="orbit" style="--in:0%;--t:26s;--c:var(--cyan)"></div>
+        <div class="orbit rev" style="--in:7%;--t:20s;--c:var(--red)"></div>
+        <div class="orbit" style="--in:14%;--t:16s;--c:var(--yellow)"></div>
+        <div class="orbit rev" style="--in:-6%;--t:34s;--c:var(--green)"></div>
+        <img src="mascota_com.svg" alt="Mascota de COM: jaguar charro">
+        <div class="formula-chip f1">¡Hola, mateatleta!</div>
+        <div class="formula-chip f2">Rumbo a Fusion26</div>
+        <div class="formula-chip f3">π · ∑ · ∞</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue"><i></i>SCROLL</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-row" id="mq1">
+    <span style="--dot:var(--cyan)"><em>Lógica</em></span>
+    <span style="--dot:var(--red)">Constancia</span>
+    <span style="--dot:var(--yellow)"><em>Creatividad</em></span>
+    <span style="--dot:var(--green)">Actitud positiva</span>
+    <span style="--dot:var(--purple-2)"><em>Trabajo en equipo</em></span>
+    <span style="--dot:var(--cyan)">Disciplina</span>
+    <span style="--dot:var(--red)"><em>Mateatletas</em></span>
+    <span style="--dot:var(--yellow)">Pasión</span>
+  </div>
+  <div class="marquee-row" id="mq2">
+    <span style="--dot:var(--green)">Kids A</span>
+    <span style="--dot:var(--purple-2)"><em>Kids B</em></span>
+    <span style="--dot:var(--cyan)">Junior's A</span>
+    <span style="--dot:var(--red)"><em>Juniors B</em></span>
+    <span style="--dot:var(--yellow)">Elite</span>
+    <span style="--dot:var(--green)"><em>Campeón de Campeones</em></span>
+    <span style="--dot:var(--purple-2)">Circuito Nacional</span>
+    <span style="--dot:var(--cyan)"><em>Fusion Nacional</em></span>
+  </div>
+</div>
+
+<!-- QUIÉNES SOMOS -->
+<section class="section" id="quienes">
+  <div class="container about">
+    <div class="about-media reveal-clip">
+      <img src="1.png" alt="Arte geométrico COM" class="parallax-img">
+      <div class="about-badge">
+        <img src="logo.png" alt="">
+        <div><b>COM</b><span>Concursos y Olimpiadas Matemáticas</span></div>
+      </div>
+    </div>
+    <div class="about-text">
+      <span class="kicker">Quiénes somos</span>
+      <h2 class="h2 split">Formamos mentes que <span class="muted">resuelven</span> lo imposible</h2>
+      <p class="reveal">Somos <strong>Campeonatos de Olimpiadas Matemáticas “COM”</strong>, una comunidad creada para llegar a los alumnos por el gusto de las matemáticas, pero a otro nivel. Aquí nuestros <strong>mateatletas</strong> ponen a prueba su lógica, su creatividad y su trabajo en equipo, y crecen con cada reto que resuelven.</p>
+      <p class="reveal">Tenemos <strong>sedes en todo el país</strong> y una <strong>sede virtual</strong> para estados libres. Además compartimos <strong>MateTips</strong>, talleres de la <strong>Red Profesional de Entrenadores</strong> y exámenes de años anteriores para que llegues preparado.</p>
+      <div class="stats">
+        <div class="stat reveal" style="--c:var(--cyan)"><b data-count="11" data-suffix=" mil">0</b><span>Seguidores en Facebook</span></div>
+        <div class="stat reveal" style="--c:var(--red)"><b data-count="9">0</b><span>MateTips para entrenar como campeón</span></div>
+        <div class="stat reveal" style="--c:var(--yellow)"><b data-count="5">0</b><span>Categorías, de 4° de primaria a universidad</span></div>
+        <div class="stat reveal" style="--c:var(--green)"><b data-count="1">0</b><span>Campeón de Campeones por categoría</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELEGADOS ESTATALES -->
+<section class="section" id="delegados" style="padding-top:0">
+  <div class="container">
+    <div class="areas-head">
+      <div>
+        <span class="kicker">Delegados estatales</span>
+        <h2 class="h2 split">Tu estado, <span class="muted">tu delegado</span></h2>
+      </div>
+      <p class="sub reveal">Pasa el mouse sobre el mapa y elige tu estado para conocer a tu delegado estatal.</p>
+    </div>
+    <div class="dmap reveal" id="dmap">
+      <div class="dmap-stage" id="dmapStage">
+        <svg id="mxMap" viewBox="0 0 793 498" aria-label="Mapa de la República Mexicana">
+          <defs>
+            <filter id="stGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
+              <feOffset dy="6" result="o"/>
+              <feFlood flood-color="#000" flood-opacity=".65"/>
+              <feComposite in2="o" operator="in" result="s"/>
+              <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g id="mxStates">
+<path class="st" data-id="agu" data-name="Aguascalientes" style="--c:var(--green)" tabindex="0" role="button" aria-label="Aguascalientes" d="m 390.52786,309.79244 -2.34,-2.26 -0.07,-1.21 1.24,-2.87 3.33,-4.59 0.93,-3.24 1.07,-0.73 1.79,-0.38 3.47,-1.97 1.21,-0.92 0.39,-1.26 0.73,-0.17 0.77,1.39 1.33,1.34 4.44,2.63 0.59,2.44 1.14,2.04 0,0 0.26,0.59 -0.24,1.6 1.96,2.14 -4.28,1.97 -2.55,3.55 -0.72,0.5 -3.02,1.04 -1.26,0.06 -2.17,-1.02 -1.74,-1.41 -4.21,-0.38 z"/>
+<path class="st" data-id="bcn" data-name="Baja California" style="--c:var(--yellow)" tabindex="0" role="button" aria-label="Baja California" d="m 106.48786,137.85244 -0.65,0 0,0 -0.76,0.12 0.13,0.44 -0.82,0.41 -0.68,0.01 -0.75,0.86 -0.29,-0.74 0.19,-0.78 3.08,-3.76 0.62,-0.15 0.06,0.97 -0.8,0.76 -0.02,0.52 0.69,1.34 z m -27.349998,-11.99 0.56,0.45 0.75,2.86 -0.25,1.02 0.38,2.42 -0.68,0.9 0.04,2.09 -0.62,-0.19 -0.54,0.33 -0.65,-0.31 -0.6,-1.42 -0.58,-0.18 -1,0.6 -0.37,-0.15 0.07,-0.78 2.73,-3.03 0.15,-0.68 -0.58,-1.61 0.51,-1.89 0.68,-0.43 z m 58.139998,-8.56 0.82,0.18 2.68,2.27 -0.54,0.47 -0.6,-0.96 -1.69,-0.95 -0.67,-1.01 z m 8.46,-1.5 0.34,0.64 -0.27,1.02 -1.16,0.04 -0.35,-1.56 1.44,-0.14 z m -142.8599978,-13.07 -0.64,1.32 0.15,1.03 1.31,1.2 0.23,2.9 -0.67,2.08 -0.75,0.23 -0.56,-1.47 0.21,-0.92 -0.56,-0.37 -0.07,-1.6 -1.24000002,-1.24 0.35,-1 -0.29,-0.96 0.74000002,-0.62 0.8,0.04 0.99,-0.62 z M 120.65786,92.442438 l -0.02,0.48 1.1,-0.48 0.02,0.32 0.93,0.26 1.27,1.64 0.77,0.39 1.06,2.21 -0.59,0.86 0.12,1.17 1.84,0.830002 2.9,-0.180002 0.34,0.300002 -0.17,4.33 0.62,1.71 1.2,0.37 -0.34,1.9 -2.96,-2.09 -1.72,-2.42 -2.56,-1.82 -0.96,-1.88 -1.37,-0.26 -0.24,-1.090002 -2.04,-2.47 -0.16,-0.86 0.77,-1.87 -0.21,-0.98 0.4,-0.37 z m -21.549998,-12.53 0.64,0.81 -0.45,0.14 -0.34,-0.36 0.15,-0.59 z m -9.92,-73.05 -0.85,0.51 -0.47,-0.4 -1.34,0.01 -0.6,2.05 -0.47,0.48 -0.05,1.34 -1.81,2.43 1.4,1.99 -0.62,1.83 0.29,1.14 -0.42,2.67 0.24,0.98 -0.6,0.98 0.96,0.95 0.92,0.13 3.82,2.76 0,0 -0.47,1.74 0.92,4 -1.12,1.46 -0.74,2.41 -0.08,3.53 -0.85,3.16 0.3,0.65 -0.25,2.22 0.62,2.21 1.37,1.26 -0.52,0.66 -0.02,0.65 2.84,1.84 0.59,3.53 -0.08,5.21 1.72,4.04 0.02,2.21 -0.35,1.3 0.21,0.82 -0.52,1.95 0.37,0.33 -0.65,2.16 1,2.06 0.62,0.38 1.73,4 1.23,0.61 0.3,0.9 0.96,0.15 0.64,0.89 -0.02,1.82 0.45,0.94 0.819998,0.32 0.44,0.72 1.17,0.12 0.34,-0.86 1.81,0.78 1.21,1.54 0.31,-0.06 0.96,1.18 0.94,0.48 0.68,1.13 1.62,0.83 2.09,2.34 1.52,0.83 0.11,0.61 1.44,0.69 1.98,2.47 1.44,1.170002 0.3,0.88 -0.73,0.85 0.01,0.48 2.08,2.55 0.79,1.64 -0.58,1.16 0.45,1.64 -0.33,0.25 0.81,1.69 0.82,0.1 0.53,-0.7 -0.41,-0.38 0.42,-0.62 0.48,0.27 0.47,-0.36 0.41,0.8 0.6,-0.12 -0.04,0.41 0.45,0.12 0.12,2.09 0.39,0.95 1.1,-0.03 1.31,-1.04 1.08,0.62 1.43,4.51 0.77,0.82 0.59,3.53 2.58,1.46 2.44,-0.59 0.48,0.36 0.07,0.73 0.81,-0.15 0.11,0.6 -0.36,0.48 0.25,0.66 -0.59,2.6 1.97,2.8 -0.47,2.03 0.62,1.45 -0.39,1.24 0.93,0.57 0.27,0.99 -0.3,2.49 0,0 -0.64,-1.71 -0.87,-0.26 0,0 -31.69,-0.11 0.23,-0.53 -0.35,-0.49 -0.05,-1.32 0.86,1.21 0.79,-1.39 -1.61,-0.41 -0.35,-1.72 1.52,-2.99 -0.42,-0.96 -0.88,0.53 -0.51,-0.49 1.28,-2.91 0.65,-3.16 -1.27,-2.19 -1.56,-0.63 -0.07,-2.03 -0.44,-0.43 -2.2,-0.1 0.01,-0.81 -0.45,-0.52 -1.54,-0.86 0.12,-0.59 -0.46,-1.17 -0.879998,-0.47 -0.56,-1.87 -0.46,-0.07 -0.23,-0.6 -0.96,-0.73 -0.97,-0.07 -0.17,0.33 -0.52,-1.09 -0.68,-0.44 -0.23,0.3 -0.54,-2.72 -0.64,-1.05 -1.06,-0.47 -0.64,0.34 -0.8,-0.98 -0.25,-1.35 -1.16,-0.55 -0.12,-0.37 -0.45,0.03 -3.43,-4.210002 -2.91,-1.5 -3.06,-0.4 -1.55,-2.51 -2.41,-1.18 -0.76,-0.03 -2,-1.92 -1.19,0.25 -2,-2.17 -0.89,-0.1 -1.88,-1.56 0.25,-2.52 -0.33,-1.5 -1.14,-1.62 -1.57,-0.58 0.62,-3.57 -0.54,-1.2 0.02,-4.19 -1.46,-2.55 -2.06,-1.24 0.19,-1.4 -0.82,-0.77 -0.23,0.4 0.5,0.94 -0.5,0.35 -0.46,-0.7 -0.53,0 0.58,1.34 -0.31,0.1 -1.06,-2.05 0.57,-5.32 -0.63,-3.55 -0.53,-1.05 -0.6,-0.08 -1.44,-1.26 -0.53,0.01 -2.3,-3.02 -1.55,0.2 -0.25,-0.46 0.74,-5.28 -1.38,-2.71 -2.09,-2.2 -1.85,-3.14 -1.29,-0.96 -0.68,0.08 -0.18,-1 -1.27,-0.92 -0.27,-0.72 -0.41,0.08 -0.12,-0.58 1.02,-0.52 -0.44,-0.9 0.47,-1.24 -1.17,-1.61 -0.33,0.14 -0.85,-1 0.45,-0.1 1.6,0.89 1.05,-0.96 0.19,-2.58 -0.4,-0.61 -1.26,-0.27 -0.57,-0.77 -1.15,-0.2 -0.41,-1.83 -0.48,-0.4 -1.23,0 -1.23,-1.18 -0.12,-3.02 -0.81,-2.83 -0.47,-0.75 -2.1,-0.71 -0.48,-0.56 -2.14,-5.9 0.04,-1.34 60.19,-5.54 -1.58,2.83 -0.67,0.19 0.5,1.79 -0.35,0.24 -0.3,1.52 z"/>
+<path class="st" data-id="bcs" data-name="Baja California Sur" style="--c:var(--red)" tabindex="0" role="button" aria-label="Baja California Sur" d="m 91.057862,397.56244 1.49,0.37 -0.48,0.42 -1.32,0.17 -0.12,-0.73 0.43,-0.23 z m 93.899998,-12.95 1.03,0.69 0.7,1.07 -0.01,1.76 -0.83,0.41 -0.44,-0.69 -1.15,-0.2 -0.81,-1.31 1.51,-1.73 z m 4.73,-12.33 0.23,0.65 -0.46,0.66 -0.29,-0.57 0.52,-0.74 z m 21.73,-135.15 2.79,4.59 0.44,1.91 -1.56,-0.29 -0.71,-1.05 -1.1,-3.81 0.14,-1.35 z m -51.48,-4.14 3.12,0.16 1.11,1.44 0.94,0.11 0.81,0.62 1.33,2.43 -0.35,0.83 -6.92,-5.03 -0.31,-0.34 0.27,-0.22 z m 40.73,-0.24 1.77,1.59 -0.93,2.03 -0.54,0.03 0.04,-0.83 -0.73,-0.26 0.12,-0.5 -0.46,-0.58 0.18,-0.67 -0.27,-0.46 0.82,-0.35 z m -0.86,-1.58 0.87,1.34 -0.59,0.33 -0.62,-0.36 -0.1,-0.78 0.44,-0.53 z m -7.78,-14.08 0.92,1.45 1.98,0.54 0.42,0.6 0.06,1.54 0.97,2.16 -0.47,0.09 -2.64,-2.04 -0.68,-2.02 -0.89,-0.9 0.33,-1.42 z m -35.67,-4.58 0.21,1.38 -1.1,3.4 0.11,3.08 -0.76,0.68 0.66,1.33 -0.33,1.14 -0.63,0.07 -0.31,0.53 0.16,0.72 1.14,1.27 -0.16,0.29 0.93,0.82 0.44,1.34 -0.67,1.1 0.92,0.78 1.25,1.81 -0.07,0.38 -1.06,-0.54 -0.05,-0.66 -1.78,-1.9 0.19,-0.53 0.57,0.08 0.22,-0.54 -0.12,-1.07 -0.8,-0.98 -1.33,-0.69 -1.22,0.37 -0.7,-0.45 -0.04,-0.58 0.41,-0.08 1.95,-5.17 1.97,-7.38 z m 36.07,-1.13 -0.45,1.2 -0.52,0.24 -0.15,-0.74 1.12,-0.7 z m -35.23,-4.93 -0.16,4.42 -0.37,1.37 -0.5,-0.35 1.03,-5.44 z m 0.06,-5.2 0.16,2.08 -0.17,2.51 -0.28,0.01 0.29,-4.6 z m 33.06,-0.92 0.31,3.3 -0.71,-0.44 -0.4,-1.4 0.8,-1.46 z m -6.54,-0.04 0.54,1.25 -0.33,0.51 -0.41,-0.2 -0.41,-1.41 0.61,-0.15 z m -0.66,-9.78 -0.5,1.02 0.4,1.67 -1.2,-0.74 -1.71,2.67 0,0.92 -0.56,0.55 0,0.68 -0.6,0.05 -0.13,-0.76 0.4,-0.45 0.18,-1.68 1.05,-1.74 -0.19,-1.46 0.98,-0.25 0.18,-0.43 0.64,0.4 1.06,-0.45 z m -5.19,-1.89 0.18,0.79 -0.45,0.05 -0.17,-0.54 0.44,-0.3 z m -49.09,-16.53 1.34,0.32 0.75,1.57 -0.96,-0.63 -1.97,-0.48 -0.12,-0.28 0.96,-0.5 z m 28.56,-14.77 1.06,1 -0.34,1.22 -0.62,-0.16 -0.5,-1.41 0.4,-0.65 z m 5.07,-5.51 0.42,0.05 0.28,0.62 -0.93,0.04 -0.18,-0.46 0.41,-0.25 z m -83.339998,-12.4 1.37,0.75 -0.1,0.53 -1.37,-1.02 0.1,-0.26 z m 26.709998,-1.56 0.65,0 0,0 0.41,0.41 0.29,-0.41 31.7,0.1 0,0 0.87,0.26 0.64,1.71 0,0 -0.07,0.5 1.29,1.03 0.4,1.96 1.08,1.29 0.42,-0.04 1.23,1.7 2.78,0.86 0.54,0.62 0.94,0.15 1.61,1.11 0.71,0.96 0.7,3.73 1.64,1.81 0.97,2.21 -0.41,0.76 2.6,2.1 2.54,0.65 0.47,0.57 0.93,-0.01 0.15,0.73 -0.57,0.03 -0.89,1.04 -0.23,1.58 1.68,2.42 0.9,0.46 0.04,0.46 0.92,0.66 0.33,1.37 -0.7,0.55 -0.47,1.29 1.17,0.73 0.29,1.17 1.08,0.66 0.69,1.69 1,0.75 1.55,-1.38 -3.45,-3.58 -0.23,-2.91 -0.68,-1.64 0.74,-0.47 1.85,1.4 0.67,1.09 1.35,0.93 0.47,0.75 2.16,1.37 -0.19,3.51 0.35,0.56 2.72,0.85 -0.6,1.63 0.04,1.24 1.15,1.88 0.71,0.31 0.22,0.5 0.07,1.14 -0.35,0.66 1.98,5.16 -0.58,0.94 0.1,1.35 -0.52,0.72 0.11,0.99 0.45,0.58 0.08,1.92 0.63,0.67 0.04,1.05 1.8,1.47 0.22,-0.17 0.8,3.11 1.84,2.4 2.56,0.31 -0.22,1.61 1.17,3.14 0.85,0.85 0.3,1.05 -0.3,0.17 0.38,1.53 0.62,0.81 -0.04,1 0.68,0.54 0.44,1.26 0.86,0.48 0.51,0.9 0.47,-0.13 0.76,0.62 0.25,1.3 1.61,2.21 0.67,2.08 -0.17,1.19 -0.74,1.77 -0.87,0.93 -0.22,3.09 0.22,1.04 1.05,1.39 0.13,2.88 1.06,1.24 0.69,1.57 1.54,1.35 4.34,0.95 1.21,-0.12 0.06,0.28 -1.28,0.5 -0.79,-0.65 -0.42,0.25 0.21,1.46 1.68,-0.13 -0.01,-0.78 1.21,-1.03 0.06,-0.98 -0.91,-2.2 0.28,-1.07 0.71,-0.45 1.56,0.21 0,0.78 1.06,0.62 0.42,1.12 2.15,0.99 2.06,1.58 0.71,3.23 1.2,0.3 2.6,-0.88 0.04,0.58 0.53,0.49 -0.7,0.86 0.07,2.03 3.24,3.16 -0.28,1.97 0.31,1.69 0.39,0.47 5.38,2.63 -0.31,0.81 1.43,2.07 -0.22,0.69 0.42,0.43 -0.51,4.39 -0.59,1.26 -1.87,2.31 -1.04,0.72 -2.2,0.54 -1.21,0.82 -0.02,0.75 -2.07,1.14 -0.53,1.04 -0.94,0.74 -0.93,0.04 -0.64,0.67 -1.15,0 -2.42,-2.01 -1.17,-2.77 -1.46,-7.1 -2.5,-4.57 -1.83,-2.44 -6.19,-3.28 -11.64,-11.53 -10.8,-6.54 0.12,-0.26 -1.16,-1.24 -1.55,-0.21 0.06,-0.48 -0.64,-0.07 -1.02,-2.97 0.28,-0.11 -0.47,-0.58 -0.99,-0.3 -0.1,1.14 -2.41,-0.2 -0.06,0.75 -0.6,-0.01 0.15,-1.48 -0.73,-2.01 -2.19,-2.41 0.27,-0.25 -0.56,-0.5 -0.68,0.27 0.13,0.44 -1.46,-0.24 -2.01,-0.97 -0.31,-0.69 0.54,-0.03 0.11,-0.76 -0.62,-0.4 -0.17,-0.78 0.65,-0.97 -0.27,-0.16 0.39,-0.72 -0.44,-0.13 0.24,-0.45 -0.42,-0.48 -0.57,0.92 0.29,0.76 -0.39,0.49 0.05,2.53 -0.73,0 -0.48,-1.15 0.77,-1.55 -0.65,-1.39 0.81,-0.45 0.74,-1.67 0.02,-0.96 -0.86,0.12 0.16,-1.89 0.87,-2.01 0.27,-1.77 0.71,-0.12 0.06,-2.45 -0.5,-0.11 0.06,-1.17 0.58,-0.44 -0.39,-0.33 -0.21,-1.07 0.3,-1 0.3,-0.05 0.13,-2.41 -0.13,-1.28 -0.8,-1.07 -0.34,-2.88 -2.03,-5.36 -0.94,-1.24 -1.93,-1.06 -0.87,-2.85 -1.64,-1.94 -1.58,-0.4 -0.19,0.66 -0.45,0.13 -3.19,-2.33 -0.69,-0.26 -0.67,0.28 -0.79,-1.19 -1.98,-1.4 0.01,-0.44 -0.63,-0.03 -3.59,-2.96 0.97,0.09 1.27,0.94 0.13,-0.24 -1.06,-0.77 -1.08,-0.32 -0.69,0.22 -2.27,-1.98 0.19,-0.19 -0.4,-0.5 0.38,-0.61 -1.73,-2.07 -0.94,-1.98 -0.36,1.05 -1.51,-0.7 0.31,-0.32 0.51,0.16 1.55,-1.56 0.42,-1.29 -0.82,-2.81 -0.6,0.65 -0.38,3.22 -0.56,0.49 -0.7,-0.23 -0.38,0.75 0.06,1.83 -0.45,0.05 -2.14,-1.33 -1.51,-0.26 0.21,-0.53 0.54,0.39 0.07,-0.38 -0.53,-0.2 -1.44,0.22 -0.8,0.89 -0.39,1.19 -0.63,0.28 -0.01,0.58 -0.71,0.4 -0.82,-0.26 -0.8,-0.52 -0.7,-1.41 -1.6,-0.4 -1.61,-3.69 -1.81,-1.34 -2.21,-0.57 -0.45,0.16 -0.18,0.55 -0.44,0.03 -1.28,-1.34 -1.1,-1.99 -1.08,-0.8 -1.22,-0.58 -2.02,-0.3 -0.75,0.66 -2.429998,-1.55 -0.51,0.41 -0.48,-0.26 0.06,-0.8 -0.62,-0.39 -0.53,0.11 -0.24,-0.37 -0.02,-3.52 -0.48,-1.57 -2.35,-1.91 -3.33,-1.21 -1.15,-2.25 -1.67,-1.25 -0.07,-1.02 -0.68,-0.46 -0.62,0.95 -0.77,-0.35 -0.31,-0.91 -1.03,-0.53 -0.56,0.27 -1.08,-2.81 -0.79,-0.78 0.8,-0.41 1.06,0.91 2.33,-0.22 1.52,0.23 0.36,0.5 1.37,-0.18 1.62,0.3 0.46,0.49 1.58,0.33 2.77,-0.23 0.59,0.35 2.44,-1.32 0.6,0.35 0.759998,-0.15 0.15,-0.6 -0.63,-0.04 1.1,-1.2 0.86,0.29 -0.52,2.48 0.76,1.26 1.5,1.2 1.27,0.37 1.35,1.2 -0.05,0.42 0.8,0.26 1.02,-1.07 0.06,-0.88 2.1,0.72 1.56,2.96 0.89,0.14 0.59,-1.17 -1.57,-1.62 0.12,-1.05 0.67,0.65 0.15,-0.41 -0.57,-0.45 0.27,-0.61 -0.46,-1.74 0.23,-0.9 -1.75,-1.44 -1.03,1.89 0.19,1.14 -3.18,1.21 -1.64,-1.24 0.24,-0.54 0.6,0.5 -0.74,-1.98 1.17,-1.74 -0.54,-0.48 0.21,-1.43 z"/>
+<path class="st" data-id="cam" data-name="Campeche" style="--c:var(--purple-2)" tabindex="0" role="button" aria-label="Campeche" d="m 671.96786,386.93244 0.5,0.79 -0.68,0.61 -0.54,0.22 -1.06,-0.57 -0.38,0.33 0.39,0.33 -1.66,1.34 -0.54,-0.67 -0.29,0.58 -2.12,0.86 -1.09,0.1 -0.54,-0.57 0.27,-0.32 2.42,-0.39 5.32,-2.64 z m 28.7,-53.46 -0.16,7.3 4.12,0.51 0.97,2.01 0.45,0.18 1.11,-0.35 0.94,0.99 0.48,-0.09 0.4,-1.01 0.79,-0.73 0.42,0.28 1.03,1.76 -0.11,0.91 0.57,1.04 1.83,1.17 1.98,4.46 3.86,2.1 1.17,2.49 3.17,3.58 0.79,3.44 0.44,0.46 0,0 1.34,1.81 5.3,4.25 3.41,4.67 -0.18,5.85 -1.17,0.66 -0.41,0.67 0.22,2.52 -0.8,5.13 0.17,1.27 0.99,1.24 0.15,0.71 -0.51,1.37 0.82,0.46 -0.57,1.67 0.47,1.38 0.28,4.7 -0.57,1.26 -2.44,2.83 0.25,2.46 0,0 -0.02,3.33 -45.94,-0.01 0,0 0.02,-1.64 -3.98,-1.58 -0.68,0.42 -0.77,-0.9 -1.56,-0.66 -1.64,-1.55 -3.65,-0.8 -2.79,0.13 -0.3,1.3 0.34,1.82 -0.3,0.72 -1.68,0.11 -1.29,0.64 -2.21,-1.12 -1.5,0.15 -1.31,-0.66 -0.87,-1.43 -3.47,-2.33 -1.22,-1.83 -1.08,-2.59 -0.45,-0.32 0.18,-1.97 -1.11,-1.42 -0.36,-0.16 -0.08,0.42 -0.53,0.13 -0.69,-1.06 -0.99,-0.05 -1.44,-1 -0.63,-0.91 -1.14,-3.72 0,0 3.13,-0.56 9.83,-0.61 0.88,1.41 1.49,0.8 -0.6,1.18 -0.27,-0.39 -0.31,0.34 -0.96,-1.28 -0.73,0.85 -0.68,-0.42 -0.24,0.18 0.17,0.72 -0.45,0.57 0.59,0.74 1.15,-0.25 -0.45,-1.12 0.79,0.04 0.28,0.46 0.57,-0.14 1.1,0.72 0.16,0.56 6.79,1.67 1.43,-0.13 0.16,-0.7 0.73,-0.7 4.45,-1.53 0.82,-2.92 0.63,-0.32 0.35,-1.32 -0.23,-0.7 -1.1,-1 -0.92,0.72 -1.15,-0.61 -0.29,-0.98 0.61,-0.47 -0.07,-0.79 0.97,-1.04 -0.77,0.19 -0.7,1.33 -0.76,0.72 -0.52,-0.05 -0.82,0.76 -0.12,0.56 -0.63,0.03 0,-0.24 2.5,-2.57 6.81,-3.66 4.79,-3.45 4.86,-4.53 0.47,-0.93 -0.08,-1.02 0.52,-2 -0.21,-2.17 0.67,-1.8 -0.51,-0.56 -0.04,-0.64 0.93,-1.14 0.19,-1.03 3.85,-2.86 1.41,-2.48 -0.98,-2.71 0.3,-1.37 -0.41,-1.28 0.38,-0.29 -0.39,-4.48 0.3,-0.78 -0.45,-3.4 1.34,-3.56 0.44,-3.02 1.14,-1.42 z"/>
+<path class="st" data-id="chp" data-name="Chiapas" style="--c:var(--purple-2)" tabindex="0" role="button" aria-label="Chiapas" d="m 607.45786,458.00244 0.18,-0.64 0,0 -0.06,-0.41 0.4,0.01 0.76,1.15 -1.28,-0.11 z m -0.37,-4.01 -0.01,-0.78 0,0 -0.12,-2.12 0.52,-1.45 -1.25,-2.93 0.08,-0.85 2.19,-6.28 2.94,-2.62 0.8,-3.49 0.76,-1.02 -0.02,-2 0.34,-0.94 0,0 0.94,-1.13 1.95,-0.86 3.72,-2.89 0,0 2.53,-3.17 0.06,-1.61 1.39,-1.87 1.2,-0.79 0.59,-1.16 0.75,-7.08 1.66,-0.28 0.54,-0.61 2.14,0.85 1.39,1.69 0.77,0.35 2.79,-0.09 -0.35,1.69 -1.42,2.12 -0.14,0.58 0.38,0.93 2.07,2.18 -0.3,1.87 0.36,0.33 1.25,-0.06 0.44,-0.35 0.54,0.2 1.21,1.94 0.04,0.66 0.66,0.87 0.81,0.31 1.91,-0.84 2.42,-2.25 5.83,-4.27 0.57,-0.83 3.29,-1.19 0.39,-0.78 -0.41,-1.75 0.12,-0.37 0.43,0.08 -0.04,-0.44 1.77,0.48 1.95,-0.03 0.71,-1.84 1.45,0.37 -0.12,0.59 0.56,0.3 0.59,-0.44 1.19,0.18 1.21,-0.28 1.06,1.36 0.05,2.01 2.56,1.26 1.27,3.3 -0.75,2.66 4.34,1.2 0.19,0.83 1.31,0.37 1.1,1.79 -0.76,0.28 -0.53,1.03 0,0 -0.65,0.06 0.57,0.98 0.76,-0.04 0.98,1.12 0.83,-0.35 0.93,0.31 -0.02,0.83 0.53,0.74 0.63,0.26 0.33,0.96 1.12,1.16 1.05,0.23 0.3,1.03 1.38,1.37 0.11,0.64 1.34,0.4 0.53,0.62 0.27,-0.29 1.1,0.44 0.24,0.85 1.03,0 0.88,0.72 1.13,-0.08 0.04,0.55 2.14,1.25 1.38,2.18 0.35,3.22 0.82,-0.1 0.11,0.55 -0.67,0.23 0.23,0.4 0.76,-0.34 0.36,0.51 0.88,-0.31 0.57,0.63 0.57,-0.28 0.53,0.66 -0.15,0.49 1.71,0 0.38,0.59 0.12,0.58 -0.36,0.35 0.34,0.53 -0.33,0.88 -0.54,0.04 -0.18,0.64 0.36,0.35 -0.77,1.62 0.8,1.06 -0.67,0.44 0.56,0.29 -0.02,0.41 -0.64,-0.05 0.27,1.36 -32.14,-0.27 -12.25,21.07 3.87,5 -1,1.6 -0.85,-0.09 -0.35,0.72 0.13,2.49 -1.05,1.38 0.92,4.29 -0.73,1.17 -0.38,1.54 -0.86,0.71 -4.46,-4.06 -10.99,-11.58 -0.1,-0.85 -0.8,-0.19 -11.16,-10.52 -5.44,-4.29 -6.08,-4.22 -3.82,-1.84 0.28,-0.4 0.75,-0.06 0.29,0.61 0.63,-0.27 0.14,-0.48 -1.12,-1.84 -4.66,-1.01 -0.73,-0.91 -0.22,-1.31 z"/>
+<path class="st" data-id="chh" data-name="Chihuahua" style="--c:var(--green)" tabindex="0" role="button" aria-label="Chihuahua" d="m 375.24786,107.48244 -2.26,4.16 0.02,0.35 1.71,0.61 0.01,1.04 -0.66,0.98 -0.84,-0.32 -0.7,0.34 -1.73,4.01 -1.41,1.11 -1.64,0.61 -2.27,3.78 -0.56,1.1 0.87,1.42 -0.94,1.38 -2.66,6.81 -0.6,0.38 -1.77,-0.71 -0.01,1.55 1.12,0.18 0.49,1.46 -0.34,0.48 -1.9,0.38 0.76,1.44 -0.06,0.83 -0.57,0.82 0.72,0.78 0.14,0.72 -1.09,1.16 0.81,4.52 1.13,0.5 0.24,0.83 0.09,1.06 -0.48,1.14 0.68,3.68 0.22,4.82 0.54,0.68 1.83,0.79 -0.41,1.54 -1.15,0.04 -1.07,1 -1.92,0.91 0.44,0.8 -0.1,1.31 2.15,1.9 1.08,1.83 0,0 -1.1,0.24 -1.15,-0.86 -0.51,0.68 -0.28,-0.17 0.44,-0.72 -0.79,-0.12 -3.21,1.05 -1.51,-0.57 -0.88,0.81 -1.43,-0.28 -0.68,-1 -1.43,-0.24 -1.38,-0.89 -0.73,0.32 -0.31,0.74 0.48,0.66 1.54,0.12 -0.07,1 -2.5,0.39 -1.15,1.52 -1.51,0.54 -1.89,3.08 0.24,1.34 -0.25,0.77 -0.44,0.24 -1.71,-0.2 -1.74,0.91 -0.98,-0.21 -1.72,-1.19 -1.95,-1.89 -2.54,0.24 -1.22,-0.33 -0.74,-0.68 -0.54,-0.04 -0.01,1.08 -1.6,0.7 -0.52,0.58 -0.57,0.09 -0.41,-0.54 -1.68,0.96 -0.23,-0.6 -1.56,-0.47 -1.27,0.25 -1.1,-1.89 -1.64,0.29 -0.76,-1.09 -0.98,0 -1.58,-1.36 -1.94,-0.23 -0.28,-0.58 -1.26,-0.71 -0.96,-1.94 -1.06,-0.23 -1.91,-1.23 -1.27,-0.06 -0.67,-0.89 -0.77,0.54 -0.21,1.29 -1.76,0.57 0.05,1.84 -0.63,0.47 -0.9,3.39 0.03,1.6 -0.9,1.53 0.15,0.46 1.12,0.5 -0.03,1.07 -0.33,0.58 -1.98,0.87 -0.86,0.87 0,1.36 -1,-0.16 -0.41,0.36 0.36,2.14 -0.92,0.26 -1.72,3.99 0.97,1.56 0.61,1.9 -2.12,3.42 -3.53,2.72 -1.23,1.61 -0.64,-0.28 -0.67,-1.21 -2.01,-0.33 -0.52,-0.86 -1.6,0.22 -1.08,-0.66 -0.31,-1.32 -2.31,0.78 -0.32,0.65 0,0 -2.14,-2.79 -0.59,-3.23 -2.89,-4.89 -2.36,-0.69 -3.19,-0.31 -3.81,-1.13 -1.22,-4.68 -3.11,-5.02 -0.07,-1.88 -1.42,-0.92 -0.32,-1.09 0.49,-2 -0.49,-0.82 0.4,-2.27 -1.06,-2.33 -1.22,0.25 -0.61,-0.24 -0.12,-2.9 -0.68,-0.38 -4.89,0.22 0,0 -1.76,-0.39 -2.02,0.62 -3.54,-1.84 0.02,-0.46 0.73,-0.42 -0.48,-3.44 1.25,-3.14 -0.04,-1.72 -1.63,-4.07 -0.97,-1.43 -0.63,-2.09 -2.81,-1.7 -0.52,-0.65 0.7,-2.45 -0.38,-1.66 -2.09,-2.98 -1.82,-0.74 -0.39,-0.69 0.59,-2.76 -1.56,-1.07 -0.19,-0.61 1.04,-1.39 2.53,-0.49 1.45,-0.85 0.77,0.14 1.77,1.31 0.5,-0.03 1.41,-1.05 1.14,-0.12 0.97,-1.22 0.93,-0.09 0.6,-1.19 -2.25,-0.86 -1.55,-1.81 0.42,-2.9 -0.83,-1.95 0.19,-1.04 1.48,-2.62 -0.8,-2.65 0.84,-1.28 -0.46,-2.55 1.49,-1.26 0.1,-2.69 1.38,-0.67 0.29,-0.51 -0.26,-5.670002 0.16,-0.9 0.8,-0.95 0.01,-2.6 -0.66,-6.22 -0.75,-0.96 -0.57,-0.02 -0.34,-1 0.59,-4.93 1.27,-2.57 0,-1.11 -1.45,-1.33 -0.16,-0.99 0.85,-0.52 0.28,-1.82 -1.94,-6.15 0.06,-1.19 -1.1,-1.46 -0.11,-0.81 0.67,-1.61 -1.04,-0.93 -0.09,-2.42 -2.73,-2.65 0.04,-0.61 1.57,-0.08 -0.02,-1.81 0.49,-1.27 -0.24,-1.6 -1.64,-2.84 -0.52,-1.92 0.94,-1.28 -1.05,-1.04 0,0 14.1,-0.04 0,-13.16 42.05,0 1,1.07 1.59,-0.13 1.01,0.56 0.87,1.03 1.75,4.03 0.76,0.41 1.13,2.37 3.2,1.96 1.81,0.18 1.25,0.8 0.59,1.48 0.57,-0.01 0.37,0.66 0.52,0 2.18,2.66 0.25,0.84 1.28,0.45 0.41,0.57 1.5,0.59 1.16,1 1.21,2.71 1.2,0.58 0.36,0.76 1.87,1.18 0.55,0.9 -0.17,0.47 0.98,0.16 1.46,1.01 0.28,-0.37 0.91,0.87 0.89,-0.25 0.21,0.62 0.4,-0.23 0.56,0.66 0.42,0.01 -0.11,0.44 1.2,0.19 0.8,1.35 0.85,0.53 0.91,-0.14 0.57,0.73 0.25,1.3 1.15,0.43 0.85,1.02 0.76,2.12 0.02,1.46 0.46,0.75 -0.19,0.85 1.11,0.73 -0.22,0.33 1.52,1.59 -0.08,0.53 1.36,1.1 0.46,1.59 -0.16,1.5 0.28,1 -0.49,2.07 0.36,0.21 -0.04,1.08 0.43,0.73 -0.31,0.41 0.27,1.07 1.08,0.93 1.14,1.91 1.31,3.91 3.45,2.74 0.4,0.83 1.13,0.62 0.53,-0.33 1.97,1 0.12,0.44 0.57,0.18 -0.12,0.63 1.22,1.72 1.44,0.56 1.39,1.31 1.97,0.9 3.01,0.420002 1.38,0.64 0.4,-0.16 0.22,1.28 0.4,-0.29 1,1.39 1.47,0.31 0.26,0.39 2.34,-0.02 2.11,2.09 -0.11,0.48 0.6,-0.07 0.49,0.75 z"/>
+<path class="st" data-id="coa" data-name="Coahuila" style="--c:var(--purple-2)" tabindex="0" role="button" aria-label="Coahuila" d="m 463.90786,143.13244 -0.26,0.61 -1.09,0.79 -0.95,0.06 -1.92,1.3 -5.52,-0.92 -3.67,0.26 -1.13,0.63 -0.55,2.34 -1.69,2.6 -0.29,0.79 0.16,2.29 -0.63,0.49 -2.23,-0.12 -2.1,0.92 -1.19,-0.38 -1.19,1.04 -1.83,2.98 0.25,3.34 2.82,2.07 0.59,-0.05 0.7,-3.12 0.63,0.07 2.05,1.48 0.42,5.13 -0.84,2.24 -1.05,0.77 -1.14,2.19 -3.2,-0.04 -2.61,1.7 -3.51,0.28 -0.87,0.9 -1.04,2.73 -2.42,2.42 0.02,1.3 4.54,4.78 2.7,2.02 1.05,3.11 1.42,1.15 0.86,0.08 0.38,0.64 -0.99,2.9 0.24,2.47 0.84,1.78 1.11,0.14 0.84,0.66 2.13,0.08 0.35,0.36 0.56,3.41 0.82,0.85 3.28,1.88 -0.51,1.05 3.6,0.63 0.5,0.8 0.88,0.32 0.39,0.95 -0.75,0.89 -0.15,1.15 -0.34,0.2 -1.94,-0.03 -3.41,-0.88 -1.31,-1.53 -1.74,-0.17 -0.94,0.31 0.29,0.81 -1.79,0.57 -1.7,3.22 0.89,2.93 0.09,2.16 -0.2,0.39 -2.41,0.06 -0.16,0.37 0.29,0.83 -0.32,1.2 1.38,1.55 0.11,1.39 0.65,1.23 -1,3.26 0,0 -2.12,-0.47 -0.75,0.32 -0.18,0.78 -1.44,0.37 -2.09,-0.81 -1.37,-1.3 -1.92,-3.76 -1.25,-0.82 -2.96,-0.37 -2.27,0.51 -0.92,0.88 -2.83,-0.02 -0.62,-3.56 -1.16,-0.32 -1.47,0.41 -2.16,-3.07 -1.96,-1.66 -2.5,-0.97 -2.54,-1.71 -9.4,-0.61 -5.4,1.07 -0.63,0.53 -0.02,1.63 0,0 -3.05,2.03 -0.58,1.01 -0.51,2.14 0.5,1.72 -0.28,0.52 -0.69,0.21 -2.1,-1.35 -2.78,-0.16 -3.42,-1.59 -1.3,-1.2 -0.62,-0.86 -0.54,-3.12 -2.43,-1.93 -0.6,-1.74 -1.77,-2.12 -0.63,-3.15 1.36,-1.36 2.26,-0.45 -0.8,-1.23 -1.34,-0.26 -0.67,-0.82 0.09,-0.86 1.4,-2.15 1.06,-0.81 1.2,-3.11 -1.2,-4.47 -0.18,-1.99 0.41,-2.28 -1.68,-3.95 -0.17,-1.39 0.44,-2.93 -1.38,-3.97 -2.3,-2.13 -0.82,-1.21 -1.22,-1.18 -2.98,-0.79 -0.72,-0.63 0,0 -1.08,-1.83 -2.15,-1.9 0.1,-1.31 -0.44,-0.8 1.92,-0.91 1.07,-1 1.15,-0.04 0.41,-1.54 -1.83,-0.79 -0.54,-0.68 -0.22,-4.82 -0.68,-3.68 0.48,-1.14 -0.09,-1.06 -0.24,-0.83 -1.13,-0.5 -0.81,-4.52 1.09,-1.16 -0.14,-0.72 -0.72,-0.78 0.57,-0.82 0.06,-0.83 -0.76,-1.44 1.9,-0.38 0.34,-0.48 -0.49,-1.46 -1.12,-0.18 0.01,-1.55 1.77,0.71 0.6,-0.38 2.66,-6.81 0.94,-1.38 -0.87,-1.42 0.56,-1.1 2.27,-3.78 1.64,-0.61 1.41,-1.11 1.73,-4.01 0.7,-0.34 0.84,0.32 0.66,-0.98 -0.01,-1.04 -1.71,-0.61 -0.02,-0.35 2.26,-4.16 0,0 0.69,0.07 0.27,-0.63 0.42,0.08 -0.26,0.57 1.36,0.71 0.1,0.51 0.44,-0.45 0.34,0.4 1.61,-0.11 0.85,0.38 0.89,-0.36 0.51,-2.25 0.27,0.2 0.29,-1.06 0.82,-0.11 1.09,-1.72 0.02,-0.59 0.62,-0.25 0.37,0.29 0.99,-0.47 0.17,-0.71 0.63,0.22 0.46,-0.35 -0.2,-0.65 -0.8,-0.45 0.43,-0.810002 0.17,-1.76 1.03,-0.22 -0.08,-0.33 0.71,-0.91 -0.38,-0.25 0.05,-0.9 0.7,-1.25 -0.13,-1.05 0.74,-0.6 0.32,-1.55 0.54,0.13 0.07,-1.24 1.18,-1.1 -0.12,-0.42 0.69,-1.56 1.11,0.23 1.38,-0.59 0.63,0.32 0.86,-0.59 -0.08,-0.5 2.68,0.52 0.7,-0.64 0.41,-1.62 1.08,-0.99 1.4,0.32 0.01,0.39 2.13,0.35 1.61,1.42 1.4,0.17 0.5,-0.14 0.02,-0.33 1.03,-0.13 1.58,0.23 0.27,0.4 0.45,-0.39 2.05,-0.32 0.47,0.29 -0.06,0.54 0.78,-0.25 1.68,0.75 0.43,-0.19 0.37,0.32 0.41,-0.29 0.28,0.4 1.91,-0.56 0.08,-0.56 0.61,-0.5 0.19,1.49 1.98,-0.84 0.2,1.05 1.06,-0.53 0.23,0.21 -0.41,0.31 0.38,1.02 0.55,0.4 0.33,1.42 1.2,-0.21 0.38,0.59 -0.28,1.53 0.61,0.44 0.23,-1.33 0.31,-0.35 0.46,0.14 0.15,1.62 -0.49,1.07 0.3,0.34 1.91,0.18 0.56,1.05 2.21,0.49 1.3,2.52 1.64,0.75 1.43,1.03 0.3,0.800002 1.97,1.01 0.76,1.68 -0.24,0.42 2.38,1.79 0.4,0.88 0.35,3.74 0.46,1.22 0.74,0.07 0.66,2.01 0.68,0.11 0.34,0.61 0.1,1.32 0.61,0.6 0.19,2.13 1.31,0.64 0.02,0.81 1.25,0.77 -0.37,1.12 0.64,0.85 1.24,0.37 -0.12,0.41 -0.65,0.17 0.69,0.94 -0.23,1.37 1.5,2.4 -0.04,1.08 0.97,1.12 0.76,0.09 0.3,1.1 3.14,1.37 0.88,1.8 0.81,0.46 0.19,1.02 0.82,1.19 0.91,0.12 -0.02,1.09 1,1.01 -0.18,1.02 0.71,1.06 0,1.06 0.67,0.11 z"/>
+<path class="st" data-id="col" data-name="Colima" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="Colima" d="m 372.56786,382.21244 -2.47,2.24 -1.02,-0.31 -0.38,0.28 0.03,1.79 -1.86,1.18 -0.68,1.7 0,0 -5.51,-4.36 -5.18,-2.77 -4.02,-1.36 0.14,-0.84 0.46,-0.05 0.15,-0.62 -0.45,-0.52 -1.1,-0.6 -1.84,0.94 -0.25,-0.63 -1.75,-0.74 -4.53,-1.21 0.33,-0.44 0.62,0.41 0.18,-0.26 -0.59,-0.22 0,0 1.92,0.05 1.48,-1.79 1.14,0.48 0.56,-0.11 0.48,-0.84 0.87,-0.58 0.55,0.4 3.77,-0.88 1.27,0.38 1.13,-0.29 3.1,-2.32 3.25,0.32 1.41,-0.21 3.22,-1.68 2.51,-2.41 0.61,0.13 0.48,2.89 -0.16,1.02 0.97,0.83 0.21,0.78 1.07,0.48 -0.5,1.8 0.07,3.12 -0.56,1.32 0.82,1.54 z"/>
+<path class="st" data-id="dur" data-name="Durango" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="Durango" d="m 280.78786,200.80244 0.32,-0.65 2.31,-0.78 0.31,1.32 1.08,0.66 1.6,-0.22 0.52,0.86 2.01,0.33 0.67,1.21 0.64,0.28 1.23,-1.61 3.53,-2.72 2.12,-3.42 -0.61,-1.9 -0.97,-1.56 1.72,-3.99 0.92,-0.26 -0.36,-2.14 0.41,-0.36 1,0.16 0,-1.36 0.86,-0.87 1.98,-0.87 0.33,-0.58 0.03,-1.07 -1.12,-0.5 -0.15,-0.46 0.9,-1.53 -0.03,-1.6 0.9,-3.39 0.63,-0.47 -0.05,-1.84 1.76,-0.57 0.21,-1.29 0.77,-0.54 0.67,0.89 1.27,0.06 1.91,1.23 1.06,0.23 0.96,1.94 1.26,0.71 0.28,0.58 1.94,0.23 1.58,1.36 0.98,0 0.76,1.09 1.64,-0.29 1.1,1.89 1.27,-0.25 1.56,0.47 0.23,0.6 1.68,-0.96 0.41,0.54 0.57,-0.09 0.52,-0.58 1.6,-0.7 0.01,-1.08 0.54,0.04 0.74,0.68 1.22,0.33 2.54,-0.24 1.95,1.89 1.72,1.19 0.98,0.21 1.74,-0.91 1.71,0.2 0.44,-0.24 0.25,-0.77 -0.24,-1.34 1.89,-3.08 1.51,-0.54 1.15,-1.52 2.5,-0.39 0.07,-1 -1.54,-0.12 -0.48,-0.66 0.31,-0.74 0.73,-0.32 1.38,0.89 1.43,0.24 0.68,1 1.43,0.28 0.88,-0.81 1.51,0.57 3.21,-1.05 0.79,0.12 -0.44,0.72 0.28,0.17 0.51,-0.68 1.15,0.86 1.1,-0.24 0,0 0.72,0.63 2.98,0.79 1.22,1.18 0.82,1.21 2.3,2.13 1.38,3.97 -0.44,2.93 0.17,1.39 1.68,3.95 -0.41,2.28 0.18,1.99 1.2,4.47 -1.2,3.11 -1.06,0.81 -1.4,2.15 -0.09,0.86 0.67,0.82 1.34,0.26 0.8,1.23 -2.26,0.45 -1.36,1.36 0.63,3.15 1.77,2.12 0.6,1.74 2.43,1.93 0.54,3.12 0.62,0.86 1.3,1.2 3.42,1.59 2.78,0.16 2.1,1.35 0.69,-0.21 0.28,-0.52 -0.5,-1.72 0.51,-2.14 0.58,-1.01 3.05,-2.03 0,0 0.35,0.52 0.04,1.65 0.75,0.34 0.36,1.1 1.53,0.71 0.8,0.94 -0.81,4.9 1.21,0.45 1.02,4 -0.97,0.52 -0.02,0.41 0.5,0.37 -0.12,0.68 -6.07,0.58 -1.68,-0.23 -0.76,0.91 -2.66,-0.87 -1,-0.7 -1.12,-0.1 -2.25,0.8 -2.23,-0.7 -3.9,-0.27 -1.71,1.37 -0.47,1.34 -2.4,1.82 -2.07,2.83 -2.26,2.14 -2.4,0.72 -0.23,1.32 0.78,0.51 0.37,1.65 -0.31,1.68 0.37,1.89 -0.45,1.2 0.89,4.27 -2.8,2.42 -2.32,2.89 -0.09,1.88 -1.29,5.77 -0.61,0.37 -1.37,2.73 -0.08,1.28 0.85,3.09 -0.16,5.55 -0.25,0.63 -3.21,1.42 -1.01,1.51 -1.16,3.05 0,0 -2.94,1.3 -0.4,1.38 -0.48,0.03 -1.82,-1.11 -0.95,-2.07 -2.49,-2.39 -1.71,-0.43 -1.39,-1.76 -1.35,2.56 -0.81,0.85 -0.69,-0.03 -2.2,-4.58 1.69,-1.76 1.7,-0.87 0.6,-0.89 -0.12,-1.24 -1.15,0.03 -0.52,-0.37 -0.58,-2.46 -2.09,-0.16 -1.33,-0.6 -1.53,-1.75 -0.54,-0.03 -0.91,1.31 -1.68,0.35 -2.2,-2.64 0,0 -2.12,-2.18 -0.6,-0.06 -0.85,0.6 -2.04,-0.15 -0.61,-1.28 -0.13,-2.26 -1.22,-1.34 -0.74,-1.74 0.27,-0.93 -1.05,-2.92 -0.44,-2.81 -1.72,-1.65 -0.9,-1.98 -1.08,-1.21 -0.63,-2.95 -0.71,-1.06 -0.79,-2.59 0.26,-0.9 -1.03,-0.93 -0.09,-2.2 -1.74,-2.27 -0.14,-1.07 -1.08,-0.26 -0.89,-1.38 -1.45,-0.96 -4.04,-1.17 -0.67,1.04 -2.79,2.12 -1.33,0.19 -0.69,0.55 -0.7,-0.49 -0.84,0.18 -0.59,-1.96 -0.98,-1.41 -0.81,-4.12 -0.2,-0.25 -0.57,0.42 -0.57,-0.2 -1.21,-4.47 -1.32,-0.31 -0.89,-2.61 -2.3,-0.22 -0.53,0.44 -1.2,-0.96 0.33,-1.44 -1.2,-2.38 -0.75,-0.65 -0.48,-1.82 -1.01,-0.61 0.51,-1.96 0.09,-5.12 1.33,-3.21 -0.08,-0.68 -0.47,0.08 -0.6,-0.72 1.73,-2.22 1.19,-0.77 -0.15,-0.73 -0.73,0.16 z"/>
+<path class="st" data-id="gua" data-name="Guanajuato" style="--c:var(--purple-2)" tabindex="0" role="button" aria-label="Guanajuato" d="m 465.44786,314.42244 0.5,0.49 -0.11,2.06 -1.15,1.91 2.48,0.61 -0.04,1.17 -0.71,1.44 -1.45,0.67 -0.56,1.03 -1.1,0.17 -1.73,-1.75 -1.52,0.56 -2.25,3.34 0.1,1.45 -0.67,1.6 -0.82,-0.48 -0.22,1.1 -0.66,0.4 -2.72,-0.38 -1.5,0.71 -4.58,0.28 -0.72,1.41 -0.65,3.8 0.14,0.76 0.96,0.71 0.65,1.74 -0.01,2.71 1.09,1.86 2.02,1.41 0.72,1.67 0,0 -0.43,1.09 0.6,1.18 0.1,1.32 -0.51,1.75 0.67,0.05 -0.08,0.99 -1.18,1.15 -2.06,0.28 -0.73,0.79 -0.48,1.4 -0.62,0.18 0.33,-1.5 -0.5,-0.24 -1.94,0.48 -1.38,1.02 -3.44,-0.17 -2.58,-0.91 -1.3,-0.14 -0.61,0.29 -0.26,-0.1 0.21,-0.47 -0.46,-2.34 -2.21,0.6 -1.39,-0.44 -0.66,0.58 0.33,0.82 -1.22,0.52 -1.8,-0.74 -2.54,-0.24 -0.47,-0.5 -0.02,-3.24 -0.45,-1.73 1.04,0.52 0.63,-0.27 -1.34,-1.8 -1.09,-0.75 -1.43,0.24 -0.63,-0.39 -2.1,0.69 -2.01,2.8 -0.91,-0.3 -2.21,0.14 -0.48,-0.43 -1.18,0.7 -0.81,-0.09 -0.44,-0.45 -0.68,-2.85 0.36,-0.4 -0.57,-0.49 -0.55,0.07 -0.33,-0.54 -0.86,-0.05 0,0 0.38,-2.77 1.79,-3.43 -1.57,-2.87 -1.65,-0.43 -0.55,-1.31 2.01,-1.96 0.12,-0.83 1.81,-1.5 1.91,-3.95 2.49,-1.91 1.12,-2.71 -0.11,-0.65 0.52,-0.74 1.47,-0.09 0.43,-0.37 0.67,-1.37 -0.81,-0.47 0.58,-2.19 -0.7,-0.12 1.52,-5.53 -0.12,-0.7 1.2,-1.36 -0.74,-0.83 1.22,-1.29 0,0 0.97,0.63 0.81,-0.94 0,0 1.16,0.67 2.91,0.31 1.26,0.73 4.63,1.06 1.23,0.75 1.07,-0.04 4.97,3.72 2.74,1.43 2.75,-0.03 1.52,-0.61 -0.15,-1.12 0.62,-1.83 1.08,-0.73 3.89,1.28 3.15,2 0.27,0.69 0.48,-0.09 1.7,2.13 1.81,-0.17 0.39,-0.54 0.68,0.84 1.61,0.04 z"/>
+<path class="st" data-id="gro" data-name="Guerrero" style="--c:var(--purple-2)" tabindex="0" role="button" aria-label="Guerrero" d="m 449.47786,379.54244 0.3,2.94 -1.05,1.92 -0.74,4.23 0.37,1.6 1.75,0.76 0.1,1.19 -0.25,0.72 -1.66,1.81 0.65,0.66 1.33,-0.27 1.51,0.33 0.22,1.08 1.57,1.96 0.04,-0.43 0.62,0.03 0.34,-0.39 0.19,0.37 1.98,-2.18 2.47,-0.58 -0.69,-1.38 0.35,-0.6 1.02,-0.49 0.79,0.43 3.51,-0.23 0.29,-0.58 0.88,-0.42 0.85,0.29 0.44,-1.56 1.76,-0.32 -0.36,-1.72 0.81,-0.05 0.91,1.08 1.98,0.67 0.82,-0.49 0.81,0.13 0,0 0.51,0.84 -0.65,1.12 0.44,0.35 1.08,-0.23 1.12,0.46 2.02,2.67 5.51,0.7 2.3,2.33 0,0 -0.05,1.23 1.35,1.18 1.34,0.62 1.22,2.25 2.99,-0.2 0.22,0.8 -0.83,0.97 4.21,1.78 0.12,1.07 1.4,-0.3 0.47,0.27 0.86,-0.86 1.55,-0.14 1.61,1.98 1.61,0.8 0,0 -1.74,3.95 -0.17,1.41 2.73,6.06 0.6,4.58 -0.92,0.83 -0.18,2.06 0.56,0.52 2.3,0.78 0.45,1.17 -0.11,1.91 0.27,0.59 1.16,0.25 0.42,0.54 0.36,1.56 -0.92,2.88 -0.91,0.92 -1.22,0.23 -0.93,0.67 -0.18,1.35 -4.11,3.59 -0.46,2.02 -4.64,3.54 0,0 -3.56,-3.61 -1.93,-2.51 -1.69,0.16 -0.33,0.56 -1.28,-0.19 -10.62,-3.2 -3.11,-0.65 -4,-0.04 -1.63,-0.53 -2.08,-1.09 -1.81,-1.48 -0.99,-0.26 0.62,-0.64 -0.23,-0.44 -0.98,0.04 0.19,0.43 -0.57,0.25 -1.11,-1.73 -0.88,-0.44 -26.59,-9.48 0.13,-0.58 -0.51,-0.64 -2.49,-1.75 -0.76,-0.98 -6.24,-2.63 0.23,-0.84 -0.91,-1.08 -0.81,-0.57 -2.18,-0.28 -0.1,-0.54 -1.05,-0.38 -0.76,-1.89 -1.86,-1.33 -1.37,-2.35 -3.81,-2.12 -2.2,-0.68 -1.37,0.18 -0.74,0.82 -0.53,-0.32 0,0 -0.82,-1.26 0.11,-3.93 0.76,-0.63 2.64,-0.82 0.86,0.25 1.46,-0.64 0.76,-0.77 1.62,0.37 0.82,-0.28 0.18,-0.32 -1.84,0.03 0.33,-0.9 -0.11,-1.23 -0.65,-1.41 0.58,-1.1 -0.63,-1.23 0.13,-0.34 0.64,-0.03 -0.47,-0.79 0.68,-0.39 0.62,0.14 -0.21,-0.46 0.56,-0.11 0.53,0.82 0.48,-0.77 -0.33,-0.41 1.06,-0.33 0.06,1.05 0.6,-0.38 0.29,0.38 0.15,-0.67 0.67,-0.24 1.13,0.03 1.21,1.9 2,0.91 3.46,-0.51 0.21,-0.46 2.03,-0.46 1.72,0.04 0.47,0.49 2.03,0.47 1.57,-0.19 1.13,0.28 1.18,1.66 0.08,0.82 0.64,0.13 1.42,-1.1 0.62,0.57 1.44,0.23 0.4,0.79 1.49,0.85 0.34,-0.42 0.4,0.3 0.27,1.06 0.81,-0.03 0.77,-1.01 -2.83,-3.79 -0.3,-3.14 -1.22,-4.24 0.47,-1.03 1.1,-0.85 0.42,0.04 0.57,1.57 2.44,-2.92 0.93,-0.53 1.09,-2.45 2.22,-1.41 z m 4.64,18.75 0.07,0.32 0.38,-0.34 -0.45,0.02 z"/>
+<path class="st" data-id="hid" data-name="Hidalgo" style="--c:var(--purple-2)" tabindex="0" role="button" aria-label="Hidalgo" d="m 496.62786,317.19244 0.84,0.17 0.3,0.75 -0.3,2.66 1.83,1.71 1.26,0.66 1.31,0.07 0.86,-0.9 2.03,0.62 2.53,3.42 -1.86,2.46 -0.63,2.21 0.56,1.06 -0.26,0.63 -1.45,0.23 -1.34,-1.39 -0.46,0 -2.39,2.16 -0.32,0.86 -0.65,0.54 -0.33,3.66 -0.58,1.3 -0.25,2.08 1.17,2.59 0.88,1.08 0.5,-0.22 1.33,-1.55 2.48,-1.16 1.88,-2.23 1.6,-0.73 2.14,-2.33 0.83,-0.35 1.46,0.95 0,0 0.07,3 -2.86,2.52 -0.91,1.38 -3.62,1.85 0.7,1.41 2.12,-0.48 0.46,2.19 -0.81,4.8 -1.54,3.08 0.7,4.73 0,0 -2.38,-0.5 -0.82,1.47 -1.45,1.21 -2.09,0.28 -1,-0.23 -5.01,1.71 0,0 -0.2,-1.41 1.84,-4.15 -0.17,-1.74 -5.81,0.61 -1.72,2.58 -0.24,0.21 -0.65,-0.32 0.02,-0.9 -0.87,-1.77 0.2,-0.52 0.91,-0.53 0.85,-0.08 1.11,-4.28 -0.47,-1.34 -0.6,-0.07 -2.73,1.39 -3.88,1.07 -0.53,3.75 -0.69,0.76 -2.13,-1.01 -0.17,2.24 -1.21,0.99 0.1,-2.49 -0.4,-1.34 -0.69,-0.65 -0.34,-1.25 -1.22,-1.26 0.7,-0.99 -1.51,-3.13 -0.64,-0.25 -0.13,-0.58 -4.65,-0.69 -2.63,-1.49 -1.18,-1.39 0,0 1.01,-6.54 1.58,-0.49 0.91,-0.68 2.93,-0.72 2.32,-1.61 -0.63,-2.02 1.15,-2.56 1.16,-0.42 0.81,-1.2 0.47,-2.21 0.83,-1.56 -0.27,-1.11 1.65,-1.43 1.21,0.71 4.11,-1.29 1.28,-3.13 0,0 2.26,-0.75 1.14,2.4 1.34,1.1 1.08,-0.04 1.35,-2.38 0.92,1.31 1.33,-2.96 1.58,-1.84 z"/>
+<path class="st" data-id="jal" data-name="Jalisco" style="--c:var(--yellow)" tabindex="0" role="button" aria-label="Jalisco" d="m 390.52786,309.79244 2.05,-1.12 4.21,0.38 1.74,1.41 2.17,1.02 1.26,-0.06 3.02,-1.04 0.72,-0.5 2.55,-3.55 4.28,-1.97 -1.96,-2.14 0.24,-1.6 -0.26,-0.59 0,0 3.54,0.91 2.13,1.14 2.67,2.35 2.09,0.75 0.28,0.39 0,0 -1.22,1.29 0.74,0.83 -1.2,1.36 0.12,0.7 -1.52,5.53 0.7,0.12 -0.58,2.19 0.81,0.47 -0.67,1.37 -0.43,0.37 -1.47,0.09 -0.52,0.74 0.11,0.65 -1.12,2.71 -2.49,1.91 -1.91,3.95 -1.81,1.5 -0.12,0.83 -2.01,1.96 0.55,1.31 1.65,0.43 1.57,2.87 -1.79,3.43 -0.38,2.77 0,0 -2.8,0.01 -2.14,1.04 -1.71,-0.17 -1.33,0.46 -1.68,-0.13 -1.07,0.34 -2.06,1.64 -1.06,-0.08 -1.01,1.05 -0.94,0.33 -0.28,1.43 -2.97,0.73 -0.23,0.81 -0.44,0.04 -1.05,-1.3 -2.47,-0.45 -0.3,1.15 -0.93,-0.2 -0.36,0.27 -0.02,2.35 -0.89,1.51 0.5,0.84 0.5,0.05 0.45,-0.56 2.27,0.28 3.21,0.94 0.66,0.64 0.61,2.21 -0.33,0.81 -0.93,0.74 1.91,4.2 -0.63,2.59 3.36,-0.07 0.61,0.68 0.06,1.56 -2.36,2.5 -0.85,2.31 -2.31,-0.58 -1.37,0.72 -4.02,3.58 -2.2,1.21 -1.59,1.74 -0.29,0.09 -1.26,-1.76 -0.53,-0.1 -2.22,1.7 -1.55,-0.3 -1.66,0.41 0,0 -0.05,-1.96 -0.82,-1.54 0.56,-1.32 -0.07,-3.12 0.5,-1.8 -1.07,-0.48 -0.21,-0.78 -0.97,-0.83 0.16,-1.02 -0.48,-2.89 -0.61,-0.13 -2.51,2.41 -3.22,1.68 -1.41,0.21 -3.25,-0.32 -3.1,2.32 -1.13,0.29 -1.27,-0.38 -3.77,0.88 -0.55,-0.4 -0.87,0.58 -0.48,0.84 -0.56,0.11 -1.14,-0.48 -1.48,1.79 -1.92,-0.05 0,0 -0.56,-0.53 -0.63,0.09 -0.08,-0.51 -0.66,0.26 -0.49,-0.3 -0.85,0.13 0.01,-0.64 0.51,-0.55 -0.13,-0.46 -0.89,-0.29 -0.23,0.43 -0.93,0.19 -2,-1.07 -1.89,-1.72 0.36,-0.72 -0.37,-0.73 -0.84,-0.47 0.09,-0.85 -0.45,-0.22 -0.22,-1.49 -0.76,-0.74 -0.84,-0.03 0.04,-0.36 -2.83,-2.11 -0.26,-0.73 -1.43,-1.51 -0.4,-1.11 -3.92,-5.33 -1.12,-2.32 0.21,-2.21 -0.34,-1.22 -0.68,-0.24 -0.13,-0.6 -2.24,-2.34 -0.46,-1.65 1.05,-0.51 0.95,-1.13 7.41,-1.16 1.5,-1.1 0.66,-1.61 -0.31,-0.97 -1.28,-1.06 0,0 4.45,-5.62 1.17,-0.45 2.33,0.47 3.19,-2.44 1.25,-0.21 1.5,0.73 1.21,1.43 3.08,0.78 2.66,3.01 1.08,0.56 2.3,2.12 0.67,0.78 0.5,1.55 0.51,0.32 0.03,-1.46 -1.18,-1.46 0.29,-0.35 -0.73,-0.75 -0.37,-1.53 0.45,-0.64 0.82,-0.18 1.5,-8.51 4.04,-0.23 0.95,-0.4 0.97,-0.97 1.71,-0.28 2.25,-1.28 0.4,-0.82 0.4,-4.22 -0.24,-1.48 -1.39,-1.24 -1.74,-4.29 -4.5,-0.6 -0.85,-1.61 -0.11,-2.72 -0.53,-0.48 -1.11,-0.09 -1.2,-1.16 -1.65,0.52 -0.46,-3.02 1.24,-4.89 -0.18,-0.48 0,0 1.08,-1.21 1.35,0.34 0.36,-3.03 3.1,-1.17 0.53,0.37 -1.05,3.24 0.27,0.49 1.8,-1.14 1.03,-1.18 -0.16,-1.43 -1.74,-3.84 0.11,-0.79 2.16,-1.53 2.66,-0.38 1.81,1.01 -0.17,0.91 -1.1,0.82 -1.45,1.87 -1.69,4.22 -0.04,3.32 1.21,1.78 1.16,0.17 0.38,-1.16 0,-7.04 0.63,-0.57 3.43,-0.67 1.42,0.51 1.4,1.32 0.6,1.93 -0.04,1.16 -3.78,6.17 -0.09,0.45 0.58,0.66 1.93,0.02 0.69,-0.8 1.27,0.2 0.71,0.52 0.9,-0.44 0.93,-1.73 2.39,-1.89 -1.24,-1.03 0.31,-1.87 1.88,-0.73 2.17,0.17 0.41,0.86 -0.76,1.51 0.5,0.44 2.15,0.14 0.51,0.38 -0.7,3.47 -1.19,2.91 -0.74,0.69 -1.26,0.2 -3.28,1.68 -1.77,1.73 -2.92,2.07 0.18,1.79 -0.33,2.47 -1.62,1.88 -1.79,0.46 0.85,2.48 0.93,0.54 1.02,-0.49 0.67,0.14 0.34,0.58 -0.1,1.02 -1.17,1.12 -4.04,1.81 0.17,0.5 2.5,0.62 0.75,0.81 0.75,1.7 0.94,0.49 2.26,-0.19 2.9,1.61 0.99,-0.48 0.88,0.07 0.22,-0.56 1.34,-0.26 1.71,0.43 0.11,-0.37 1.47,-0.52 0.33,-2.02 0.63,-0.54 1.37,-0.49 1.52,0.5 3.58,-2.91 2.29,-1.4 0.96,-1.31 0.48,-2.69 -2.78,-1.78 -0.65,-1.85 z"/>
+<path class="st" data-id="cmx" data-name="Ciudad de México" style="--c:var(--red)" tabindex="0" role="button" aria-label="Ciudad de México" d="m 488.38786,379.24244 -0.95,-0.02 -2.35,0.75 -0.91,-0.8 -0.63,0.12 -1.3,1.09 -1.33,-1.17 -1.33,0.24 0,0 -2.63,-4.38 -0.09,-0.98 3.17,-2.75 0.55,-1.98 2.24,-2.46 0.33,0.36 -0.05,1.06 1.57,1.92 0.48,1.55 2.14,1.79 0.32,1.48 0.47,-0.38 0.23,0.49 0.35,1.58 -0.47,1.67 z"/>
+<path class="st" data-id="mex" data-name="Estado de México" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="Estado de México" d="m 454.56786,398.27244 -0.38,0.34 -0.07,-0.32 0.45,-0.02 z m 8.86,-51.68 1.17,1.4 2.64,1.49 4.64,0.69 0.13,0.58 0.64,0.26 1.51,3.12 -0.7,1 1.22,1.25 0.34,1.25 0.69,0.65 0.4,1.34 -0.1,2.49 1.21,-1 0.17,-2.24 2.13,1.01 0.69,-0.77 0.53,-3.75 3.88,-1.08 2.73,-1.38 0.59,0.06 0.47,1.34 -1.11,4.28 -0.85,0.08 -0.91,0.52 -0.21,0.52 0.87,1.78 -0.01,0.89 0.64,0.32 0.24,-0.2 1.72,-2.58 5.82,-0.61 0.17,1.74 -1.84,4.15 0.19,1.42 0,0 0.97,1.82 0.76,-0.24 0.52,0.6 0,0 0.39,1.82 -0.56,0.61 -0.04,1.09 1.04,3.63 0.12,4.4 0,0 -0.89,0.18 -2.61,2.06 -2.55,-0.94 -0.93,-1.59 -0.98,-0.83 0,0 -0.19,-0.83 0.47,-1.67 -0.35,-1.58 -0.23,-0.5 -0.47,0.38 -0.31,-1.48 -2.14,-1.8 -0.48,-1.54 -1.57,-1.92 0.05,-1.06 -0.33,-0.36 -2.24,2.46 -0.56,1.98 -3.17,2.75 0.1,0.98 2.62,4.38 0,0 -3.95,6.3 -0.45,1.43 -1.56,1.84 -0.24,1 0,0 -0.81,-0.13 -0.82,0.49 -1.98,-0.67 -0.91,-1.08 -0.81,0.05 0.36,1.72 -1.76,0.32 -0.44,1.56 -0.85,-0.29 -0.88,0.42 -0.29,0.58 -3.51,0.23 -0.79,-0.43 -1.02,0.49 -0.35,0.6 0.69,1.38 -2.47,0.58 -1.98,2.18 -0.19,-0.37 -0.34,0.39 -0.62,-0.03 -0.04,0.43 -1.57,-1.96 -0.22,-1.08 -1.51,-0.33 -1.33,0.27 -0.65,-0.66 1.66,-1.81 0.25,-0.72 -0.1,-1.19 -1.75,-0.76 -0.37,-1.6 0.74,-4.23 1.05,-1.92 -0.3,-2.94 0,0 0.56,-0.38 0.23,-1.13 1.5,-1.83 1.1,-2.39 -0.28,-0.98 0.76,-1.78 0.43,-0.6 0.67,-0.12 0.3,-0.62 -0.44,-5.18 -0.57,-0.47 -0.96,-1.95 1.51,0.1 1.44,-0.5 0.29,-0.51 0.28,-2.06 1.33,-1.7 -0.04,-0.61 -0.87,-0.82 0.08,-2.43 0,0 2.55,-0.31 1.92,-2.01 -0.29,-1.73 -0.54,-0.96 0.24,-0.31 0.88,0.6 0.65,-0.13 -0.21,-0.72 0.3,-0.63 1.15,-0.72 z"/>
+<path class="st" data-id="mic" data-name="Michoacán" style="--c:var(--red)" tabindex="0" role="button" aria-label="Michoacán" d="m 408.26786,344.95244 0.86,0.05 0.33,0.54 0.55,-0.07 0.57,0.49 -0.36,0.4 0.68,2.85 0.44,0.45 0.81,0.09 1.18,-0.7 0.48,0.43 2.21,-0.14 0.91,0.3 2.01,-2.8 2.1,-0.69 0.63,0.39 1.43,-0.24 1.09,0.75 1.34,1.8 -0.63,0.27 -1.04,-0.52 0.45,1.73 0.02,3.24 0.47,0.5 2.54,0.24 1.8,0.74 1.22,-0.52 -0.33,-0.82 0.66,-0.58 1.39,0.44 2.21,-0.6 0.46,2.34 -0.21,0.47 0.26,0.1 0.61,-0.29 1.3,0.14 2.58,0.91 3.44,0.17 1.38,-1.02 1.94,-0.48 0.5,0.24 -0.33,1.5 0.62,-0.18 0.48,-1.4 0.73,-0.79 2.06,-0.28 1.18,-1.15 0.08,-0.99 -0.67,-0.05 0.51,-1.75 -0.1,-1.32 -0.6,-1.18 0.43,-1.09 0,0 1.55,0.99 1.22,1.92 -0.18,0.75 3.29,3.04 0,0 -0.08,2.43 0.87,0.81 0.03,0.62 -1.33,1.7 -0.28,2.05 -0.29,0.52 -1.43,0.49 -1.52,-0.1 0.96,1.96 0.57,0.47 0.43,5.18 -0.3,0.62 -0.66,0.11 -0.44,0.6 -0.76,1.79 0.28,0.98 -1.1,2.39 -1.5,1.83 -0.23,1.13 -0.56,0.39 0,0 -2.25,1.38 -1.09,2.46 -0.93,0.53 -2.44,2.92 -0.57,-1.57 -0.42,-0.04 -1.1,0.85 -0.47,1.03 1.22,4.23 0.3,3.15 2.83,3.79 -0.77,1.01 -0.81,0.02 -0.27,-1.06 -0.4,-0.3 -0.34,0.41 -1.48,-0.84 -0.4,-0.79 -1.44,-0.23 -0.62,-0.57 -1.41,1.1 -0.65,-0.12 -0.08,-0.83 -1.18,-1.66 -1.13,-0.27 -1.57,0.19 -2.03,-0.47 -0.47,-0.5 -1.72,-0.04 -2.03,0.46 -0.21,0.46 -3.46,0.5 -1.99,-0.91 -1.21,-1.9 -1.13,-0.03 -0.66,0.25 -0.15,0.67 -0.29,-0.38 -0.6,0.38 -0.06,-1.06 -1.06,0.34 0.32,0.4 -0.48,0.77 -0.53,-0.82 -0.56,0.11 0.21,0.46 -0.62,-0.14 -0.68,0.39 0.47,0.79 -0.64,0.03 -0.13,0.34 0.63,1.23 -0.58,1.1 0.65,1.4 0.11,1.23 -0.33,0.9 1.84,-0.02 -0.18,0.31 -0.82,0.28 -1.62,-0.37 -0.76,0.78 -1.47,0.64 -0.86,-0.25 -2.63,0.82 -0.76,0.63 -0.11,3.93 0.82,1.27 0,0 0.19,0.76 -1.28,0.53 -2.96,-1.46 -4.05,-1.21 -7.91,-1.73 -5.13,-2.39 -3.78,-0.7 -4.95,-1.86 -0.52,0.23 -3.81,-2.32 -1.77,-4.11 -2.87,-2.23 0.36,-0.84 -1.56,-1.89 0,0 0.68,-1.7 1.86,-1.18 -0.03,-1.79 0.38,-0.28 1.02,0.31 2.47,-2.24 0,0 1.66,-0.41 1.55,0.3 2.22,-1.7 0.53,0.1 1.26,1.76 0.29,-0.09 1.59,-1.74 2.2,-1.21 4.02,-3.58 1.37,-0.72 2.31,0.58 0.85,-2.31 2.36,-2.5 -0.06,-1.56 -0.61,-0.68 -3.36,0.07 0.63,-2.59 -1.91,-4.2 0.93,-0.74 0.33,-0.81 -0.61,-2.21 -0.66,-0.64 -3.21,-0.94 -2.27,-0.28 -0.45,0.56 -0.5,-0.05 -0.5,-0.84 0.89,-1.51 0.02,-2.35 0.36,-0.27 0.93,0.2 0.3,-1.15 2.47,0.45 1.05,1.3 0.44,-0.04 0.23,-0.81 2.97,-0.73 0.28,-1.43 0.94,-0.33 1.01,-1.05 1.06,0.08 2.06,-1.64 1.07,-0.34 1.68,0.13 1.33,-0.46 1.71,0.17 2.14,-1.04 z"/>
+<path class="st" data-id="mor" data-name="Morelos" style="--c:var(--yellow)" tabindex="0" role="button" aria-label="Morelos" d="m 479.58786,379.45244 1.33,-0.24 1.33,1.17 1.3,-1.09 0.63,-0.12 0.91,0.8 2.35,-0.75 0.95,0.02 0,0 0.98,0.83 0.93,1.59 2.55,0.94 2.62,-2.06 0.89,-0.18 0,0 -2.76,7.08 1.27,7.84 -0.55,0.72 -2.76,-2.64 -0.51,0.12 -0.8,1.26 -1.16,0.64 -0.61,0.99 -2.77,1.9 0,0 -2.3,-2.34 -5.51,-0.69 -2.02,-2.68 -1.13,-0.45 -1.07,0.23 -0.44,-0.36 0.65,-1.12 -0.5,-0.83 0,0 0.24,-1.01 1.56,-1.84 0.44,-1.43 z"/>
+<path class="st" data-id="nay" data-name="Nayarit" style="--c:var(--green)" tabindex="0" role="button" aria-label="Nayarit" d="m 304.00786,319.19244 0.16,0.81 -0.79,0.37 -0.46,-0.71 0.42,-0.46 0.67,-0.01 z m -5.18,-4.35 1.56,0.44 0.4,0.56 -0.51,0.38 -0.15,0.76 -2.29,-0.87 -0.4,-0.53 1.39,-0.74 z m -5.42,-5.3 2.62,0.7 0.4,0.44 -0.06,0.59 0.77,0.78 -0.21,0.87 -0.6,0.37 -2.37,-1.27 -0.54,-1.38 -0.01,-1.1 z m -0.44,-2.1 0.36,1 -0.51,0.23 -0.24,-0.83 0.39,-0.4 z m 24.72,-21.4 0.58,1.44 -0.17,1.35 0.55,0.48 -0.21,0.67 0.94,6.35 -0.6,0.03 -0.18,-0.4 -0.75,-4.16 -1.96,-4.49 0.28,-0.25 1.1,1.77 0.76,-0.25 -0.74,-2.17 0.4,-0.37 z m 7.2,-12.79 2.2,2.64 1.68,-0.35 0.91,-1.31 0.54,0.03 1.52,1.75 1.33,0.6 2.09,0.16 0.58,2.47 0.52,0.37 1.15,-0.03 0.12,1.24 -0.59,0.89 -1.7,0.87 -1.69,1.76 2.2,4.58 0.69,0.03 0.81,-0.85 1.35,-2.56 1.39,1.76 1.7,0.43 2.49,2.39 0.96,2.07 1.81,1.12 0.48,-0.04 0.4,-1.38 2.94,-1.3 0,0 0.21,2.77 0.42,0.96 0.73,0.43 0,0 0.18,0.48 -1.25,4.89 0.46,3.02 1.66,-0.52 1.2,1.15 1.11,0.09 0.53,0.48 0.11,2.72 0.85,1.62 4.5,0.6 1.74,4.29 1.39,1.24 0.24,1.47 -0.4,4.22 -0.4,0.83 -2.25,1.28 -1.72,0.28 -0.97,0.97 -0.96,0.4 -4.04,0.23 -1.5,8.51 -0.82,0.18 -0.45,0.64 0.38,1.53 0.73,0.75 -0.29,0.35 1.18,1.46 -0.04,1.46 -0.51,-0.32 -0.5,-1.55 -0.68,-0.78 -2.3,-2.12 -1.08,-0.55 -2.66,-3.01 -3.08,-0.79 -1.21,-1.43 -1.5,-0.73 -1.25,0.22 -3.19,2.43 -2.33,-0.46 -1.17,0.45 -4.45,5.62 0,0 -1.22,-1.75 -0.47,-0.08 -0.88,0.73 -3,-0.99 0.77,-0.63 0.92,-2.15 0.36,0.09 0.87,-1.57 1.21,-0.8 0.88,-1.17 0.15,-0.84 1.02,0.35 1.14,-1.62 -0.28,-0.98 0.5,-3.15 -0.65,-2.83 1.39,-2.69 -0.21,-1.25 -0.74,-0.84 -0.93,0.31 -4.66,-3.17 -1.43,-3.57 -2.97,-5.06 -0.73,-2.66 0.18,-3.21 0.8,-0.38 0.46,1.19 0.6,0.1 0.31,0.8 1.98,0.97 0.3,-1.52 -1.02,-0.71 -0.25,0.25 -0.35,-0.75 -1.02,0.34 -0.19,-0.57 0.38,-0.35 -0.07,-0.61 -0.45,-0.06 -0.33,0.42 -0.33,-0.3 0.13,-0.7 -0.52,-0.97 -0.21,-3.39 -0.3,-0.57 0.19,-0.85 -0.58,-0.39 0.25,-0.68 -0.63,-2.11 0.33,-0.17 0,0 2.1,1.24 3.46,0.57 0.36,-0.89 -0.23,-2.04 -0.4,-0.36 -0.21,-1.33 -1.31,-1.3 -0.45,-1.3 0.33,-1.02 1.69,-2.1 0.56,-3.41 0.9,-0.62 z"/>
+<path class="st" data-id="nle" data-name="Nuevo León" style="--c:var(--yellow)" tabindex="0" role="button" aria-label="Nuevo León" d="m 466.82786,145.86244 -0.65,0.34 -1.28,1.73 -2.78,0.8 -0.62,0.69 0.27,0.79 -0.35,1.07 0.6,0.45 4,0.19 0.05,0.88 -1.17,1.42 1.27,0.87 -0.22,2.46 0.24,1.38 1.15,1.13 0.42,3.19 -1.64,1.39 -0.81,2.39 0.13,1.12 1.47,-0.05 1.25,0.66 0.52,0.78 -0.47,1.29 -0.23,3.22 0.8,0.82 0.88,-0.37 0.67,0.4 0.84,1.9 1.88,0.22 1.24,4.14 1.82,2.49 1.41,-0.13 -0.06,1 1.17,1.62 0.69,0.09 0.75,-0.73 0.63,0.05 0.18,0.6 -0.36,0.73 0.76,1.34 -0.89,0.33 0.82,0.46 0.37,0.65 3.28,0.46 0.65,0.59 1.19,2.34 0.95,0.54 2.66,-1.53 1.07,0.15 3.38,-0.69 0.69,0.45 0.14,1.47 0.79,1.01 -0.3,3.35 0.59,1.52 -0.47,0.77 -0.2,2.07 0.69,1.57 -0.41,0.8 0.99,0.83 1.99,0.63 0.4,0.26 0.03,0.52 -1.54,1.58 -0.59,1.37 -1.25,0.62 -1.36,1.44 -0.78,0.08 -0.99,1.13 -4.38,0.85 -0.99,1.14 -0.75,2.03 -2.8,-0.22 -0.61,-1.17 -0.51,-0.04 -1.46,1.97 -1.26,0.41 -0.25,0.4 0.6,2.24 0.67,0.36 -0.38,1.67 -0.9,0.09 -0.92,0.69 -0.47,1.6 -1.12,0.45 -0.38,-1.52 -0.38,0.13 -0.36,1.04 -1.15,0.47 -1.12,1.6 -1.76,-0.1 -1.3,2.13 -2.87,1.27 -1.99,1.35 -0.69,2.1 0.22,0.28 1.83,-0.09 1.26,2.62 -0.86,6.77 1.77,2.09 1.4,3.64 1.37,0.77 0.76,2.34 -2.25,-0.44 -0.36,0.1 -0.34,1.51 -1.76,0.97 -0.71,0.15 -2.55,-0.68 -2.31,1.23 -0.66,2.81 -1.48,1.77 -0.33,0.96 0.39,2.84 -0.21,1.77 -3.09,-0.38 -0.8,0.68 0.55,1.35 -0.43,0.77 0,0 -3.9,-0.74 -2.34,2.8 -1.5,-0.72 -1.24,-1.47 -0.56,-1.65 -0.25,-4.09 -0.51,-1.27 1.15,-5.6 -0.11,-0.89 -0.97,-1.46 0.21,-4.37 -0.88,-2.25 -2.48,-3.13 0.13,-1.43 -1.79,-1.71 -0.29,-0.81 1.2,-1.57 0.05,-0.33 -0.69,-0.26 0.48,-1.57 -1.39,-0.5 -1.05,0.19 -1.72,-2.32 0,0 0.55,-0.42 0,0 1,-3.26 -0.65,-1.23 -0.11,-1.39 -1.38,-1.55 0.32,-1.2 -0.29,-0.83 0.16,-0.37 2.41,-0.06 0.2,-0.39 -0.09,-2.16 -0.89,-2.93 1.7,-3.22 1.79,-0.57 -0.29,-0.81 0.94,-0.31 1.74,0.17 1.31,1.53 3.41,0.88 1.94,0.03 0.34,-0.2 0.15,-1.15 0.75,-0.89 -0.39,-0.95 -0.88,-0.32 -0.5,-0.8 -3.6,-0.63 0.51,-1.05 -3.28,-1.88 -0.82,-0.85 -0.56,-3.41 -0.35,-0.36 -2.13,-0.08 -0.84,-0.66 -1.11,-0.14 -0.84,-1.78 -0.24,-2.47 0.99,-2.9 -0.38,-0.64 -0.86,-0.08 -1.42,-1.15 -1.05,-3.11 -2.7,-2.02 -4.54,-4.78 -0.02,-1.3 2.42,-2.42 1.04,-2.73 0.87,-0.9 3.51,-0.28 2.61,-1.7 3.2,0.04 1.14,-2.19 1.05,-0.77 0.84,-2.24 -0.42,-5.13 -2.05,-1.48 -0.63,-0.07 -0.7,3.12 -0.59,0.05 -2.82,-2.07 -0.25,-3.34 1.83,-2.98 1.19,-1.04 1.19,0.38 2.1,-0.92 2.23,0.12 0.63,-0.49 -0.16,-2.29 0.29,-0.79 1.69,-2.6 0.55,-2.34 1.13,-0.63 3.67,-0.26 5.52,0.92 1.92,-1.3 0.95,-0.06 1.09,-0.79 0.26,-0.61 0,0 0.75,-0.17 0.24,0.93 0.77,0.25 z"/>
+<path class="st" data-id="oax" data-name="Oaxaca" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="Oaxaca" d="m 543.86786,396.11244 1.17,-2.18 0.3,-0.96 -0.49,-0.74 0.05,-0.86 0.65,-0.61 1.15,1.16 1,0.35 -0.58,1.27 0.61,2.74 0.64,0.9 1.96,1.55 1.3,-0.38 1.39,0.81 1.02,1.89 1.38,0.09 -0.54,0.9 0.7,0.35 2.47,-0.78 1.43,0.52 1.15,-0.19 2.03,0.48 0.52,0.44 1,3.79 -0.22,1.25 -0.81,1.12 -0.99,2.57 -0.72,0.68 0.34,0.72 -0.17,1.18 2.17,4.42 1.96,0.58 1.26,-0.65 2.87,-0.17 3.01,-2.1 3.66,-0.92 1.21,-1.09 0.42,0.07 1.37,0.84 -0.18,0.68 -1.49,0.66 -0.23,1.13 3.36,4.41 3.45,2.79 -0.01,0.99 0.64,0.57 -0.33,1.37 28.57,1.75 0,0 -0.34,0.94 0.03,2 -0.76,1.02 -0.8,3.49 -2.94,2.62 -2.19,6.29 -0.08,0.85 1.24,2.93 -0.52,1.46 0.12,2.11 0,0 0.04,0.44 -1.98,0.89 -0.49,-0.09 -0.52,-0.43 -0.72,0.07 -0.79,-0.87 -0.87,0.02 -0.89,-1.51 -1.12,0.39 0.02,0.99 -0.66,0.05 -0.02,0.63 1.12,0.96 4.37,0.32 3.07,2.29 0,0 -0.18,0.64 0,0 -4.71,-2.07 -2.96,-0.91 -7.69,-1.12 -0.24,-0.45 2.64,-0.9 0.73,-0.65 0.4,-1.13 -2.38,-0.84 -1.29,0.9 -0.39,0.77 -0.96,0.05 -0.27,0.61 -0.51,-0.15 -0.1,-0.39 1.1,-0.94 -1.1,-0.93 0.24,-0.61 -1.39,-1.05 -1.67,0.44 -1.3,2.23 -1.25,-0.03 -0.92,0.82 0.21,0.86 -0.61,0.06 -0.44,0.8 6.42,-0.01 1.84,0.24 0.12,0.29 -3.64,0.06 -3.99,0.67 -1.85,-0.16 -0.16,0.61 -2.02,0.17 -0.48,0.46 -0.63,0 -0.16,1 -2.02,0.89 -0.34,0.52 0.21,0.78 -1.37,0.46 -0.18,0.54 -1.55,-0.18 -0.11,0.58 -1.97,0 -0.11,0.47 -2.03,0.89 -2.44,0.34 -1.28,0.85 -3.85,1.01 -2.73,1.26 0.01,0.26 -1.46,0.4 0.18,0.33 -2.95,1.43 -4.45,-0.27 -1.87,0.97 -1.57,-0.03 -3.54,-1.49 -4.01,-0.6 -1.55,-0.95 -2.43,-0.76 -0.77,-0.54 -0.27,-0.77 -3.76,-1.7 -3.26,-0.61 -2.02,0.13 -2.64,-0.73 -0.74,0.18 -2.57,-0.4 -0.44,0.39 -2.43,-0.37 -5.68,-3.74 -5.44,-2.9 -4.67,-0.84 -3.82,-1.38 0,0 4.64,-3.55 0.46,-2.01 4.11,-3.59 0.19,-1.35 0.93,-0.67 1.22,-0.23 0.9,-0.91 0.92,-2.88 -0.36,-1.55 -0.42,-0.54 -1.16,-0.26 -0.27,-0.59 0.11,-1.91 -0.45,-1.17 -2.29,-0.78 -0.56,-0.51 0.18,-2.07 0.92,-0.83 -0.61,-4.58 -2.73,-6.06 0.17,-1.42 1.74,-3.95 0,0 1.2,-1.4 2.07,-1.35 1.57,-0.36 3.46,-0.01 1.45,-0.59 2.19,1.61 1.18,0.36 0.72,-0.21 1.77,-1.64 -0.07,-0.43 -2.35,-1.64 -0.44,-0.76 2.03,-4.33 1.56,-0.68 1.59,-0.2 0.48,0.34 0.23,0.97 -0.1,0.46 -1.33,0.9 0.1,0.4 1.31,0.96 0.74,1.08 1.44,2.82 0.36,1.64 0.82,0.7 0.87,-0.85 0.91,-1.9 2.6,-2.58 1.36,-0.29 3.72,0.89 1.78,-1.48 0.11,-0.89 0.29,0.56 1.36,-0.9 2.39,-0.51 1.92,-3.45 z"/>
+<path class="st" data-id="pue" data-name="Puebla" style="--c:var(--red)" tabindex="0" role="button" aria-label="Puebla" d="m 511.59786,338.20244 0.7,-2.56 0.96,-0.75 0.09,-0.83 0.88,-0.94 0.27,-1.02 1.18,0.39 2.03,-0.32 -0.01,1.79 -1.23,0.75 0.16,0.3 0.87,-0.19 0.81,0.6 -0.37,0.84 0.16,0.84 0.81,0.84 2.23,1.22 0.48,1.12 -1.5,2.47 -1.61,-0.92 -1.17,0.76 0.06,4.01 0.46,2.37 0.68,0.55 2.04,-0.22 0.86,1.78 0.59,0.2 1.61,-1.4 1.22,-1.95 0.82,-0.66 7.06,2.48 0.08,0.51 -2.16,2.99 -1.65,4.28 -0.2,0.81 0.32,0.98 -0.34,0.97 -0.67,0.87 -0.97,2.63 -0.57,0.24 -0.25,0.7 1.38,2.99 -0.55,1.38 0.34,0.42 1.43,0.99 3.63,0.82 2.93,1.27 0.47,0.59 0.11,1.28 -0.16,0.7 -0.53,0.12 -4.82,-0.22 -0.19,0.9 0.52,6.12 -0.07,0.55 -1.86,2.41 0,2.99 0.36,1.11 0.85,0.73 3.81,1.11 -0.17,0.75 1.86,3.13 1.43,0.1 0.95,-1.05 1.39,-0.8 2.58,0.83 1.85,2.16 0,0 -0.81,0.84 -1.92,3.45 -2.39,0.51 -1.36,0.9 -0.29,-0.56 -0.11,0.89 -1.78,1.48 -3.72,-0.89 -1.36,0.29 -2.6,2.58 -0.91,1.9 -0.87,0.85 -0.82,-0.7 -0.36,-1.64 -1.44,-2.82 -0.74,-1.08 -1.31,-0.96 -0.1,-0.4 1.33,-0.9 0.1,-0.46 -0.23,-0.97 -0.48,-0.34 -1.59,0.2 -1.56,0.68 -2.03,4.33 0.44,0.76 2.35,1.64 0.07,0.43 -1.77,1.64 -0.72,0.21 -1.18,-0.36 -2.19,-1.61 -1.45,0.59 -3.46,0.01 -1.57,0.36 -2.07,1.35 -1.2,1.4 0,0 -1.61,-0.8 -1.6,-1.98 -1.55,0.14 -0.86,0.86 -0.47,-0.27 -1.4,0.31 -0.13,-1.08 -4.2,-1.78 0.83,-0.97 -0.22,-0.8 -2.98,0.2 -1.22,-2.25 -1.35,-0.62 -1.35,-1.18 0.05,-1.22 0,0 2.77,-1.9 0.61,-0.99 1.16,-0.64 0.8,-1.26 0.51,-0.12 2.76,2.64 0.55,-0.72 -1.27,-7.84 2.76,-7.08 0,0 -0.12,-4.4 -1.04,-3.63 0.04,-1.09 0.55,-0.61 -0.38,-1.83 0,0 0.7,-0.29 1.16,0.37 3.03,2.31 1.32,1.38 0.54,1.38 1.18,1.31 4.06,2.24 0.86,-0.14 3.07,-2.68 0.57,-0.04 1.46,0.99 0.77,-0.05 1.24,-0.84 1.4,-2.33 0.84,0.32 2.68,-0.51 0.82,-0.55 0.28,-1.15 -0.94,-0.2 -0.67,-0.6 -0.31,-1.17 -1.21,-1.24 -0.59,-0.38 -1.53,0.5 -0.84,-0.17 0.13,-1.73 -4.1,-3.41 -0.71,-1.06 -0.49,-0.07 -1.55,1.83 -0.61,0.24 -2.06,-0.38 0,0 -0.7,-4.73 1.54,-3.08 0.81,-4.8 -0.46,-2.19 -2.12,0.48 -0.7,-1.41 3.62,-1.85 0.91,-1.38 2.86,-2.52 z"/>
+<path class="st" data-id="que" data-name="Querétaro" style="--c:var(--green)" tabindex="0" role="button" aria-label="Querétaro" d="m 483.94786,320.33244 -1.28,3.13 -4.11,1.29 -1.21,-0.71 -1.65,1.43 0.27,1.11 -0.83,1.56 -0.47,2.21 -0.81,1.2 -1.16,0.42 -1.15,2.56 0.63,2.02 -2.32,1.61 -2.93,0.72 -0.91,0.68 -1.58,0.49 -1.01,6.54 0,0 -1.1,0.79 -0.3,0.63 0.21,0.72 -0.66,0.12 -0.88,-0.6 -0.24,0.31 0.54,0.96 0.29,1.73 -1.92,2.01 -2.55,0.31 0,0 -3.29,-3.04 0.18,-0.75 -1.22,-1.92 -1.55,-0.99 0,0 -0.72,-1.67 -2.02,-1.41 -1.09,-1.86 0.01,-2.71 -0.65,-1.74 -0.96,-0.71 -0.14,-0.76 0.65,-3.8 0.72,-1.41 4.58,-0.28 1.5,-0.71 2.72,0.38 0.66,-0.4 0.22,-1.1 0.82,0.48 0.67,-1.6 -0.1,-1.45 2.25,-3.34 1.52,-0.56 1.73,1.75 1.1,-0.17 0.56,-1.03 1.45,-0.67 0.71,-1.44 0.04,-1.17 -2.48,-0.61 1.15,-1.91 0.11,-2.06 -0.5,-0.49 0,0 -0.59,-0.57 1.54,-0.38 -0.28,-0.45 0.18,-0.48 1.1,0.04 1.51,1 0.59,1.89 0.63,0.66 2.49,0.25 1.94,-0.5 0.58,0.36 1.06,-2.77 0.56,-0.37 0.8,0.24 0.48,-0.28 0.99,2.2 3.22,3.35 0.82,1.46 z"/>
+<path class="st" data-id="roo" data-name="Quintana Roo" style="--c:var(--green)" tabindex="0" role="button" aria-label="Quintana Roo" d="m 792.18786,339.01244 -1.08,2.58 -1.14,1.48 -0.35,0.05 -2.56,3.35 -1.57,0.97 -0.67,-1.71 0.12,-1.91 2.29,-3.75 0.7,-0.36 0.72,0.76 0.34,-0.33 0.46,0.28 1.55,-0.4 1.19,-1.01 z m -60.53,69.87 -0.25,-2.46 2.44,-2.83 0.57,-1.26 -0.28,-4.7 -0.47,-1.38 0.57,-1.67 -0.82,-0.46 0.51,-1.37 -0.15,-0.71 -0.99,-1.24 -0.17,-1.27 0.8,-5.13 -0.22,-2.52 0.41,-0.67 1.17,-0.66 0.18,-5.85 -3.41,-4.67 -5.3,-4.25 -1.34,-1.81 0,0 0.93,-2 0.33,-1.46 -0.17,-0.87 0.56,-0.49 3.54,-0.17 1.39,-1.39 2.43,-1.05 2.43,-0.04 1.18,-0.41 1.92,-1.78 1.08,0.92 0.3,-0.32 -0.27,-0.69 1.87,-1.6 1.78,-1.04 5.51,-1.98 0.46,-0.47 0.79,-2.37 0.51,-0.42 1,0.01 0.93,1.68 0.36,-0.05 -0.25,-2.19 1.5,-2.76 1.17,-0.56 1.14,1 1.54,-0.44 1.51,0.1 3.11,-1.83 3.13,-2.7 1.72,-0.82 0.86,-1.17 0.27,-1.58 0.86,-1.08 0.48,-2.46 1.15,-2.05 0.1,-0.97 -1.33,-3.21 0.47,-3.16 0.88,-0.86 0.13,-0.76 -0.33,-5.31 0,0 1.33,0.09 -0.04,0.41 0.57,0.28 0.67,-0.32 2.09,0.59 0.33,0.39 0.65,-0.25 1.63,0.19 0.44,0.4 0.29,-0.53 2.71,-0.87 0.23,-1.96 -0.63,-0.27 0.64,-0.78 0.46,-0.16 0.44,0.5 1.44,0.39 0.56,0.83 0.34,-0.16 0.54,0.45 0.05,0.79 1.58,2.18 0.97,4.05 0.43,-0.1 0.22,-1.61 0.74,-0.67 -0.07,-0.9 -0.65,-1.07 0.65,0.22 0.11,1.72 -0.64,1.63 0.4,1.16 -0.16,1.37 0.19,0.8 1.2,0.85 -0.69,2.49 -0.75,0.05 -0.31,0.71 -1.27,4.05 -1.18,1.14 -1.11,1.59 0.04,0.49 -1.15,0.68 -0.33,0.81 -1.92,2.16 -3.88,3.04 -1.73,2.42 -1.02,2.47 -1.46,1.73 -1.41,3.98 -0.01,1.89 0.64,1.93 0.42,0.14 0.16,1.15 -0.58,1.37 -0.85,0.83 0.41,-0.93 0.44,0.01 0.56,-1.33 -0.06,-0.59 -0.62,-0.38 0.07,1.29 -1.05,1.79 -0.77,0.28 -0.34,-0.38 -0.92,0.55 -1.62,2.72 -2.43,0.42 -0.19,1.9 1,0.69 0.15,0.59 0.7,-0.34 -0.1,0.78 0.36,0.14 -0.25,0.71 0.58,-0.08 0.89,-1.26 1.58,-0.34 0.6,0.65 0.82,-0.78 -0.27,-0.41 1.72,-0.22 0.54,0.8 -0.74,2.5 -1.98,1.91 -0.47,-0.03 0.08,-0.79 -2.46,1.48 -0.62,1.69 0,1.25 -0.67,0.79 0.36,0.08 -0.06,0.74 1.4,-0.05 2.03,-2.79 0.8,-0.38 0.45,0.17 -0.34,1.4 0.35,-1.12 0.97,-0.08 -2.21,2.63 -0.28,3.21 -2.04,4.14 -1.12,4.75 -0.9,0.96 -0.82,4.76 -0.45,0.9 -0.04,2.04 -1.44,2.34 -0.56,3.33 -0.73,-0.54 -0.64,0.06 0.02,-0.68 0.56,-0.38 -0.12,-0.96 -0.41,0.1 0.4,-1.48 -0.52,-0.3 -0.15,-0.62 -0.81,-0.24 0.19,-1.03 -2.62,-0.79 -1.04,-1.23 0.74,-0.46 0.34,-2.04 0.93,-1.7 -0.47,-0.53 0.38,-1.24 -0.41,-1.43 -0.73,-0.62 0.24,-0.91 -0.79,-0.29 -2.26,3.58 -1.09,0.38 0.01,0.25 0.98,-0.43 -3.24,5.92 -2.26,0.13 -0.21,-0.27 -1.06,0.42 -1.2,-0.28 -0.92,0.82 -0.88,3.01 -1.06,1.13 -0.45,2.03 -1.09,1.38 -1.15,2.88 -1.42,0.78 -0.58,1.42 -1.62,1.31 0.11,1.6 -0.93,-1.04 -0.91,-0.39 -0.63,-0.95 -1.05,0.04 -0.96,-1.16 -1.8,0.39 -1.27,1.2 z m 50.74,-96.48 -0.21,0.54 -2,1.2 -1.46,-0.03 -0.56,0.38 -0.91,-0.52 -0.48,-0.76 1.72,0.56 1.4,-0.1 2.5,-1.27 z"/>
+<path class="st" data-id="slp" data-name="San Luis Potosí" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="San Luis Potosí" d="m 438.60786,232.61244 1.72,2.32 1.05,-0.19 1.39,0.5 -0.48,1.57 0.69,0.26 -0.05,0.33 -1.2,1.57 0.29,0.81 1.79,1.71 -0.13,1.43 2.48,3.13 0.88,2.25 -0.21,4.37 0.97,1.46 0.11,0.89 -1.15,5.6 0.51,1.27 0.25,4.09 0.56,1.65 1.24,1.47 1.5,0.72 2.34,-2.8 3.9,0.74 0,0 0.9,1.06 0.14,2.06 1.03,0.78 0.48,1.15 -0.33,3.63 0.22,2.98 0.2,0.69 1.09,0.92 4.2,1.37 3.27,0.26 2.2,0.73 0.65,-0.43 -0.05,-1.03 0.97,-0.56 0.62,0.33 0.81,1.29 1.69,0.56 1.38,1.08 0.83,1.17 0.92,2.53 2.16,2.85 1.78,-0.23 2,0.39 2.32,-0.07 0.71,-0.8 1.89,1.19 2.14,-0.45 0.96,0.17 0,0 0.29,0.93 0.53,0.26 2.36,-0.04 4.43,1.37 0.66,0.73 1.2,3.56 -2.53,0.05 -1.07,0.72 0.32,2.55 -0.26,0.67 -0.41,0.28 -2.17,-0.26 -0.27,0.41 0.38,0.38 1.13,0 -0.58,0.53 0.35,0.26 -0.13,1.23 0.59,0.72 0.45,-0.11 0.03,0.48 1.19,1.11 -1.7,0.79 -0.29,0.82 -1.06,-0.06 0.05,0.7 -1.26,0 -0.2,0.86 0.89,3.31 1.33,0.22 0.14,3.34 0,0 -1.68,-0.02 -1.58,1.84 -1.33,2.96 -0.92,-1.31 -1.35,2.38 -1.08,0.04 -1.34,-1.1 -1.14,-2.4 -2.26,0.75 0,0 -0.88,-0.26 -0.82,-1.46 -3.22,-3.35 -0.99,-2.2 -0.48,0.28 -0.8,-0.24 -0.56,0.37 -1.06,2.77 -0.58,-0.36 -1.94,0.5 -2.49,-0.25 -0.63,-0.66 -0.59,-1.89 -1.51,-1 -1.1,-0.04 -0.18,0.48 0.28,0.45 -1.54,0.38 0.59,0.57 0,0 -2.64,1.33 -1.61,-0.04 -0.68,-0.84 -0.39,0.54 -1.81,0.17 -1.7,-2.13 -0.48,0.09 -0.27,-0.69 -3.15,-2 -3.89,-1.28 -1.08,0.73 -0.62,1.83 0.15,1.12 -1.52,0.61 -2.75,0.03 -2.74,-1.43 -4.97,-3.72 -1.07,0.04 -1.23,-0.75 -4.63,-1.06 -1.26,-0.73 -2.91,-0.31 -1.16,-0.67 0,0 1.93,-3.97 0.35,-0.96 -0.26,-0.18 0.13,-0.55 0.39,0.03 0.36,-1.64 -1.38,-3.86 3.3,-7.3 0.19,-1.65 -1.97,-2.58 -0.71,0.05 -1.46,0.7 -4.45,4.61 -2.43,0.73 -2.08,-0.05 -1.48,-2.02 -0.92,-2 -1.07,-0.58 -2.31,-0.34 -1.11,-1.32 -4.18,-2.53 -0.94,-1 -0.25,-1.51 0.2,-1.26 1.26,-3.99 -1.03,-3.02 0.51,-1.69 -0.62,-0.81 0.87,-1.67 0.66,-0.2 2.32,0.93 2.94,-0.58 0.52,-1.44 0.85,-1.03 2.28,-0.84 3.56,-2.13 3.48,-5.14 4.74,-1.59 1.1,-1.54 1.18,-2.96 -1.01,-1.18 0.83,-3.45 0.64,-0.62 1.87,-0.48 1.36,-0.88 0.92,-1.78 0.21,-1.49 0.67,-0.52 1.58,0.07 0.98,-0.5 0.69,-1.72 1.19,-1 0.36,-1.78 z"/>
+<path class="st" data-id="sin" data-name="Sinaloa" style="--c:var(--red)" tabindex="0" role="button" aria-label="Sinaloa" d="m 317.37786,283.99244 0.42,0.06 0.54,0.94 -0.45,0.73 -0.51,-1.73 z m -61.12,-65.4 1.17,1.35 0.5,-0.19 0.27,0.31 0.01,0.9 0.59,1.13 -0.27,2.7 -0.48,-0.01 -0.69,-2.11 -1.08,-1.17 -0.02,-2.91 z m -4.82,-2.05 1.41,0.93 3.59,4.56 0.73,1.14 0.05,1.38 -0.39,0.16 -2.7,-5.14 -2.82,-2.59 0.13,-0.44 z m -0.55,-2.3 1.78,1.24 0.21,0.57 -1.66,-0.8 -0.33,-1.01 z m -21.58,-30.8 1.03,0.12 0,0 0.46,0.38 -0.13,1.01 -0.38,0.28 1.78,1.47 -0.35,-1.14 0.77,-0.64 -0.17,-0.47 -0.31,0.28 -0.46,-0.25 -0.92,-1.8 -0.02,-0.74 0,0 -0.15,-1.56 0.29,-0.19 0.24,1.87 0.39,0.17 0.5,-0.94 0.79,0.91 0.13,0.78 0.48,-0.08 -0.05,0.81 0.34,0.35 2.93,-1.7 1.28,-1.17 2,-0.58 0.11,-2.49 0.47,-0.87 4.09,-0.98 2.06,-3.86 1.86,-0.55 -0.29,-2.49 3.12,-3.88 0.31,-1.78 0,0 4.88,-0.22 0.68,0.38 0.12,2.9 0.62,0.24 1.22,-0.26 1.05,2.33 -0.4,2.26 0.5,0.82 -0.5,2.01 0.33,1.09 1.41,0.91 0.07,1.88 3.11,5.02 1.22,4.68 3.81,1.13 3.19,0.31 2.36,0.7 2.89,4.88 0.59,3.23 2.14,2.79 0,0 0.06,0.67 0.73,-0.16 0.16,0.73 -1.2,0.77 -1.73,2.21 0.6,0.72 0.47,-0.08 0.07,0.68 -1.33,3.21 -0.08,5.12 -0.51,1.97 1,0.61 0.48,1.82 0.75,0.65 1.2,2.37 -0.33,1.45 1.2,0.95 0.53,-0.44 2.3,0.23 0.9,2.61 1.32,0.3 1.21,4.47 0.57,0.2 0.57,-0.42 0.21,0.25 0.81,4.12 0.98,1.41 0.59,1.95 0.83,-0.17 0.7,0.49 0.69,-0.55 1.33,-0.19 2.79,-2.13 0.67,-1.04 4.04,1.18 1.45,0.96 0.9,1.37 1.08,0.26 0.15,1.07 1.74,2.27 0.08,2.2 1.03,0.94 -0.25,0.9 0.79,2.59 0.71,1.07 0.63,2.94 1.08,1.21 0.91,1.98 1.72,1.65 0.44,2.81 1.05,2.92 -0.27,0.93 0.74,1.74 1.22,1.33 0.13,2.26 0.6,1.28 2.04,0.14 0.85,-0.6 0.6,0.07 2.12,2.18 0,0 -0.83,0.61 -0.56,3.41 -1.69,2.1 -0.33,1.02 0.45,1.3 1.31,1.3 0.21,1.33 0.4,0.36 0.23,2.04 -0.36,0.89 -3.46,-0.57 -2.1,-1.24 0,0 0.23,-1.02 -1.5,-1.63 0.25,-0.59 0.74,-0.35 -0.69,-0.57 -0.54,0.7 0.52,1.9 0.54,0.51 -0.56,1.68 0.52,1.68 -0.37,0.56 -3.72,-5.81 -2.97,-2.87 -1.78,-1.1 -4.22,-5.17 -4.67,-4.58 0.44,-0.33 1.15,1.27 0.08,-0.33 -1.45,-1.15 -0.54,0.21 -0.19,0.56 -0.36,-0.33 0.1,-0.69 -0.7,-0.5 -0.92,-1.65 0.31,-0.41 -1.25,-1.96 -2.55,-2.5 0.08,-0.35 -1.39,-1.18 -0.64,-1.1 -2.56,-1.94 0.41,-0.5 -2.2,-3.4 -0.23,-1.22 -7.52,-6.96 0.92,0.2 0.31,-0.36 -0.45,-0.3 0.11,-0.8 -0.56,-0.11 -0.18,0.49 -0.54,0.21 -3.82,-3.04 -1.4,-0.34 -5.04,-3.96 -4.64,-2.85 0.23,-0.56 0.62,0.69 3.14,1.7 0.45,0.74 1,0.13 0.51,0.81 0.62,-0.07 0.75,1.11 0.5,-0.13 -0.54,-0.59 0.07,-0.7 0.71,-0.22 0.04,-0.4 -0.29,-1.18 -1.48,-2.02 -1.28,0.03 0.11,1.39 -1.12,0.24 -1.09,-1.43 -0.6,0.53 -1.04,-0.19 -0.18,-0.93 -1.63,-1.49 -2.1,-0.87 -0.25,-0.46 -0.58,0.4 -1.08,-0.5 -0.79,-1.06 0.07,-1.15 -1.39,-1.6 0.62,-0.28 1.21,1.17 0.69,-1.18 -0.6,-0.45 -0.17,-0.77 -0.29,0.03 0.08,-0.85 0.47,-0.52 -0.71,-0.29 -0.04,-0.5 0.52,-0.64 0.08,-0.78 -1.03,-0.68 -0.28,-1.88 -0.51,-0.7 -1.55,-1.02 -0.02,0.52 -0.88,-0.16 -1.89,-1.7 -0.31,-0.82 -1.64,0 0.11,-1.13 -1.25,-0.58 -0.56,0.84 0.28,0.65 -0.35,0.58 -1.92,-2.15 -5.4,-2.7 0.52,-0.63 -0.38,-0.49 -1.32,0.35 -1.52,-2.32 0.68,-1.33 -0.44,-0.63 -1.19,0.43 -0.4,-0.96 -1.27,-0.09 -0.41,0.23 0.24,0.6 -0.24,0.71 0.48,0.27 -0.68,1.09 -0.5,0.23 -0.06,-0.59 -0.38,-0.15 0.21,-0.44 -0.81,-0.31 -1.19,0.2 0.28,0.81 -0.81,0.23 -1.83,-2.13 1.17,-0.17 0.42,-0.44 0.05,-0.8 0.93,0.87 0.89,-0.43 0.23,-0.99 0.68,0.15 0.46,-0.49 -0.34,-1.31 -1.1,-0.04 -1.02,0.64 -0.87,1.83 -1.57,-0.48 -0.16,0.52 -0.63,-0.11 -0.37,-1.12 -1.72,-1.57 -0.47,0.45 1.6,1.16 0.08,0.75 -1.6,-1.01 -2.87,-0.52 -0.18,-0.33 2.04,0.27 0.07,-1.96 -0.5,-0.04 -1.61,-1.32 -1.08,0.28 -0.37,-0.69 0.17,-2.66 0.24,-0.09 -0.35,-1.08 -0.45,-0.16 -0.04,-0.67 0.7,-2.13 0.35,0.04 0.02,-0.83 2.14,-3.42 0.7,-2.41 1.04,-1.11 0.25,0.11 -0.21,0.99 -0.86,0.28 -0.59,2.71 0.42,0.55 0.31,-0.17 0.38,-0.98 -0.34,-0.58 0.17,-0.27 0.34,0.51 0.81,-1.72 0.18,-1.67 z"/>
+<path class="st" data-id="son" data-name="Sonora" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="Sonora" d="m 230.32786,183.56244 -1.03,-0.12 0,0 0.1,-0.52 0.48,0 0.45,0.64 z m -1.68,-0.71 0.1,-1.54 0.22,0.97 -0.32,0.57 z m -34.04,-28.51 0.63,0.87 -0.19,0.34 1.34,0.61 -0.29,0.39 -1.5,-0.91 0.01,-1.3 z m -42.07,-52.81 0.48,1.56 -0.27,1.14 0.96,1.2 1.04,2.6 -0.42,0.37 -0.1,1.38 -1.54,3.96 -0.05,1.02 -0.74,0.63 -0.48,-0.47 -0.77,0.11 -1.21,-1.14 -1.34,-0.07 -0.31,-0.56 -0.52,-0.01 -0.13,-0.37 -2.03,-1.13 1.66,-1.22 0.59,-0.87 -0.39,-3.25 0.71,-2.99 0.59,-0.87 1.34,0.23 0.99,-0.9 1.94,-0.35 z m -58.919998,-72.960002 0.83,0.13 -0.05,0.64 -1.46,-0.41 -0.02,-0.35 0.7,0 z m -3.73,-1.81 1,0.48 0.71,1.44 1.33,0.95 0.53,1.09 -0.28,0.68 -0.8,-0.65 -0.7,0.08 -1.04,-0.54 -0.88,-0.91 -0.39,-0.99 0.16,-1.44 0.36,-0.19 z m 150.529998,14.22 1.05,1.04 -0.94,1.28 0.52,1.91 1.64,2.84 0.24,1.6 -0.5,1.28 0.02,1.81 -1.57,0.07 -0.04,0.62 2.73,2.65 0.08,2.42 1.04,0.92 -0.67,1.61 0.11,0.81 1.1,1.47 -0.06,1.19 1.93,6.15 -0.28,1.81 -0.85,0.53 0.16,0.99 1.45,1.32 0,1.11 -1.27,2.57 -0.59,4.93 0.34,1 0.57,0.03 0.75,0.96 0.67,6.22 -0.01,2.6 -0.8,0.95 -0.16,0.9 0.25,5.670002 -0.29,0.51 -1.38,0.68 -0.1,2.69 -1.49,1.27 0.46,2.54 -0.85,1.28 0.8,2.65 -1.48,2.62 -0.19,1.04 0.83,1.95 -0.42,2.9 1.55,1.81 2.25,0.86 -0.59,1.19 -0.93,0.1 -0.97,1.22 -1.15,0.12 -1.4,1.05 -0.51,0.03 -1.77,-1.31 -0.77,-0.14 -1.45,0.85 -2.53,0.49 -1.04,1.39 0.19,0.6 1.56,1.08 -0.59,2.75 0.39,0.7 1.83,0.74 2.09,2.98 0.38,1.66 -0.7,2.45 0.52,0.65 2.82,1.7 0.63,2.09 0.97,1.42 1.63,4.07 0.04,1.72 -1.25,3.14 0.47,3.45 -0.73,0.42 -0.02,0.46 3.54,1.84 2.02,-0.62 1.77,0.39 0,0 -0.31,1.78 -3.12,3.88 0.29,2.49 -1.86,0.55 -2.06,3.86 -4.09,0.98 -0.47,0.87 -0.11,2.49 -2,0.58 -1.28,1.17 -2.93,1.7 -0.34,-0.35 0.05,-0.81 -0.48,0.08 -0.13,-0.78 -0.79,-0.91 -0.5,0.94 -0.39,-0.17 -0.24,-1.87 -0.29,0.19 0.15,1.56 0,0 -0.42,0.01 -0.24,0.54 -1.26,-1.71 0.12,-1.01 -1.35,-2.45 -2.29,-2.56 -1.45,-1.02 -0.85,-0.13 1.05,0.16 0.05,-0.36 -0.4,-0.93 -0.57,0.04 -0.36,-0.75 -0.64,0.2 -0.07,-0.57 -0.39,-0.09 -0.73,1.06 0.42,0.75 -2.67,-0.07 -0.5,0.65 -2.54,-1 -1.19,-1.04 -0.93,-1.27 0.01,-0.96 -1.03,-2.8 -1.35,-1.86 0.19,-0.15 0.97,1.35 0.18,-0.86 -0.63,-0.42 0.25,-0.38 -0.31,-1.63 -1.73,-1.38 -0.3,0.36 -0.42,-0.41 -1.08,0.96 -1.03,-0.68 -4.98,-1.24 -3.05,-3.03 -1.39,-0.7 0.31,-0.23 -0.41,-0.92 0.08,-1.29 -0.63,-0.39 -0.52,0.37 -0.7,-0.53 -0.15,-1.27 -0.39,-0.05 -0.4,-0.75 0.25,-2.06 -0.62,-1.18 0.23,-0.39 -0.81,-0.79 0.11,-0.77 1.37,-0.98 -0.75,-0.12 -0.24,0.79 0.17,-1.54 0.69,-0.35 -0.69,-0.12 -0.29,-1.11 0.48,-0.37 -0.15,-0.75 0.41,-0.77 0.86,0.18 0.29,-0.52 -0.99,-0.79 -0.82,-0.19 -0.54,0.48 -0.63,-0.53 -3.87,-0.91 -0.33,-0.84 -1.64,0.87 0.56,0.91 -0.19,1.05 -1.22,-0.44 -0.97,-1.01 0.4,-0.56 -0.58,-0.15 -0.02,-0.71 -1.34,-0.27 -1.32,0.75 -1.49,-1.36 -0.98,-0.33 -0.88,-1.28 -0.97,-0.3 -0.69,-0.84 -0.19,-0.87 -1.06,-1.24 -0.08,-0.87 -0.69,-0.9 -0.39,0.08 -0.46,-1.58 -0.4,0 -1.16,-1.13 -0.1,-1.37 -0.87,-0.75 -5.45,-2.01 -0.16,-1.14 -1.16,-2.62 -4.01,-3.66 -0.48,-1.25 0.57,-0.07 0.51,-0.58 0.53,1.17 0.64,-0.41 -0.02,-0.85 -0.63,-0.49 -0.53,0.38 -0.48,-0.74 -0.27,0.21 -1.28,-1.02 -1.21,-0.29 -0.44,-1.13 -0.97,-0.77 -0.27,-0.74 -1.91,-0.55 0.56,-0.73 -0.42,-0.83 -0.05,-1.32 -0.34,-0.19 0.46,-0.98 -0.47,-1.12 -0.4,-0.14 -0.05,-0.62 -0.69,-0.07 0.53,-1.81 -0.62,-1.810002 -0.64,-0.59 -1.32,0.01 -0.82,0.4 -1.66,-0.87 -0.21,-1.1 1,-2.8 -0.3,-0.57 -0.99,-0.54 -0.16,-1.18 -1,-0.83 -1.67,-2.84 -0.93,-0.65 -0.65,-1.94 -1.14,-1.61 -0.33,-1.6 -1.19,-0.57 -0.64,0.18 -0.24,-0.33 0.35,-2.46 -0.62,-1.47 0.13,-3.46 -0.51,-1.41 -1.95,-1.89 -0.11,-3.05 -0.97,-2 -2.41,-2.05 -2.54,-4.66 -0.91,-3.44 0.73,-2.28 0.06,-3.03 0.3,0.08 0.67,-1.01 0.08,-1.12 -0.5,-2.75 -0.31,0.11 -0.19,-0.79 -0.47,0.03 -2.31,-1.36 -0.67,-1.1 -0.82,0.73 -3.88,-0.94 -0.24,-0.35 -0.31,0.24 -2.58,-0.49 -0.1,-0.48 -0.56,-0.27 -1.29,-0.16 0.23,-1.47 -0.57,-1.59 0.06,-0.83 -0.54,-0.92 -1.19,-0.97 -4.33,-1.85 -0.13,-0.59 -0.38,0.14 -0.22,-0.52 -0.38,0.58 -0.79,-0.55 -0.58,0.69 -0.18,0.62 0.35,-0.07 0.21,0.52 -0.71,0.95 -0.71,-0.08 -0.41,1.19 -2.85,-0.1 -3.13,-1.43 -1.44,-1.55 -2.909998,-1.6 -0.44,-0.59 -0.75,-0.16 -2.41,-2.33 -2.15,-0.14 -1.28,-0.58 -0.98,-1.17 -0.82,0 0,0 -3.82,-2.76 -0.92,-0.13 -0.96,-0.95 0.6,-0.98 -0.24,-0.98 0.42,-2.67 -0.29,-1.14 0.62,-1.83 -1.4,-1.99 1.81,-2.43 0.05,-1.34 0.47,-0.48 0.6,-2.05 1.34,-0.01 0.47,0.4 0.85,-0.51 0,0 93.649998,34.22 57.68,-0.13 z"/>
+<path class="st" data-id="tab" data-name="Tabasco" style="--c:var(--yellow)" tabindex="0" role="button" aria-label="Tabasco" d="m 620.40786,397.20244 -4.06,1.46 -0.39,0.56 -1.89,0.16 6.34,-2.18 z m 28.1,-6.87 1.14,3.72 0.63,0.91 1.44,1 0.99,0.05 0.69,1.06 0.53,-0.13 0.08,-0.42 0.36,0.16 1.11,1.42 -0.18,1.97 0.45,0.32 1.08,2.59 1.22,1.83 3.47,2.33 0.87,1.43 1.31,0.66 1.5,-0.15 2.21,1.12 1.29,-0.64 1.68,-0.11 0.3,-0.72 -0.34,-1.82 0.3,-1.3 2.79,-0.13 3.65,0.8 1.64,1.55 1.56,0.66 0.77,0.9 0.68,-0.42 3.98,1.58 -0.02,1.64 0,0 -0.21,14.5 -10.56,0.18 0,0 0.53,-1.03 0.76,-0.28 -1.1,-1.79 -1.31,-0.37 -0.19,-0.83 -4.34,-1.2 0.75,-2.66 -1.27,-3.3 -2.56,-1.26 -0.05,-2.01 -1.06,-1.36 -1.21,0.28 -1.19,-0.18 -0.59,0.44 -0.56,-0.3 0.12,-0.59 -1.45,-0.37 -0.71,1.84 -1.95,0.03 -1.77,-0.48 0.04,0.44 -0.43,-0.08 -0.12,0.37 0.41,1.75 -0.39,0.78 -3.29,1.19 -0.57,0.83 -5.83,4.27 -2.42,2.25 -1.91,0.84 -0.81,-0.31 -0.66,-0.87 -0.04,-0.66 -1.21,-1.94 -0.54,-0.2 -0.44,0.35 -1.25,0.06 -0.36,-0.33 0.3,-1.87 -2.07,-2.18 -0.38,-0.93 0.14,-0.58 1.42,-2.12 0.35,-1.69 -2.79,0.09 -0.77,-0.35 -1.39,-1.69 -2.14,-0.85 -0.54,0.61 -1.66,0.28 -0.75,7.08 -0.59,1.16 -1.2,0.79 -1.39,1.87 -0.06,1.61 -2.53,3.17 0,0 -1.93,-0.76 -0.38,-2.2 0.38,-1 -0.17,-1.25 -1.11,-3.08 -0.44,-0.48 -2.51,-0.97 -0.42,-0.58 -1.16,-0.04 -1.44,-2.03 -1.39,-0.39 -1.06,-0.96 0.02,-3.02 -0.56,-1.47 -0.12,-2.83 -0.51,-0.4 0.86,-0.87 0.92,0.51 0.24,-0.29 -2.27,-0.39 1.89,-0.89 0,0 4.46,-1.51 0.14,1.24 2.66,-0.47 0.58,-0.41 -0.29,-0.97 0.71,-0.41 1.04,-0.14 0.23,0.44 0.75,0.06 1.31,-0.24 0.6,-0.63 -0.12,-1.19 3.28,-0.8 0.25,0.68 0.85,-0.87 5.38,-0.23 0.88,0.41 -0.67,0.56 0.07,0.89 0.8,0.04 0.8,-0.44 0.07,0.28 0.67,0 0.38,-0.56 -1.83,-0.75 1.08,-0.46 2.89,0.28 2.22,-0.3 3.01,-1.63 2.29,-2.75 5.28,-0.99 z"/>
+<path class="st" data-id="tam" data-name="Tamaulipas" style="--c:var(--red)" tabindex="0" role="button" aria-label="Tamaulipas" d="m 517.14786,239.79244 -0.24,4.46 -0.28,0.09 0.52,-4.55 z m 6.77,-26.4 0.46,0.16 -2.84,6.97 -0.33,-1.37 0.25,-0.9 0.58,-0.5 0.14,-1.01 1.74,-3.35 z m -8.7,81.32 -2,1.4 -1.52,-1.64 -0.42,-1.14 -1.2,-1.05 -1.35,-0.17 -1.57,-1.2 -1.15,-0.39 -0.72,-1.3 -2.54,0.29 -0.4,0.7 0.21,0.69 -1.98,0.44 -0.15,-0.6 -0.41,0.18 -0.73,-0.58 -1.11,-0.22 -4.16,0.25 -1.78,1.01 0,0 -0.96,-0.17 -2.14,0.44 -1.89,-1.18 -0.71,0.79 -2.32,0.08 -2,-0.39 -1.79,0.22 -2.15,-2.85 -0.92,-2.52 -0.83,-1.17 -1.38,-1.08 -1.69,-0.56 -0.81,-1.29 -0.62,-0.33 -0.97,0.56 0.05,1.03 -0.65,0.43 -2.2,-0.73 -3.26,-0.26 -4.21,-1.37 -1.09,-0.93 -0.19,-0.69 -0.23,-2.98 0.34,-3.63 -0.48,-1.15 -1.03,-0.78 -0.15,-2.05 -0.89,-1.06 0,0 0.42,-0.77 -0.54,-1.35 0.8,-0.68 3.1,0.38 0.21,-1.77 -0.39,-2.84 0.33,-0.96 1.47,-1.77 0.67,-2.81 2.31,-1.23 2.55,0.68 0.71,-0.14 1.75,-0.97 0.34,-1.51 0.36,-0.1 2.25,0.45 -0.76,-2.34 -1.37,-0.78 -1.4,-3.63 -1.76,-2.09 0.86,-6.77 -1.26,-2.63 -1.84,0.09 -0.22,-0.28 0.69,-2.1 2,-1.35 2.87,-1.27 1.31,-2.13 1.75,0.11 1.12,-1.6 1.15,-0.48 0.36,-1.03 0.38,-0.13 0.39,1.52 1.11,-0.45 0.47,-1.6 0.92,-0.69 0.91,-0.09 0.38,-1.67 -0.67,-0.36 -0.6,-2.24 0.25,-0.4 1.26,-0.41 1.46,-1.97 0.51,0.04 0.6,1.17 2.8,0.23 0.75,-2.03 0.99,-1.14 4.38,-0.85 0.99,-1.13 0.77,-0.08 1.37,-1.44 1.25,-0.63 0.59,-1.37 1.54,-1.57 -0.02,-0.52 -0.4,-0.27 -2,-0.63 -0.99,-0.83 0.41,-0.8 -0.69,-1.57 0.21,-2.07 0.47,-0.77 -0.59,-1.52 0.3,-3.34 -0.8,-1.02 -0.13,-1.47 -0.69,-0.44 -3.39,0.68 -1.06,-0.15 -2.66,1.52 -0.96,-0.54 -1.19,-2.34 -0.65,-0.59 -3.28,-0.46 -0.38,-0.66 -0.82,-0.46 0.9,-0.33 -0.76,-1.34 0.36,-0.72 -0.18,-0.6 -0.63,-0.05 -0.75,0.74 -0.69,-0.09 -1.17,-1.62 0.06,-0.99 -1.42,0.12 -1.81,-2.48 -1.25,-4.14 -1.88,-0.23 -0.85,-1.9 -0.67,-0.4 -0.88,0.38 -0.8,-0.82 0.23,-3.22 0.47,-1.29 -0.52,-0.78 -1.26,-0.66 -1.46,0.05 -0.13,-1.12 0.81,-2.39 1.64,-1.39 -0.42,-3.19 -1.15,-1.14 -0.24,-1.38 0.22,-2.46 -1.27,-0.87 1.17,-1.42 -0.05,-0.88 -4,-0.19 -0.6,-0.45 0.35,-1.07 -0.27,-0.79 0.62,-0.69 2.78,-0.8 1.28,-1.72 0.65,-0.34 0,0 0.18,0.29 1.26,0 0.11,0.71 0.7,0.18 0.18,-0.39 0.75,0 0.7,1.05 0.34,-0.27 0.36,0.2 0.71,1.22 -0.38,1.72 0.75,0 0.44,0.53 -0.34,2.9 -0.99,1.99 1.04,0.14 -0.13,0.93 0.27,0.28 0.74,-0.19 0.36,0.55 0.39,1.93 -0.35,2.01 0.31,0.46 -0.52,0.66 0.16,1.22 0.76,0.16 0.83,1.21 -0.29,0.39 0.46,0.73 1.06,0.31 0.42,1.5 0.77,0.27 1.02,2.08 -0.06,0.78 0.88,1.05 0.47,2.36 0.42,0.22 0.1,2.37 1.22,0.55 0.71,1.17 -0.47,1.26 0.97,1.02 0.81,-0.42 0.8,0.55 0.87,-0.21 0.48,0.13 0.05,0.6 0.75,-0.11 0.74,0.58 0.36,-0.28 1.93,-0.01 0.33,0.89 1.29,0.26 1.52,2.03 2.38,-0.11 0,0.58 0.31,-0.11 0.18,0.44 0.5,-0.48 0.94,0.46 -0.05,0.42 1.6,-0.35 0.01,0.66 1.35,1.21 1.32,-0.12 0.04,0.76 0.75,0.8 1.49,0.86 0.79,0.07 0.36,0.44 0.54,-0.52 0.7,0.6 1.73,-0.51 0.37,0.72 0.67,0.03 0.1,-0.51 1.26,-0.17 0.35,0.36 2.62,-0.27 0.7,0.42 0.74,-0.35 0.39,0.23 -0.15,0.48 0.83,0.24 2.89,-0.01 1.11,1.91 0.45,-0.13 0.5,0.98 0.39,-0.27 0.73,1.35 1.9,0.57 -0.19,0.31 0.64,0.43 1.51,-0.27 -0.11,-1.67 0.7,-0.59 0.48,0.32 0.18,-0.35 0.93,-0.04 0.07,-0.51 1.62,-0.27 1.37,-0.05 0.35,0.28 -0.33,4.95 -0.98,3.8 -5.65,11.07 -0.79,-0.25 1.81,-3.11 -0.71,-0.57 0.46,-0.61 -0.41,-0.59 -1.12,0.05 0.16,-0.55 -1.54,-0.16 -0.62,-0.79 -1,1.08 0.73,-0.13 0.69,1.12 0.22,-0.19 0.33,1.1 -0.31,0.25 -0.24,-0.53 -0.63,0.2 -0.38,0.77 0.35,0.19 0.31,1.24 -0.77,0.28 -0.3,-1.37 -0.83,0.61 -0.36,-0.59 -0.01,-1.12 -1.79,-0.24 0.06,0.44 -0.87,0.81 0.51,0.81 -0.31,0.94 -0.52,0.08 -0.89,-0.6 -0.21,0.56 0.56,0.09 0.65,0.89 0.31,-0.21 0.58,0.32 -0.19,0.78 0.89,0.66 -0.77,1.06 0.06,1.31 -1.34,2.92 0.4,0.45 0.74,-0.03 0.4,0.74 0.86,0.2 -1.51,1.13 -0.23,0.99 -0.42,0.07 -0.05,0.69 0.6,0.36 0.13,0.78 -0.54,2.97 0.41,0.11 0.33,0.83 -0.87,4.23 -0.51,0.04 -0.28,-0.54 0.13,-1.43 -0.97,0.28 -0.87,-0.65 0.23,0.93 -0.69,0.44 0.41,0.56 -0.3,1.03 0.92,2.21 0.38,0.18 -0.22,0.7 0.6,-0.15 0.12,-1.64 0.76,-0.7 0.24,3.22 -0.68,6.41 -0.35,0.47 -0.23,-0.08 0.26,-0.56 -0.59,-0.08 -0.05,0.5 0.89,0.43 0.04,7.06 0.88,0.46 0.04,0.41 -0.44,0.32 -0.35,2.07 0.18,0.66 0.35,0.09 0.1,-1.98 -0.25,0.04 -0.08,-0.71 0.53,-0.31 -0.94,9.63 0.3,11.01 -0.21,3.59 -0.47,0.65 -0.38,1.92 -1.25,1.51 -0.98,2.08 -0.17,1.21 0.98,0.73 0.05,2.82 -0.39,-0.03 -0.01,0.99 0.56,1.95 0.45,-0.13 1.17,2.73 -0.16,0.36 z"/>
+<path class="st" data-id="tla" data-name="Tlaxcala" style="--c:var(--yellow)" tabindex="0" role="button" aria-label="Tlaxcala" d="m 505.90786,362.68244 2.06,0.38 0.61,-0.24 1.55,-1.83 0.49,0.07 0.71,1.06 4.1,3.41 -0.13,1.73 0.84,0.17 1.53,-0.5 0.59,0.38 1.21,1.24 0.31,1.17 0.67,0.6 0.94,0.2 -0.28,1.15 -0.82,0.55 -2.68,0.51 -0.84,-0.32 -1.4,2.33 -1.24,0.84 -0.77,0.05 -1.46,-0.99 -0.57,0.04 -3.07,2.68 -0.86,0.14 -4.06,-2.24 -1.18,-1.31 -0.54,-1.38 -1.32,-1.38 -3.03,-2.31 -1.16,-0.37 -0.7,0.29 0,0 -0.53,-0.6 -0.76,0.25 -0.96,-1.83 0,0 5.01,-1.71 1,0.23 2.09,-0.28 1.45,-1.21 0.82,-1.47 z"/>
+<path class="st" data-id="ver" data-name="Veracruz" style="--c:var(--green)" tabindex="0" role="button" aria-label="Veracruz" d="m 524.98786,315.32244 -0.73,2.05 -0.82,0.98 -0.12,-1.51 1.67,-1.52 z m -7.43,-10.52 1.69,3.57 -0.48,-0.14 -0.97,-1.58 -0.24,-1.85 z m 2.09,1.04 1.9,2.41 5.33,4.9 -0.65,3.08 -1.71,4.14 -0.52,0.45 -0.18,-2.06 1.77,-3.43 -0.13,-1.33 -1.75,-1.65 -1.29,-2 -2.83,-3.13 -1.48,-3.68 -0.47,0.12 0.08,-0.8 1.93,2.98 z m -27.41,-14.46 1.78,-1.01 4.16,-0.25 1.11,0.22 0.73,0.58 0.41,-0.18 0.15,0.6 1.98,-0.44 -0.21,-0.69 0.4,-0.7 2.54,-0.29 0.72,1.3 1.15,0.39 1.57,1.2 1.35,0.17 1.2,1.05 0.42,1.14 1.52,1.64 2,-1.4 0,0 0.63,5.37 1.66,4.54 -0.12,1.02 -0.4,0.22 0.62,1.35 0.43,3.26 0.83,0.93 0.08,1.11 1.85,3.26 1.51,-0.34 0.52,0.75 -0.38,1.3 0.5,1.74 0.99,0.8 0.07,1.12 0.51,0.17 0.74,2.9 4.69,9.94 0.64,2.94 0.79,1.36 4.18,4.12 0.71,1.22 5.91,6.38 3.46,4.36 0.64,1.38 2.61,2.89 1.15,3.28 0.11,2 0.64,1.06 -0.1,1.11 1.52,2.13 -0.18,1.8 0.67,2.64 1.72,1.32 1.22,0.46 0.17,0.7 0.99,0.45 0.96,1.36 -0.31,0.65 0.21,0.9 0.76,0.66 2.41,0.34 0.3,2.52 0.67,1.77 0.86,0.93 3.52,1.69 0.01,0.72 -2.04,-1.35 -0.97,-0.08 -0.06,0.3 0.47,0.15 0,0.65 0.75,0.32 0.31,0.61 -0.12,0.24 -0.67,-0.33 -0.34,0.29 0.17,0.5 1.17,-0.13 -0.07,-0.66 0.91,-0.27 0.63,0.3 0.22,-1.19 1.8,1.17 2.71,0.74 9.53,0.24 3,2.35 0.58,1.17 2.21,0.61 3.33,0.3 0.51,0.43 0.57,1.84 0.76,0.77 0.13,0.67 2.8,2.79 0.56,2.39 2.67,1.28 3.79,-0.39 7.27,-1.8 0,0 -1.89,0.89 2.27,0.39 -0.24,0.29 -0.92,-0.51 -0.86,0.87 0.51,0.4 0.12,2.83 0.56,1.47 -0.02,3.02 1.06,0.96 1.39,0.39 1.44,2.03 1.16,0.04 0.42,0.58 2.51,0.97 0.44,0.48 1.11,3.08 0.17,1.25 -0.38,1 0.38,2.2 1.93,0.76 0,0 -3.72,2.89 -1.95,0.86 -0.94,1.13 0,0 -28.57,-1.75 0.33,-1.37 -0.64,-0.57 0.01,-0.99 -3.45,-2.78 -3.36,-4.41 0.23,-1.13 1.49,-0.66 0.18,-0.68 -1.37,-0.84 -0.42,-0.06 -1.21,1.08 -3.66,0.92 -3.01,2.11 -2.87,0.16 -1.26,0.66 -1.96,-0.58 -2.18,-4.43 0.17,-1.17 -0.34,-0.72 0.73,-0.68 0.99,-2.58 0.81,-1.11 0.22,-1.25 -1,-3.79 -0.52,-0.44 -2.03,-0.48 -1.15,0.19 -1.43,-0.52 -2.47,0.79 -0.7,-0.35 0.53,-0.9 -1.38,-0.09 -1.02,-1.89 -1.39,-0.81 -1.31,0.38 -1.96,-1.56 -0.64,-0.9 -0.6,-2.74 0.58,-1.27 -1,-0.35 -1.15,-1.15 -0.65,0.61 -0.05,0.86 0.5,0.74 -0.3,0.96 -1.17,2.18 0,0 -1.85,-2.17 -2.58,-0.82 -1.39,0.8 -0.96,1.05 -1.43,-0.1 -1.86,-3.13 0.17,-0.75 -3.81,-1.12 -0.85,-0.72 -0.36,-1.12 0,-2.98 1.86,-2.41 0.07,-0.55 -0.52,-6.12 0.18,-0.9 4.82,0.22 0.53,-0.12 0.16,-0.7 -0.11,-1.29 -0.47,-0.59 -2.93,-1.27 -3.63,-0.82 -1.44,-0.99 -0.34,-0.42 0.56,-1.38 -1.38,-2.98 0.24,-0.7 0.57,-0.24 0.98,-2.63 0.67,-0.87 0.34,-0.97 -0.31,-0.98 0.19,-0.81 1.66,-4.28 2.15,-2.98 -0.07,-0.51 -7.06,-2.49 -0.82,0.67 -1.22,1.95 -1.61,1.4 -0.59,-0.19 -0.86,-1.78 -2.04,0.22 -0.68,-0.55 -0.46,-2.37 -0.06,-4.01 1.17,-0.76 1.61,0.92 1.5,-2.48 -0.48,-1.12 -2.22,-1.22 -0.81,-0.83 -0.16,-0.85 0.36,-0.83 -0.81,-0.6 -0.87,0.19 -0.16,-0.3 1.23,-0.76 0.01,-1.79 -2.03,0.32 -1.19,-0.39 -0.27,1.02 -0.88,0.94 -0.08,0.84 -0.97,0.75 -0.7,2.56 0,0 -1.45,-0.95 -0.83,0.36 -2.14,2.33 -1.6,0.73 -1.89,2.23 -2.48,1.15 -1.33,1.55 -0.5,0.22 -0.88,-1.08 -1.17,-2.59 0.25,-2.08 0.58,-1.3 0.33,-3.66 0.65,-0.54 0.31,-0.86 2.39,-2.16 0.46,0 1.34,1.39 1.45,-0.23 0.25,-0.63 -0.56,-1.05 0.63,-2.21 1.86,-2.46 -2.53,-3.42 -2.03,-0.62 -0.86,0.89 -1.32,-0.06 -1.26,-0.66 -1.83,-1.71 0.3,-2.66 -0.3,-0.75 -0.85,-0.17 0,0 -0.13,-3.35 -1.33,-0.22 -0.89,-3.31 0.21,-0.85 1.26,0 -0.05,-0.7 1.05,0.05 0.29,-0.82 1.71,-0.79 -1.19,-1.11 -0.04,-0.48 -0.45,0.12 -0.59,-0.73 0.13,-1.23 -0.35,-0.26 0.58,-0.53 -1.14,0 -0.38,-0.38 0.27,-0.42 2.18,0.26 0.41,-0.27 0.25,-0.67 -0.31,-2.55 1.06,-0.71 2.53,-0.05 -1.2,-3.56 -0.65,-0.73 -4.44,-1.38 -2.36,0.04 -0.53,-0.26 -0.23,-0.95 z"/>
+<path class="st" data-id="yuc" data-name="Yucatán" style="--c:var(--cyan)" tabindex="0" role="button" aria-label="Yucatán" d="m 771.88786,315.18244 0.33,5.3 -0.14,0.76 -0.88,0.87 -0.47,3.16 1.33,3.2 -0.1,0.97 -1.14,2.05 -0.49,2.45 -0.86,1.08 -0.26,1.58 -0.86,1.17 -1.72,0.82 -3.13,2.7 -3.11,1.84 -1.51,-0.11 -1.53,0.44 -1.14,-1 -1.17,0.56 -1.5,2.76 0.25,2.19 -0.36,0.05 -0.93,-1.68 -1.01,-0.01 -0.5,0.42 -0.79,2.37 -0.46,0.48 -5.51,1.98 -1.78,1.04 -1.88,1.6 0.27,0.69 -0.3,0.32 -1.08,-0.92 -1.92,1.78 -1.19,0.41 -2.43,0.03 -2.43,1.05 -1.39,1.39 -3.54,0.17 -0.56,0.49 0.17,0.87 -0.32,1.45 -0.93,2.01 0,0 -0.44,-0.46 -0.79,-3.44 -3.16,-3.58 -1.18,-2.49 -3.85,-2.1 -1.99,-4.46 -1.82,-1.16 -0.57,-1.04 0.11,-0.91 -1.03,-1.76 -0.42,-0.28 -0.79,0.73 -0.4,1.01 -0.48,0.09 -0.94,-0.98 -1.12,0.34 -0.44,-0.18 -0.97,-2.01 -4.13,-0.52 0.16,-7.29 0,0 0.07,-1.38 0.61,-0.59 0.72,-1.71 -0.15,-0.52 -0.33,0.21 -1.11,3.43 -0.56,0.54 0.3,-1.55 1.02,-2.96 1.05,-1.38 5.6,-3.54 2.5,-0.57 2.08,-1.28 0.92,-0.01 0.26,-0.45 0.98,-0.31 2.9,-0.67 0.06,0.4 0.57,-0.01 -0.12,-0.29 0.65,-0.36 4,-0.73 16.6,-2.2 5.03,-1.91 0.56,-1.4 5.5,-1.17 3.23,0.26 1.33,-0.37 2.26,-1.47 2.09,0.47 -0.17,0.45 1.73,0.63 3.59,0.25 0.5,0.81 1.01,0.57 2.17,0.09 1.9,0.54 0.42,-0.41 -3.78,-0.93 z"/>
+<path class="st" data-id="zac" data-name="Zacatecas" style="--c:var(--red)" tabindex="0" role="button" aria-label="Zacatecas" d="m 391.19786,219.24244 0.02,-1.63 0.63,-0.53 5.4,-1.07 9.4,0.61 2.54,1.71 2.5,0.97 1.96,1.66 2.16,3.07 1.47,-0.41 1.16,0.32 0.62,3.56 2.83,0.02 0.92,-0.88 2.27,-0.51 2.96,0.37 1.25,0.82 1.92,3.76 1.37,1.3 2.09,0.81 1.44,-0.37 0.18,-0.78 0.75,-0.32 2.12,0.47 0,0 -0.55,0.42 0,0 -0.81,0.44 -0.36,1.78 -1.19,1 -0.69,1.72 -0.98,0.5 -1.58,-0.07 -0.67,0.52 -0.21,1.49 -0.92,1.78 -1.36,0.88 -1.87,0.48 -0.64,0.62 -0.83,3.45 1.01,1.18 -1.18,2.96 -1.1,1.54 -4.74,1.59 -3.48,5.14 -3.56,2.13 -2.28,0.84 -0.85,1.03 -0.52,1.44 -2.94,0.58 -2.32,-0.93 -0.66,0.2 -0.87,1.67 0.62,0.81 -0.51,1.69 1.03,3.02 -1.26,3.99 -0.2,1.26 0.25,1.51 0.94,1 4.18,2.53 1.11,1.32 2.31,0.34 1.07,0.58 0.92,2 1.48,2.02 2.08,0.05 2.43,-0.73 4.45,-4.61 1.46,-0.7 0.71,-0.05 1.97,2.58 -0.19,1.65 -3.3,7.3 1.38,3.86 -0.36,1.64 -0.39,-0.03 -0.13,0.55 0.26,0.18 -0.35,0.96 -1.93,3.97 0,0 -0.81,0.94 -0.97,-0.63 0,0 -0.28,-0.39 -2.09,-0.75 -2.67,-2.35 -2.13,-1.14 -3.54,-0.91 0,0 -1.14,-2.04 -0.59,-2.44 -4.44,-2.63 -1.33,-1.34 -0.77,-1.39 -0.73,0.17 -0.39,1.26 -1.21,0.92 -3.47,1.97 -1.79,0.38 -1.07,0.73 -0.93,3.24 -3.33,4.59 -1.24,2.87 0.07,1.21 2.34,2.26 0,0 -0.09,2.21 0.65,1.85 2.78,1.78 -0.48,2.69 -0.96,1.31 -2.29,1.4 -3.58,2.91 -1.52,-0.5 -1.37,0.49 -0.63,0.54 -0.33,2.02 -1.47,0.52 -0.11,0.37 -1.71,-0.43 -1.34,0.26 -0.22,0.56 -0.88,-0.07 -0.99,0.48 -2.9,-1.61 -2.26,0.19 -0.94,-0.49 -0.75,-1.7 -0.75,-0.81 -2.5,-0.62 -0.17,-0.5 4.04,-1.81 1.17,-1.12 0.1,-1.02 -0.34,-0.58 -0.67,-0.14 -1.02,0.49 -0.93,-0.54 -0.85,-2.48 1.79,-0.46 1.62,-1.88 0.33,-2.47 -0.18,-1.79 2.92,-2.07 1.77,-1.73 3.28,-1.68 1.26,-0.2 0.74,-0.69 1.19,-2.91 0.7,-3.47 -0.51,-0.38 -2.15,-0.14 -0.5,-0.44 0.76,-1.51 -0.41,-0.86 -2.17,-0.17 -1.88,0.73 -0.31,1.87 1.24,1.03 -2.39,1.89 -0.93,1.73 -0.9,0.44 -0.71,-0.52 -1.27,-0.2 -0.69,0.8 -1.93,-0.02 -0.58,-0.66 0.09,-0.45 3.78,-6.17 0.04,-1.16 -0.6,-1.93 -1.4,-1.32 -1.42,-0.51 -3.43,0.67 -0.63,0.57 0,7.04 -0.38,1.16 -1.16,-0.17 -1.21,-1.78 0.04,-3.32 1.69,-4.22 1.45,-1.87 1.1,-0.82 0.17,-0.91 -1.81,-1.01 -2.66,0.38 -2.16,1.53 -0.11,0.79 1.74,3.84 0.16,1.43 -1.03,1.18 -1.8,1.14 -0.27,-0.49 1.05,-3.24 -0.53,-0.37 -3.1,1.17 -0.36,3.03 -1.35,-0.34 -1.08,1.21 0,0 -0.72,-0.43 -0.43,-0.96 -0.2,-2.77 0,0 1.16,-3.05 1.01,-1.51 3.21,-1.42 0.25,-0.63 0.16,-5.55 -0.85,-3.09 0.08,-1.28 1.37,-2.73 0.61,-0.37 1.29,-5.77 0.09,-1.88 2.32,-2.89 2.8,-2.42 -0.89,-4.27 0.45,-1.2 -0.37,-1.89 0.31,-1.68 -0.37,-1.65 -0.78,-0.51 0.23,-1.32 2.4,-0.72 2.26,-2.14 2.07,-2.83 2.4,-1.82 0.47,-1.34 1.71,-1.37 3.9,0.27 2.23,0.7 2.25,-0.8 1.12,0.1 1,0.7 2.66,0.87 0.76,-0.91 1.68,0.23 6.07,-0.58 0.12,-0.68 -0.5,-0.37 0.02,-0.41 0.97,-0.52 -1.02,-4 -1.21,-0.45 0.81,-4.9 -0.8,-0.94 -1.53,-0.71 -0.36,-1.1 -0.75,-0.34 -0.04,-1.65 z"/>
+          </g>
+          <g id="mxHover" pointer-events="none"></g>
+        </svg>
+        <div class="dmap-tip" id="dmapTip" aria-hidden="true"></div>
+        <p class="dmap-hint" id="dmapHint">Toca o haz clic en un estado</p>
+        <p class="dmap-credit">Mapa base: MapSVG · CC BY 4.0</p>
+      </div>
+
+      <aside class="dpanel" id="dpanel" aria-live="polite">
+        <button class="dpanel-close" id="dClose" type="button" aria-label="Cerrar y volver al mapa">✕ <span>Cerrar</span></button>
+        <div class="dp-head dp-in">
+          <svg class="dp-shape" id="dpShape" aria-hidden="true"><path/></svg>
+          <div>
+            <span class="kicker" id="dpKicker">Delegado estatal</span>
+            <h3 id="dpState">—</h3>
+          </div>
+        </div>
+        <div class="dp-person" id="dpPerson">
+        <div class="dp-card dp-in">
+          <div class="dp-photo" id="dpPhoto"></div>
+          <div class="dp-who">
+            <b id="dpName">—</b>
+            <span id="dpRole">Delegado estatal</span>
+            <em class="dp-chip" id="dpChip">Por confirmar</em>
+          </div>
+        </div>
+        <ul class="dp-info dp-in">
+          <li><i>Preparación académica</i><span id="dpEdu">—</span></li>
+          <li><i>Teléfono</i><span id="dpTel">—</span></li>
+          <li><i>Correo</i><span id="dpMail">—</span></li>
+        </ul>
+        </div>
+        <div class="dp-actions dp-in">
+          <a class="btn btn-primary magnetic" id="dpWa" href="#" target="_blank" rel="noopener noreferrer">Contactar por WhatsApp <span class="arrow">→</span></a>
+          <button class="btn btn-ghost dp-swap" id="dpSwap" type="button" aria-pressed="false"><span class="dp-swap-ic" aria-hidden="true">⇄</span><span id="dpSwapTxt">Ver codelegado</span></button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- MATETIPS -->
+<section class="section" id="matetips" style="padding-top:0">
+  <div class="container">
+    <div class="areas-head">
+      <div>
+        <span class="kicker">MateTips</span>
+        <h2 class="h2 split">Consejos de <span class="muted">campeón</span></h2>
+      </div>
+      <p class="sub reveal">Toca cada tarjeta para descubrir el consejo. Así entrenan los mateatletas COM.</p>
+    </div>
+    <div class="tips">
+      <button class="tip reveal" style="--c:var(--cyan)"><span class="tip-in"><span class="tip-front"><i>01</i><b>Lee el problema completo</b></span><span class="tip-back">Antes de calcular, identifica los datos, las condiciones y lo que realmente se pide. La clave suele estar en un detalle del enunciado.</span></span></button>
+      <button class="tip reveal" style="--c:var(--red)"><span class="tip-in"><span class="tip-front"><i>02</i><b>Dibuja figuras y diagramas</b></span><span class="tip-back">Un buen dibujo revela relaciones y patrones que no se ven a simple vista. Si puedes verlo, puedes entenderlo mejor.</span></span></button>
+      <button class="tip reveal" style="--c:var(--yellow)"><span class="tip-in"><span class="tip-front"><i>03</i><b>Prueba con casos pequeños</b></span><span class="tip-back">Si no sabes resolver el problema completo, empieza por una versión más pequeña: muchas veces el patrón está en los primeros ejemplos.</span></span></button>
+      <button class="tip reveal" style="--c:var(--green)"><span class="tip-in"><span class="tip-front"><i>04</i><b>Busca conexiones</b></span><span class="tip-back">¿Se parece a algo que ya resolviste? ¿Puedes usar un teorema conocido? Relacionar áreas te da más herramientas.</span></span></button>
+      <button class="tip reveal" style="--c:var(--purple-2)"><span class="tip-in"><span class="tip-front"><i>05</i><b>Revisa tu trabajo</b></span><span class="tip-back">Muchos puntos se pierden por descuidos. Verifica tus cálculos y que respondiste exactamente lo que se pregunta.</span></span></button>
+      <button class="tip reveal" style="--c:var(--cyan)"><span class="tip-in"><span class="tip-front"><i>06</i><b>Toma pausas estratégicas</b></span><span class="tip-back">Descansar no es rendirse; es prepararse para pensar mejor. Una mente fresca encuentra caminos nuevos.</span></span></button>
+      <button class="tip reveal" style="--c:var(--red)"><span class="tip-in"><span class="tip-front"><i>07</i><b>Establece un plan de estudio</b></span><span class="tip-back">Un plan organizado te ayuda a aprovechar tu tiempo y fortalecer tus áreas de oportunidad paso a paso.</span></span></button>
+      <button class="tip reveal" style="--c:var(--yellow)"><span class="tip-in"><span class="tip-front"><i>08</i><b>Practica todos los días</b></span><span class="tip-back">Aunque sean solo 20 minutos: la constancia es uno de los hábitos que distingue a los grandes mateatletas.</span></span></button>
+      <button class="tip reveal" style="--c:var(--green)"><span class="tip-in"><span class="tip-front"><i>09</i><b>Mantén una actitud positiva</b></span><span class="tip-back">Ve cada problema como una oportunidad para aprender. Una mente positiva piensa con mayor claridad.</span></span></button>
+    </div>
+  </div>
+</section>
+
+<!-- COMUNIDAD -->
+<section class="section" id="comunidad" style="padding-top:0">
+  <div class="container">
+    <span class="kicker">Comunidad</span>
+    <h2 class="h2 split">Nadie entrena <span class="muted">solo</span></h2>
+    <div class="links-grid links-2">
+      <a class="qlink reveal" href="https://chat.whatsapp.com/HTAHVWTFgkzA0VvQwDxMJJ" target="_blank" rel="noopener noreferrer" style="--c:var(--green)" data-cursor="Unirme"><span class="q-title">Comunidad<span class="q-sub">Grupo de WhatsApp con MateTips y material</span></span><span class="q-arrow">→</span></a>
+      <a class="qlink reveal" href="https://wa.me/529612891680" target="_blank" rel="noopener noreferrer" style="--c:var(--cyan)" data-cursor="Escribir"><span class="q-title">Informes<span class="q-sub">WhatsApp 961 289 1680</span></span><span class="q-arrow">→</span></a>
+      <a class="qlink reveal" href="https://www.facebook.com/CampeonatoOlimpiadasMatematicas?locale=es_LA" target="_blank" rel="noopener noreferrer" style="--c:var(--purple-2)" data-cursor="Seguir"><span class="q-title">Facebook<span class="q-sub">Más de 11 mil seguidores</span></span><span class="q-arrow">→</span></a>
+      <a class="qlink reveal" href="https://www.instagram.com/campeonatos_matematicos/" target="_blank" rel="noopener noreferrer" style="--c:var(--red)" data-cursor="Seguir"><span class="q-title">Instagram<span class="q-sub">@campeonatos_matematicos</span></span><span class="q-arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index_pro.html" class="brand"><img src="logo.png" alt="Logo COM"><div><b>COM</b><small>Olimpiadas Matemáticas</small></div></a>
+        <p>Creado con el fin de llegar a los alumnos por el gusto de las matemáticas a otro nivel.</p>
+        <div class="socials">
+          <!-- WhatsApp de informes tomado de Facebook (961 289 1680). EDITA: pon tu correo en mailto: -->
+          <a href="https://wa.me/529612891680" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="whatsapp.png" alt=""></a>
+          <a href="https://www.instagram.com/campeonatos_matematicos/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="instagram.png" alt=""></a>
+          <a href="https://www.facebook.com/CampeonatoOlimpiadasMatematicas?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="facebook.png" alt=""></a>
+          <a href="#" aria-label="Correo"><img src="gmail.png" alt=""></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Participa</h4>
+        <ul>
+          <li><a href="convocatorias.html">Convocatorias</a></li>
+          <li><a href="registro.html">Registro</a></li>
+          <li><a href="eventos_pro.html">Eventos</a></li>
+          <li><a href="entrenamientos.html">Entrenamientos</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Consulta</h4>
+        <ul>
+          <li><a href="nosotros_pro.html">Nosotros</a></li>
+          <li><a href="recursos.html">Recursos</a></li>
+          <li><a href="resultados.html">Resultados</a></li>
+          <li><a href="ranking.html">Ranking</a></li>
+          <li><a href="constancias.html">Constancias</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Campeonatos de Olimpiadas Matemáticas “COM”.</span>
+      <a href="#inicio" id="toTop">Volver arriba ↑</a>
+    </div>
+    <div class="foot-mega" aria-hidden="true">COM</div>
+  </div>
+</footer>
+
+<a href="https://wa.me/529612891680" class="float-wa" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="whatsapp.png" alt=""></a>
+
+<!-- BUSCADOR -->
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Buscar en COM">
+  <div class="palette-box">
+    <div class="palette-input">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="paletteInput" placeholder="Buscar en COM… (resultados, registro, ranking)" autocomplete="off">
+      <kbd>ESC</kbd>
+    </div>
+    <div class="palette-list" id="paletteList"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<script>
+(() => {
+"use strict";
+const $  = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const hasGSAP = typeof window.gsap !== "undefined";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+const COLORS = ["#2ec4e6","#ef3340","#ffd400","#4cb848","#c13ad6"];
+const store = {
+  get(k, d){ try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+$("#year").textContent = new Date().getFullYear();
+
+/* ---------- Título de la pestaña ---------- */
+const baseTitle = document.title;
+document.addEventListener("visibilitychange", () => {
+  document.title = document.hidden ? "🧮 ¡Un reto te espera! · COM" : baseTitle;
+});
+
+/* ---------- Scroll suave (Lenis) ---------- */
+let lenis = null;
+if (window.Lenis && !reduce) {
+  lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+  if (hasGSAP) {
+    gsap.registerPlugin(ScrollTrigger);
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  }
+  lenis.stop();
+} else if (hasGSAP) { gsap.registerPlugin(ScrollTrigger); }
+
+document.addEventListener("click", e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const id = a.getAttribute("href");
+  if (id === "#") { e.preventDefault(); return; }
+  const el = $(id);
+  if (!el) return;
+  e.preventDefault();
+  closeMenu();
+  lenis ? lenis.scrollTo(el, { offset: 0 }) : el.scrollIntoView({ behavior: "smooth" });
+});
+
+/* ---------- Cursor personalizado ---------- */
+const dot = $(".cursor-dot"), ring = $(".cursor-ring");
+if (fine) {
+  document.body.classList.add("has-cursor");
+  let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+  addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`; });
+  (function loop(){ rx += (mx-rx)*.16; ry += (my-ry)*.16; ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`; requestAnimationFrame(loop); })();
+  document.addEventListener("mouseover", e => {
+    const t = e.target.closest("a,button,input,.card,.step");
+    const label = e.target.closest("[data-cursor]");
+    ring.classList.toggle("hover", !!t && !label);
+    ring.classList.toggle("label", !!label);
+    ring.textContent = label ? label.dataset.cursor : "";
+  });
+  document.addEventListener("mouseleave", () => { dot.style.opacity = ring.style.opacity = 0; });
+  document.addEventListener("mouseenter", () => { dot.style.opacity = ring.style.opacity = 1; });
+}
+
+/* ---------- Botones magnéticos + brillo que sigue al mouse ---------- */
+if (fine) $$(".magnetic").forEach(el => {
+  el.addEventListener("mousemove", e => {
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    el.style.setProperty("--mx", x + "px"); el.style.setProperty("--my", y + "px");
+    el.style.transform = `translate(${(x - r.width/2) * .25}px, ${(y - r.height/2) * .35}px)`;
+  });
+  el.addEventListener("mouseleave", () => { el.style.transform = ""; });
+});
+
+/* ---------- Texto "scramble" ---------- */
+const GLYPHS = "∑∫πΔ√∞≡φθλ0123456789ABCDEFXYZ";
+function scramble(el, finalText, dur = 700){
+  const start = performance.now(), len = finalText.length;
+  cancelAnimationFrame(el._raf);
+  const step = now => {
+    const p = Math.min(1, (now - start) / dur);
+    let out = "";
+    for (let i = 0; i < len; i++) {
+      out += (i < p * len || finalText[i] === " ") ? finalText[i] : GLYPHS[(Math.random()*GLYPHS.length)|0];
+    }
+    el.textContent = out;
+    if (p < 1) el._raf = requestAnimationFrame(step);
+  };
+  el._raf = requestAnimationFrame(step);
+}
+if (fine) $$("[data-scramble]").forEach(a => {
+  const txt = a.textContent;
+  a.addEventListener("mouseenter", () => scramble(a, txt, 450));
+});
+
+/* ---------- Palabra rotatoria del hero ---------- */
+const rot = $("#rotator");
+const words = (rot && rot.dataset.words) ? rot.dataset.words.split(",") : ["grandeza","estrategia","creatividad","victoria","ingenio"];
+let wi = 0;
+setInterval(() => { if (!document.hidden) { wi = (wi+1) % words.length; scramble(rot, words[wi], 800); } }, 2800);
+
+/* ---------- Navbar: glass + ocultar al bajar ---------- */
+const nav = $("#nav"); let lastY = 0;
+const progress = $(".scroll-progress");
+function onScroll(){
+  const y = scrollY;
+  nav.classList.toggle("scrolled", y > 30);
+  nav.classList.toggle("hidden", y > lastY && y > 400 && !menu.classList.contains("open"));
+  lastY = y;
+  const h = document.documentElement.scrollHeight - innerHeight;
+  progress.style.transform = `scaleX(${h > 0 ? y / h : 0})`;
+}
+addEventListener("scroll", onScroll, { passive: true });
+
+/* ---------- Menú móvil ---------- */
+const burger = $("#burger"), menu = $("#mobileMenu");
+function closeMenu(){ menu.classList.remove("open"); burger.classList.remove("open"); lenis && lenis.start(); }
+burger.addEventListener("click", () => {
+  const open = !menu.classList.contains("open");
+  menu.classList.toggle("open", open); burger.classList.toggle("open", open);
+  if (lenis) open ? lenis.stop() : lenis.start();
+});
+
+/* ---------- Canvas del hero: red de partículas + símbolos ---------- */
+(function field(){
+  const c = $("#field"), ctx = c.getContext("2d");
+  let W, H, DPR, pts = [], syms = [];
+  const mouse = { x: -9999, y: -9999 };
+  const SYMS = ["π","∑","∞","√","∫","Δ","φ","≡","θ","%","÷","×","+","="];
+  function resize(){
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = c.clientWidth; H = c.clientHeight;
+    c.width = W * DPR; c.height = H * DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    const n = Math.min(110, Math.floor(W * H / 14000));
+    pts = Array.from({ length: n }, () => ({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-.5)*.35, vy: (Math.random()-.5)*.35, r: Math.random()*1.6+.6, c: COLORS[(Math.random()*COLORS.length)|0] }));
+    syms = Array.from({ length: Math.min(18, Math.floor(W/80)) }, () => ({ s: SYMS[(Math.random()*SYMS.length)|0], x: Math.random()*W, y: Math.random()*H, z: Math.random()*.8+.3, a: Math.random()*Math.PI*2, va: (Math.random()-.5)*.004, c: COLORS[(Math.random()*COLORS.length)|0] }));
+  }
+  const hero = $(".hero");
+  hero.addEventListener("mousemove", e => { const r = c.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+  hero.addEventListener("mouseleave", () => { mouse.x = mouse.y = -9999; });
+  let visible = true;
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(c);
+  function draw(){
+    requestAnimationFrame(draw);
+    if (!visible) return;
+    ctx.clearRect(0,0,W,H);
+    // símbolos flotantes
+    syms.forEach(s => {
+      s.y -= .15 * s.z; s.a += s.va; if (s.y < -60) { s.y = H + 60; s.x = Math.random()*W; }
+      const px = (mouse.x > -1 ? (mouse.x - W/2) * .02 * s.z : 0);
+      ctx.save(); ctx.translate(s.x + px, s.y); ctx.rotate(s.a);
+      ctx.font = `700 ${Math.round(26 * s.z + 10)}px Orbitron, sans-serif`;
+      ctx.fillStyle = s.c; ctx.globalAlpha = .10 + .08 * s.z;
+      ctx.textAlign = "center"; ctx.fillText(s.s, 0, 0); ctx.restore();
+    });
+    ctx.globalAlpha = 1;
+    // partículas
+    for (const p of pts) {
+      const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy);
+      if (d < 140) { p.vx += dx / d * .06; p.vy += dy / d * .06; }
+      p.vx *= .985; p.vy *= .985;
+      p.vx += (Math.random()-.5) * .02; p.vy += (Math.random()-.5) * .02;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      p.x = Math.max(0, Math.min(W, p.x)); p.y = Math.max(0, Math.min(H, p.y));
+    }
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i];
+      for (let j = i + 1; j < pts.length; j++) {
+        const b = pts[j], d = Math.hypot(a.x-b.x, a.y-b.y);
+        if (d < 120) { ctx.strokeStyle = `rgba(193,58,214,${(1 - d/120) * .35})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+      }
+      const dm = Math.hypot(a.x-mouse.x, a.y-mouse.y);
+      if (dm < 200) { ctx.strokeStyle = `rgba(46,196,230,${(1 - dm/200) * .6})`; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(mouse.x,mouse.y); ctx.stroke(); }
+      ctx.fillStyle = a.c; ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.283); ctx.fill();
+    }
+  }
+  resize(); addEventListener("resize", resize);
+  if (!reduce) draw();
+})();
+
+/* ---------- Emblema 3D que sigue al mouse ---------- */
+if (fine) {
+  const em = $("#emblem3d");
+  addEventListener("mousemove", e => {
+    const x = (e.clientX / innerWidth - .5), y = (e.clientY / innerHeight - .5);
+    em.style.transform = `rotateY(${x * 22}deg) rotateX(${-y * 22}deg)`;
+  });
+}
+
+/* ---------- Tarjetas: tilt 3D + spotlight ---------- */
+if (fine) $$(".tilt").forEach(card => {
+  card.addEventListener("mousemove", e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    card.style.setProperty("--x", x + "px"); card.style.setProperty("--y", y + "px");
+    card.style.transform = `perspective(900px) rotateY(${(x / r.width - .5) * 12}deg) rotateX(${-(y / r.height - .5) * 12}deg)`;
+  });
+  card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+});
+
+if ($("#pForm")) {
+/* ---------- Reto COM ---------- */
+const problems = [
+  { area:"Álgebra", c:"#2ec4e6", q:"Si <code>a + b = 10</code> y <code>ab = 21</code>, ¿cuánto vale <code>a² + b²</code>?", a:"58", h:"Recuerda que (a + b)² = a² + 2ab + b²." },
+  { area:"Teoría de números", c:"#4cb848", q:"¿Cuál es el último dígito de <code>7²⁰²⁶</code>?", a:"9", h:"Las potencias de 7 terminan en 7, 9, 3, 1 y se repiten cada 4." },
+  { area:"Combinatoria", c:"#ef3340", q:"¿Cuál es la suma de todos los enteros del 1 al 100?", a:"5050", h:"Empareja el primero con el último: 1+100, 2+99, …" },
+  { area:"Teoría de números", c:"#4cb848", q:"¿Cuántos ceros hay al final del número <code>100!</code>?", a:"24", h:"Cuenta cuántos factores 5 aparecen: ⌊100/5⌋ + ⌊100/25⌋." },
+  { area:"Geometría", c:"#ffd400", q:"¿Cuántas diagonales tiene un polígono convexo de 10 lados?", a:"35", h:"Cada vértice se une con n − 3 vértices, y cada diagonal se cuenta dos veces." }
+];
+let pi = 0;
+const solved = store.get("comSolved", []);
+const scoreEl = $("#score");
+problems.forEach(p => { const i = document.createElement("i"); i.style.setProperty("--c", p.c); scoreEl.appendChild(i); });
+function paintScore(){ $$("i", scoreEl).forEach((el, i) => el.classList.toggle("on", solved.includes(i))); }
+function loadProblem(){
+  const p = problems[pi];
+  const area = $("#pArea"); area.textContent = p.area; area.style.color = p.c;
+  $("#pIndex").textContent = `Reto ${pi + 1} / ${problems.length}`;
+  const t = $("#pText"); t.innerHTML = p.q;
+  if (hasGSAP) gsap.fromTo(t, { opacity:0, y:14 }, { opacity:1, y:0, duration:.5, ease:"power3.out" });
+  $("#pInput").value = ""; $("#pFeedback").textContent = ""; $("#pFeedback").className = "feedback";
+  const h = $("#pHint"); h.textContent = "💡 " + p.h; h.classList.remove("show");
+  $("#pHintBtn").textContent = "Ver pista";
+  paintScore();
+}
+$("#pForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const inp = $("#pInput"), fb = $("#pFeedback");
+  const val = inp.value.trim().replace(/\s/g, "");
+  if (!val) return;
+  if (val === problems[pi].a) {
+    fb.textContent = "¡Correcto! Tienes mente de olímpico. 🏆"; fb.className = "feedback ok";
+    if (!solved.includes(pi)) { solved.push(pi); store.set("comSolved", solved); }
+    paintScore(); confetti(inp);
+  } else {
+    fb.textContent = "Casi… inténtalo de nuevo o revisa la pista."; fb.className = "feedback no";
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+  }
+});
+$("#pHintBtn").addEventListener("click", () => {
+  const h = $("#pHint"); h.classList.toggle("show");
+  $("#pHintBtn").textContent = h.classList.contains("show") ? "Ocultar pista" : "Ver pista";
+});
+$("#pNext").addEventListener("click", () => { pi = (pi + 1) % problems.length; loadProblem(); });
+loadProblem();
+
+}
+
+/* ---------- Confeti ---------- */
+const cf = $("#confetti"), cctx = cf.getContext("2d");
+let bits = [], cfRunning = false;
+function sizeCf(){ cf.width = innerWidth; cf.height = innerHeight; }
+sizeCf(); addEventListener("resize", sizeCf);
+function confetti(origin){
+  if (reduce) return;
+  const r = origin.getBoundingClientRect();
+  for (let i = 0; i < 140; i++) bits.push({
+    x: r.left + r.width/2, y: r.top, vx: (Math.random()-.5) * 14, vy: -Math.random()*14 - 4,
+    s: Math.random()*8 + 4, a: Math.random()*6, va: (Math.random()-.5)*.3, c: COLORS[i % COLORS.length], life: 1
+  });
+  if (!cfRunning) { cfRunning = true; requestAnimationFrame(tickCf); }
+}
+function tickCf(){
+  cctx.clearRect(0,0,cf.width,cf.height);
+  bits.forEach(b => { b.vy += .35; b.vx *= .99; b.x += b.vx; b.y += b.vy; b.a += b.va; b.life -= .008;
+    cctx.save(); cctx.globalAlpha = Math.max(0, b.life); cctx.translate(b.x, b.y); cctx.rotate(b.a);
+    cctx.fillStyle = b.c; cctx.fillRect(-b.s/2, -b.s/4, b.s, b.s/2); cctx.restore(); });
+  bits = bits.filter(b => b.life > 0 && b.y < cf.height + 40);
+  if (bits.length) requestAnimationFrame(tickCf); else { cfRunning = false; cctx.clearRect(0,0,cf.width,cf.height); }
+}
+
+/* ---------- Buscador tipo Ctrl+K (versión mejorada del tuyo) ---------- */
+const pages = [
+  { name:"Nosotros", url:"#inicio", sub:"Quiénes somos", ic:"N", c:"#c13ad6", k:["nosotros","quienes","acerca","info","informacion","datos"] },
+  { name:"Eventos", url:"eventos_pro.html", sub:"Calendario de competencias", ic:"E", c:"#2ec4e6", k:["eventos","fechas","calendario","competencia"] },
+  { name:"Convocatorias", url:"convocatorias.html", sub:"Bases y requisitos", ic:"C", c:"#ef3340", k:["convocatoria","inscripcion concurso","bases","requisitos","evento"] },
+  { name:"Registro", url:"registro.html", sub:"Inscríbete", ic:"R", c:"#ffd400", k:["registro","inscribirme","crear cuenta","participar","perfil","usuario","cuenta"] },
+  { name:"Recursos", url:"recursos.html", sub:"Material de estudio", ic:"Rc", c:"#4cb848", k:["recursos","material","pdf","libros","problemas","ejercicios"] },
+  { name:"Entrenamientos", url:"entrenamientos.html", sub:"Prepárate", ic:"En", c:"#2ec4e6", k:["entrenamientos","clases","preparacion","practica","retos","matematicas"] },
+  { name:"Constancias", url:"constancias.html", sub:"Descarga tu reconocimiento", ic:"Co", c:"#c13ad6", k:["constancias","diploma","certificado","reconocimiento"] },
+  { name:"Resultados", url:"resultados.html", sub:"Puntajes y ganadores", ic:"Re", c:"#ef3340", k:["resultados","ganadores","puntajes","quien gano","calificaciones"] },
+  { name:"Ranking", url:"ranking.html", sub:"Tabla de posiciones", ic:"Rk", c:"#ffd400", k:["ranking","tabla","posiciones","quien va primero","lugares"] },
+  { name:"Comunidad WhatsApp", url:"https://chat.whatsapp.com/HTAHVWTFgkzA0VvQwDxMJJ", sub:"MateTips, material e información", ic:"W", c:"#4cb848", k:["whatsapp","comunidad","grupo","tips","matetips","contacto","informes"] },
+  { name:"Circuito Nacional 2027", url:"index_pro.html#ruta", sub:"Marathon, Fusion, OMG, Challenge y Math Rush", ic:"CN", c:"#c13ad6", k:["circuito","nacional","puntos","temporada","2027","concursos","campeon de campeones"] },
+  { name:"Math Rush 2027", url:"index_pro.html#ruta", sub:"Nuevo concurso del circuito", ic:"MR", c:"#ef3340", k:["math rush","rush","nuevo","2027"] },
+  { name:"Categorías", url:"eventos_pro.html#categorias", sub:"Kids A, Kids B, Junior's A, Juniors B y Elite", ic:"5", c:"#2ec4e6", k:["categorias","niveles","kids","junior","juniors","elite","primaria","secundaria","bachillerato","preparatoria","universidad"] },
+  { name:"OMG · Geometría", url:"index_pro.html#ruta", sub:"Olimpiada Mexicana de Geometría", ic:"△", c:"#ffd400", k:["omg","geometria","olimpiada mexicana"] },
+  { name:"Marathon", url:"index_pro.html#ruta", sub:"Campeonato virtual latinoamericano", ic:"M", c:"#2ec4e6", k:["marathon","maraton","virtual","latinoamerica"] },
+  { name:"Final Nacional FUSION26", url:"eventos_pro.html#proximo", sub:"4–6 de diciembre · Guadalajara, Jalisco", ic:"F", c:"#ffd400", k:["fusion","fusion26","final","nacional","guadalajara","jalisco","campeonato"] },
+  { name:"Challenge por equipos", url:"convocatorias.html", sub:"Mate Teams · sedes en todo México", ic:"Ch", c:"#ef3340", k:["challenge","equipos","sedes","sede","9no","noveno","convocatoria"] },
+  { name:"Sistema de puntos", url:"eventos_pro.html#puntos", sub:"Oro, plata y bronce en cada concurso", ic:"P", c:"#ffd400", k:["puntos","medallas","oro","plata","bronce","tabla","examen perfecto"] },
+  { name:"MateTips", url:"#matetips", sub:"Consejos para resolver como campeón", ic:"T", c:"#4cb848", k:["tips","matetips","consejos","estudiar","practica"] },
+  { name:"Inicio", url:"index_pro.html", sub:"Página principal", ic:"⌂", c:"#c13ad6", k:["inicio","home","principal","index"] },
+  { name:"Delegados estatales", url:"#delegados", sub:"Mapa: encuentra al delegado de tu estado", ic:"🗺", c:"#4cb848", k:["delegados","delegado","estatal","estado","mapa","contacto","representante"] },
+  { name:"Reto COM", url:"index_pro.html#reto", sub:"Resuelve un problema ahora", ic:"∑", c:"#4cb848", k:["reto","problema","jugar","desafio","acertijo"] },
+  { name:"Áreas olímpicas", url:"index_pro.html#areas", sub:"Álgebra, combinatoria, geometría, números", ic:"△", c:"#2ec4e6", k:["areas","algebra","geometria","combinatoria","numeros","temas"] }
+];
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+function scoreMatch(text, q){
+  text = norm(text); q = norm(q);
+  let s = 0;
+  if (text.startsWith(q)) s += 8; else if (text.includes(q)) s += 5;
+  q.split(/\s+/).filter(Boolean).forEach(w => { if (text.includes(w)) s += 2; });
+  return s;
+}
+function search(q){
+  return pages.map(p => ({ ...p, score: scoreMatch(p.name, q) * 2 + p.k.reduce((a, k) => a + scoreMatch(k, q), 0) }))
+              .filter(p => p.score > 0).sort((a, b) => b.score - a.score);
+}
+const pal = $("#palette"), pin = $("#paletteInput"), plist = $("#paletteList");
+let pItems = [], pActive = 0;
+function renderPalette(){
+  const q = pin.value.trim();
+  const hist = store.get("historyCOM", []).map(h => pages.find(p => p.name === h.name)).filter(Boolean);
+  let html = "";
+  if (!q) {
+    if (hist.length) { pItems = hist; html += `<div class="palette-label">Recientes</div>`; }
+    else { pItems = pages; html += `<div class="palette-label">Todas las secciones</div>`; }
+  } else {
+    pItems = search(q);
+    html += `<div class="palette-label">Resultados</div>`;
+  }
+  if (!pItems.length) { plist.innerHTML = `<div class="palette-empty">Sin resultados para “${q.replace(/</g,"&lt;")}”</div>`; return; }
+  pActive = Math.min(pActive, pItems.length - 1);
+  html += pItems.map((p, i) => `
+    <div class="palette-item${i === pActive ? " active" : ""}" data-i="${i}" style="--c:${p.c}">
+      <span class="pi-ic">${p.ic}</span><div><b>${p.name}</b><small>${p.sub}</small></div><span class="pi-go">↵</span>
+    </div>`).join("");
+  plist.innerHTML = html;
+}
+function openPalette(){ pal.classList.add("open"); pin.value = ""; pActive = 0; renderPalette(); pin.focus(); lenis && lenis.stop(); }
+function closePalette(){ pal.classList.remove("open"); lenis && lenis.start(); }
+function choose(p){
+  if (!p) return;
+  let hist = store.get("historyCOM", []).filter(h => h.name !== p.name);
+  hist.unshift({ name: p.name }); store.set("historyCOM", hist.slice(0, 5));
+  closePalette();
+  if (p.url.startsWith("#")) { const el = $(p.url); lenis ? lenis.scrollTo(el) : el.scrollIntoView({ behavior:"smooth" }); }
+  else location.href = p.url;
+}
+$("#openSearch").addEventListener("click", openPalette);
+pin.addEventListener("input", () => { pActive = 0; renderPalette(); });
+plist.addEventListener("click", e => { const it = e.target.closest(".palette-item"); if (it) choose(pItems[+it.dataset.i]); });
+plist.addEventListener("mousemove", e => { const it = e.target.closest(".palette-item"); if (it && +it.dataset.i !== pActive) { pActive = +it.dataset.i; renderPalette(); } });
+pal.addEventListener("click", e => { if (e.target === pal) closePalette(); });
+addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); pal.classList.contains("open") ? closePalette() : openPalette(); return; }
+  if (!pal.classList.contains("open")) {
+    if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); openPalette(); }
+    if (e.key === "Escape") closeMenu();
+    return;
+  }
+  if (e.key === "Escape") closePalette();
+  if (e.key === "ArrowDown") { e.preventDefault(); pActive = (pActive + 1) % pItems.length; renderPalette(); }
+  if (e.key === "ArrowUp") { e.preventDefault(); pActive = (pActive - 1 + pItems.length) % pItems.length; renderPalette(); }
+  if (e.key === "Enter") { e.preventDefault(); choose(pItems[pActive]); }
+});
+
+/* ---------- Dividir títulos en letras ---------- */
+function splitText(el){
+  const walk = node => {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+          const w = document.createElement("span"); w.className = "word";
+          [...part].forEach(ch => { const s = document.createElement("span"); s.className = "ch"; s.textContent = ch; w.appendChild(s); });
+          frag.appendChild(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+  };
+  walk(el);
+}
+
+/* ---------- Contadores ---------- */
+function countUp(el){
+  const end = +el.dataset.count;
+  if (!hasGSAP) { el.textContent = end + (el.dataset.suffix || ""); return; }
+  const o = { v: 0 };
+  gsap.to(o, { v: end, duration: 1.6, ease: "power3.out", onUpdate: () => el.textContent = Math.round(o.v) + (el.dataset.suffix || "") });
+}
+
+/* ---------- Preloader: dibuja los 4 cuadros del logo ---------- */
+(function buildSpirals(){
+  const g = $("#preSvg g"), ns = "http://www.w3.org/2000/svg";
+  if (!g) return;
+  const cols = ["#2ec4e6","#ef3340","#ffd400","#4cb848"];
+  const pos = [[8,8],[64,8],[8,64],[64,64]];
+  pos.forEach(([x, y], k) => {
+    [0, 9, 18].forEach(o => {
+      const r = document.createElementNS(ns, "rect");
+      r.setAttribute("x", x + o); r.setAttribute("y", y + o);
+      r.setAttribute("width", 48 - o*2); r.setAttribute("height", 48 - o*2); r.setAttribute("rx", 3);
+      r.setAttribute("class", "sq"); r.setAttribute("stroke", cols[k]);
+      r.setAttribute("stroke-width", o === 18 ? 0 : 5);
+      if (o === 18) { r.setAttribute("fill", cols[k]); r.setAttribute("class", "core"); }
+      g.appendChild(r);
+    });
+  });
+})();
+
+
+/* ---------- Delegados estatales: mapa interactivo ---------- */
+/* Para agregar un delegado: escribe sus datos con la clave del estado.
+   Claves: agu bcn bcs cam chp chh coa col dur gua gro hid jal cmx mex mic mor nay nle oax pue que roo slp sin son tab tam tla ver yuc zac
+   Ejemplo:
+   jal: { nombre:"Nombre Apellido", foto:"delegados/jal.jpg", estudios:"Lic. en Matemáticas, UdeG", telefono:"33 1234 5678", whatsapp:"523312345678", correo:"jalisco@com.mx",
+          codelegado: { nombre:"Nombre Apellido", foto:"delegados/jal_co.jpg", estudios:"Ing. Civil, ITESO", telefono:"33 8765 4321", correo:"co.jalisco@com.mx" } },
+   (whatsapp = 52 + los 10 dígitos del número, sin espacios) */
+const DELEGADOS = {
+};
+(function(){
+  const wrap = $("#dmap"); if (!wrap) return;
+  const svg = $("#mxMap"), statesG = $("#mxStates"), hoverG = $("#mxHover"), tip = $("#dmapTip"), stage = $("#dmapStage");
+  const states = $$(".st", statesG);
+  const VB = { w: 793, h: 498 };
+  let current = null, selected = null;
+  const NS = "http://www.w3.org/2000/svg";
+  const avatar = c => `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#1a1626"/><circle cx="50" cy="38" r="18" fill="${c}" opacity=".85"/><path d="M14 100c2-22 18-34 36-34s34 12 36 34Z" fill="${c}" opacity=".85"/></svg>`;
+  const colorOf = el => getComputedStyle(el).getPropertyValue("--c").trim() || "#c13ad6";
+  const resolved = el => { const t = document.createElement("i"); t.style.color = colorOf(el); document.body.appendChild(t); const c = getComputedStyle(t).color; t.remove(); return c; };
+
+  // Zona vacía (golfo / Estados Unidos) donde aparece el estado ampliado, como lupa
+  const ZONE = { x: 556, y: 18, w: 222, h: 200 };
+  const defs = svg.querySelector("defs");
+  defs.insertAdjacentHTML("beforeend", '<linearGradient id="coneG" gradientUnits="userSpaceOnUse"><stop offset="0" stop-opacity=".42"/><stop offset="1" stop-color="#ffffff" stop-opacity=".07"/></linearGradient>');
+  const coneG = defs.querySelector("#coneG");
+  function hull(P){
+    P = P.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lo = [], up = [];
+    for (const p of P) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); }
+    for (const p of P.reverse()) { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); }
+    return lo.slice(0, -1).concat(up.slice(0, -1));
+  }
+  function showZoom(el){
+    if (current === el) return;
+    hideZoom(true);
+    current = el;
+    statesG.classList.add("dim"); el.classList.add("on");
+    const color = resolved(el);
+    const bb = el.getBBox(), c0x = bb.x + bb.width / 2, c0y = bb.y + bb.height / 2;
+    const s = Math.min(ZONE.w / bb.width, ZONE.h / bb.height) * .9;
+    const c1x = ZONE.x + ZONE.w / 2, c1y = ZONE.y + ZONE.h / 2;
+    const tw = bb.width * s, th = bb.height * s;
+    const T = [[c1x - tw / 2, c1y - th / 2], [c1x + tw / 2, c1y - th / 2], [c1x + tw / 2, c1y + th / 2], [c1x - tw / 2, c1y + th / 2]];
+    const O = [[bb.x, bb.y], [bb.x + bb.width, bb.y], [bb.x + bb.width, bb.y + bb.height], [bb.x, bb.y + bb.height]];
+    // haz de luz que une el estado con su ampliación
+    coneG.setAttribute("x1", c0x); coneG.setAttribute("y1", c0y); coneG.setAttribute("x2", c1x); coneG.setAttribute("y2", c1y);
+    coneG.firstElementChild.setAttribute("stop-color", color);
+    const cone = document.createElementNS(NS, "polygon");
+    cone.setAttribute("points", hull(O.concat(T)).map(p => p.join(",")).join(" "));
+    cone.setAttribute("class", "cone");
+    const g = document.createElementNS(NS, "g");
+    const p = el.cloneNode(false); p.removeAttribute("tabindex"); p.removeAttribute("role"); p.removeAttribute("aria-label");
+    p.setAttribute("class", "zoom"); p.style.setProperty("--c", colorOf(el));
+    p.style.strokeWidth = (1.6 / s).toFixed(3);
+    g.appendChild(p);
+    const base = el.cloneNode(false); base.removeAttribute("tabindex"); base.removeAttribute("role"); base.removeAttribute("aria-label");
+    base.setAttribute("class", "zoom zoom-base"); base.style.setProperty("--c", colorOf(el));
+    hoverG.appendChild(cone); hoverG.appendChild(base); hoverG.appendChild(g);
+    if (hasGSAP) {
+      gsap.set(g, { svgOrigin: `${c0x} ${c0y}` });
+      gsap.fromTo(g, { scale: 1, x: 0, y: 0, opacity: .4 }, { scale: s, x: c1x - c0x, y: c1y - c0y, opacity: 1, duration: .55, ease: "expo.out" });
+      gsap.fromTo(cone, { opacity: 0 }, { opacity: 1, duration: .45, delay: .08, ease: "power2.out" });
+    } else {
+      g.setAttribute("transform", `translate(${c1x} ${c1y}) scale(${s}) translate(${-c0x} ${-c0y})`);
+    }
+    // nombre debajo de la ampliación
+    const k = svg.getBoundingClientRect().width / VB.w;
+    const svgBox = svg.getBoundingClientRect(), stBox = stage.getBoundingClientRect();
+    tip.textContent = el.dataset.name; tip.style.setProperty("--tc", color);
+    tip.style.left = ((svgBox.left - stBox.left) + c1x * k) + "px";
+    tip.style.top = ((svgBox.top - stBox.top) + (c1y + th / 2) * k + 14) + "px";
+    tip.classList.add("show");
+  }
+  function hideZoom(instant){
+    if (!current) return;
+    current.classList.remove("on"); current = null;
+    statesG.classList.remove("dim"); tip.classList.remove("show");
+    const gs = [...hoverG.children];
+    if (hasGSAP && !instant) gs.forEach(g => gsap.to(g, { opacity: 0, duration: .2, ease: "power2.in", onComplete: () => g.remove() }));
+    else gs.forEach(g => { if (hasGSAP) gsap.killTweensOf(g); g.remove(); });
+  }
+  let curId = null, showCo = false;
+  function person(p, co){
+    const role = co ? "Codelegado estatal" : "Delegado estatal", c = getComputedStyle($("#dpanel")).getPropertyValue("--dc").trim();
+    $("#dpanel").classList.toggle("is-co", co);
+    $("#dpKicker").textContent = role; $("#dpRole").textContent = role;
+    $("#dpName").textContent = p.nombre || "Por asignar";
+    $("#dpPhoto").innerHTML = p.foto ? `<img src="${p.foto}" alt="Foto de ${p.nombre || role}">` : avatar(c);
+    const chip = $("#dpChip"); chip.textContent = p.nombre ? (co ? "Codelegado oficial" : "Delegado oficial") : "Por confirmar"; chip.classList.toggle("ok", !!p.nombre);
+    $("#dpEdu").textContent = p.estudios || "Por asignar";
+    $("#dpTel").textContent = p.telefono || "Por asignar";
+    $("#dpMail").textContent = p.correo || "—";
+    const wa = $("#dpWa"), waNum = p.whatsapp || (p.telefono ? "52" + p.telefono.replace(/\D/g, "").slice(-10) : "");
+    if (waNum) { wa.href = "https://wa.me/" + waNum; wa.classList.remove("is-off"); wa.removeAttribute("aria-disabled"); wa.innerHTML = 'Contactar por WhatsApp <span class="arrow">→</span>'; }
+    else { wa.removeAttribute("href"); wa.classList.add("is-off"); wa.setAttribute("aria-disabled", "true"); wa.textContent = "Contacto próximamente"; }
+    $("#dpSwapTxt").textContent = co ? "Ver delegado" : "Ver codelegado";
+    $("#dpSwap").setAttribute("aria-pressed", co);
+  }
+  function fill(el){
+    const id = el.dataset.id, d = DELEGADOS[id] || {}, c = resolved(el);
+    curId = id; showCo = false;
+    wrap.style.setProperty("--dc", c); $("#dpanel").style.setProperty("--dc", c);
+    $("#dpState").textContent = el.dataset.name;
+    const bb = el.getBBox(), pad = Math.max(bb.width, bb.height) * .08;
+    const sh = $("#dpShape"); sh.setAttribute("viewBox", `${bb.x - pad} ${bb.y - pad} ${bb.width + pad * 2} ${bb.height + pad * 2}`); sh.querySelector("path").setAttribute("d", el.getAttribute("d"));
+    person(d, false);
+  }
+  $("#dpSwap").addEventListener("click", () => {
+    if (!curId) return;
+    showCo = !showCo;
+    const d = DELEGADOS[curId] || {}, p = showCo ? (d.codelegado || {}) : d;
+    const box = $("#dpPerson"), dir = showCo ? 1 : -1;
+    if (!hasGSAP) { person(p, showCo); return; }
+    gsap.to(box, { x: -40 * dir, opacity: 0, duration: .22, ease: "power2.in", onComplete: () => {
+      person(p, showCo);
+      gsap.fromTo(box, { x: 40 * dir, opacity: 0 }, { x: 0, opacity: 1, duration: .45, ease: "power3.out" });
+      gsap.fromTo("#dpPhoto", { rotateY: 90 * dir }, { rotateY: 0, duration: .6, ease: "back.out(1.6)" });
+    }});
+  });
+  function select(el){
+    hideZoom();
+    states.forEach(s => s.classList.toggle("sel", s === el));
+    selected = el; fill(el);
+    const wasOpen = wrap.classList.contains("open");
+    wrap.classList.add("open");
+    if (hasGSAP) gsap.fromTo("#dpanel .dp-in", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .6, stagger: .08, ease: "power3.out", delay: wasOpen ? 0 : .45 });
+    if (matchMedia("(max-width: 900px)").matches) setTimeout(() => { const t = $("#dpanel"); lenis ? lenis.scrollTo(t, { offset: -90 }) : t.scrollIntoView({ behavior: "smooth" }); }, 150);
+    setTimeout(() => window.ScrollTrigger && ScrollTrigger.refresh(), 950);
+  }
+  function close(){
+    wrap.classList.remove("open"); states.forEach(s => s.classList.remove("sel")); selected = null;
+    setTimeout(() => window.ScrollTrigger && ScrollTrigger.refresh(), 950);
+    const target = $("#delegados"); if (matchMedia("(max-width: 900px)").matches) (lenis ? lenis.scrollTo(target) : target.scrollIntoView({ behavior: "smooth" }));
+  }
+  const canHover = matchMedia("(hover:hover)").matches;
+  states.forEach(el => {
+    if (canHover) el.addEventListener("pointerenter", () => showZoom(el));
+    el.addEventListener("focus", () => showZoom(el));
+    el.addEventListener("click", () => select(el));
+    el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(el); } });
+  });
+  statesG.addEventListener("pointerleave", hideZoom);
+  states.forEach(el => el.addEventListener("blur", hideZoom));
+  $("#dClose").addEventListener("click", close);
+  // Datos que llegan desde el panel de administración
+  window.COM_setDelegados = data => { Object.keys(data || {}).forEach(k => { DELEGADOS[k] = data[k]; }); if (selected) fill(selected); };
+  addEventListener("keydown", e => { if (e.key === "Escape" && wrap.classList.contains("open") && !$("#palette").classList.contains("open")) close(); });
+})();
+
+/* ---------- MateTips: tarjetas que giran ---------- */
+$$(".tip").forEach(t => t.addEventListener("click", () => t.classList.toggle("flipped")));
+
+/* ---------- Cuenta regresiva a Fusion26 ---------- */
+(function(){
+  if (!$("#countdown")) return;
+  const target = new Date("2026-12-04T00:00:00-06:00").getTime();
+  const pad = n => String(n).padStart(2, "0");
+  (function tick(){
+    const d = target - Date.now();
+    if (d <= 0) {
+      ["#cdD","#cdH","#cdM","#cdS"].forEach(id => $(id).textContent = "00");
+      $("#cdMsg").textContent = "¡Llegó Fusion26! Mucho éxito, mateatletas.";
+      return;
+    }
+    $("#cdD").textContent = Math.floor(d / 864e5);
+    $("#cdH").textContent = pad(Math.floor(d / 36e5) % 24);
+    $("#cdM").textContent = pad(Math.floor(d / 6e4) % 60);
+    $("#cdS").textContent = pad(Math.floor(d / 1e3) % 60);
+    setTimeout(tick, 1000);
+  })();
+})();
+
+/* ---------- Intro + animaciones de scroll ---------- */
+function finishWithoutGSAP(){
+  const pi = $("#pageIntro"); if (pi) pi.remove(); document.body.classList.remove("loading");
+  $$("[data-count]").forEach(countUp);
+}
+if (!hasGSAP) {
+  addEventListener("load", finishWithoutGSAP);
+  setTimeout(() => { if ($("#pageIntro")) finishWithoutGSAP(); }, 2500);
+  return;
+}
+
+// ===== Transición de entrada (sin pantalla de carga) =====
+gsap.set(".hero-line", { yPercent: 110 });
+gsap.set(".hero-in", { opacity: 0, y: 30 });
+splitText($("#piTitle"));
+gsap.set("#piTitle .ch", { yPercent: 120, opacity: 0 });
+window.scrollTo(0, 0);
+
+gsap.timeline({ delay: .1 })
+  .from(".pi-logo", { scale: 0, rotate: -270, duration: .8, ease: "back.out(1.7)" })
+  .to("#piTitle .ch", { yPercent: 0, opacity: 1, duration: .7, stagger: .045, ease: "expo.out" }, "-=.45")
+  .to(".pi-line i", { scaleX: 1, duration: .7, ease: "power3.inOut" }, "-=.55")
+  .from(".pi-sub", { opacity: 0, y: 12, duration: .5 }, "-=.45")
+  .add(() => document.body.classList.remove("loading"))
+  .to(".pi-center", { yPercent: -30, opacity: 0, duration: .55, ease: "power3.in" }, "+=.3")
+  .to(".pi-dark i", { scaleY: 0, duration: .75, stagger: { each: .07, from: "center" }, ease: "power4.inOut" }, "-=.2")
+  .to(".pi-color i", { scaleY: 0, duration: .75, stagger: { each: .07, from: "center" }, ease: "power4.inOut" }, "-=.55")
+  .to(".hero-line", { yPercent: 0, duration: 1.1, stagger: .1, ease: "expo.out" }, "-=.5")
+  .to(".hero-in", { opacity: 1, y: 0, duration: 1, stagger: .1, ease: "power3.out" }, "-=.9")
+  .from("#emblem", { scale: .6, rotate: -25, duration: 1.4, ease: "expo.out" }, "<")
+  .add(() => { $("#pageIntro").style.pointerEvents = "none"; lenis && lenis.start(); ScrollTrigger.refresh(); });
+
+// ===== Transición de salida al ir a otra página del sitio =====
+function leavePage(url){
+  const pi = $("#pageIntro");
+  pi.style.pointerEvents = "auto";
+  gsap.set(".pi-center", { opacity: 0 });
+  gsap.set(".pi-layer i", { transformOrigin: "bottom" });
+  gsap.timeline({ onComplete: () => { location.href = url; } })
+    .to(".pi-color i", { scaleY: 1, duration: .5, stagger: { each: .05, from: "edges" }, ease: "power4.in" })
+    .to(".pi-dark i", { scaleY: 1, duration: .5, stagger: { each: .05, from: "edges" }, ease: "power4.in" }, "-=.32");
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[href]");
+  if (!a || a.target === "_blank" || e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+  const h = a.getAttribute("href");
+  if (!h || h.startsWith("#") || /^(https?:|mailto:|tel:|javascript:)/i.test(h)) return;
+  e.preventDefault();
+  closeMenu();
+  leavePage(h);
+});
+addEventListener("pageshow", e => {
+  if (e.persisted) { gsap.set(".pi-layer i", { scaleY: 0 }); $("#pageIntro").style.pointerEvents = "none"; }
+});
+
+// Marquees infinitos que reaccionan a la velocidad del scroll
+function marquee(el, dir){
+  el.innerHTML += el.innerHTML;
+  const w = el.scrollWidth / 2;
+  let x = dir > 0 ? -w : 0, speed = 1;
+  gsap.ticker.add(() => {
+    x += (dir * .6) * speed;
+    if (x <= -w) x += w; if (x >= 0) x -= w;
+    el.style.transform = `translateX(${x}px)`;
+    speed += (1 - speed) * .05;
+  });
+  if (lenis) lenis.on("scroll", ({ velocity }) => { speed = 1 + Math.min(Math.abs(velocity) * .35, 8); });
+}
+marquee($("#mq1"), -1); marquee($("#mq2"), 1);
+
+// Títulos letra por letra
+$$(".split").forEach(el => {
+  splitText(el);
+  gsap.from($$(".ch", el), {
+    yPercent: 120, opacity: 0, rotate: 8, duration: .9, stagger: .018, ease: "power4.out",
+    scrollTrigger: { trigger: el, start: "top 85%" }
+  });
+});
+// Revelados generales
+$$(".reveal").forEach(el => {
+  gsap.from(el, { y: 50, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%" } });
+});
+// Imagen con recorte + parallax
+gsap.from(".reveal-clip", { clipPath: "inset(100% 0 0 0 round 22px)", duration: 1.4, ease: "expo.inOut", scrollTrigger: { trigger: ".reveal-clip", start: "top 80%" } });
+gsap.to(".parallax-img", { yPercent: 12, ease: "none", scrollTrigger: { trigger: ".about-media", start: "top bottom", end: "bottom top", scrub: true } });
+// Contadores
+$$("[data-count]").forEach(el => ScrollTrigger.create({ trigger: el, start: "top 90%", once: true, onEnter: () => countUp(el) }));
+// Hero se desvanece al bajar
+gsap.to(".hero-grid", { yPercent: 18, opacity: .2, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+// CTA gigante
+if ($(".cta")) {
+gsap.from(".cta-line", { xPercent: i => i ? 30 : -30, opacity: 0, duration: 1.3, ease: "expo.out", stagger: .1, scrollTrigger: { trigger: ".cta", start: "top 75%" } });
+gsap.from(".big-btn", { scale: 0, rotate: -90, duration: 1.2, ease: "back.out(1.6)", scrollTrigger: { trigger: ".big-btn", start: "top 90%" } });
+}
+gsap.from(".foot-mega", { yPercent: 60, opacity: 0, duration: 1.5, ease: "expo.out", scrollTrigger: { trigger: ".foot-mega", start: "top 100%" } });
+
+// Ruta: scroll horizontal fijado (solo escritorio)
+const mm = gsap.matchMedia();
+mm.add("(min-width: 901px)", () => {
+  const track = $("#routeTrack");
+  if (!track) return;
+  const dist = () => track.scrollWidth - innerWidth + 48;
+  const tween = gsap.to(track, {
+    x: () => -dist(), ease: "none",
+    scrollTrigger: { trigger: ".route-pin", start: "top top", end: () => "+=" + dist(), pin: true, scrub: 1, invalidateOnRefresh: true,
+      onUpdate: self => $("#routeBar").style.transform = `scaleX(${self.progress})` }
+  });
+  $$(".step", track).forEach(s => gsap.from(s, { opacity: .25, scale: .92, ease: "none",
+    scrollTrigger: { trigger: s, containerAnimation: tween, start: "left 95%", end: "left 55%", scrub: true } }));
+});
+mm.add("(max-width: 900px)", () => {
+  $$(".step").forEach(s => gsap.from(s, { y: 60, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: s, start: "top 88%" } }));
+});
+
+if ($(".cats")) gsap.from(".cat-bar i", { scaleX: 0, duration: 1.4, ease: "expo.out", stagger: .12, scrollTrigger: { trigger: ".cats", start: "top 80%" } });
+if ($(".points")) gsap.from(".pt-row", { x: -40, opacity: 0, duration: .9, stagger: .1, ease: "power3.out", scrollTrigger: { trigger: ".points", start: "top 85%" } });
+
+addEventListener("load", () => ScrollTrigger.refresh());
+})();
+</script>
+<script src="firebase-config.js"></script>
+<script src="com-datos.js"></script>
+</body>
+</html>
